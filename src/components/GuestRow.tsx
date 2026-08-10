@@ -1,7 +1,19 @@
 "use client";
 
 import { useState } from "react";
-import { Guest } from "@/types/guest";
+import { Guest, RsvpStatus } from "@/types/guest";
+
+const RSVP_LABEL: Record<RsvpStatus, string> = {
+  pending: "Pending",
+  attending: "Attending",
+  declined: "Declined",
+};
+
+const RSVP_COLOR: Record<RsvpStatus, string> = {
+  pending: "text-foreground/40",
+  attending: "text-brand",
+  declined: "text-red-600",
+};
 
 export default function GuestRow({
   weddingId,
@@ -17,6 +29,7 @@ export default function GuestRow({
   const [editing, setEditing] = useState(false);
   const [name, setName] = useState(guest.name);
   const [guestGroup, setGuestGroup] = useState(guest.guest_group);
+  const [rsvpStatus, setRsvpStatus] = useState<RsvpStatus>(guest.rsvp_status);
   const [saving, setSaving] = useState(false);
   const [copied, setCopied] = useState(false);
 
@@ -37,7 +50,7 @@ export default function GuestRow({
     const res = await fetch(`/api/weddings/${weddingId}/guests/${guest.id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, guestGroup }),
+      body: JSON.stringify({ name, guestGroup, rsvpStatus }),
     });
     const data = await res.json();
 
@@ -72,6 +85,15 @@ export default function GuestRow({
             onChange={(e) => setGuestGroup(e.target.value)}
             className="flex-1 min-w-[140px] border border-border-warm rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand/30"
           />
+          <select
+            value={rsvpStatus}
+            onChange={(e) => setRsvpStatus(e.target.value as RsvpStatus)}
+            className="border border-border-warm rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand/30"
+          >
+            <option value="pending">Pending</option>
+            <option value="attending">Attending</option>
+            <option value="declined">Declined</option>
+          </select>
           <button
             type="submit"
             disabled={saving}
@@ -94,7 +116,13 @@ export default function GuestRow({
   return (
     <li className="flex items-center justify-between gap-3 border border-border-warm rounded-md px-3 py-2 text-sm">
       <span>
-        {guest.name} <span className="text-foreground/50">({guest.guest_group})</span>
+        {guest.name} <span className="text-foreground/50">({guest.guest_group})</span>{" "}
+        <span className={`font-medium ${RSVP_COLOR[guest.rsvp_status]}`}>
+          · {RSVP_LABEL[guest.rsvp_status]}
+        </span>
+        {guest.rsvp_note && (
+          <span className="block text-xs text-foreground/50 mt-0.5">“{guest.rsvp_note}”</span>
+        )}
       </span>
       <span className="flex items-center gap-3 whitespace-nowrap">
         <button onClick={copyLink} className="text-brand font-medium">

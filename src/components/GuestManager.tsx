@@ -71,22 +71,35 @@ export default function GuestManager({
     }
   }
 
+  const attending = guests.filter((g) => g.rsvp_status === "attending").length;
+  const declined = guests.filter((g) => g.rsvp_status === "declined").length;
+  const pending = guests.length - attending - declined;
+
   return (
     <div className="flex flex-col gap-4">
       {guests.length > 0 && (
-        <ul className="flex flex-col gap-2">
-          {guests.map((guest) => (
-            <GuestRow
-              key={guest.id}
-              weddingId={weddingId}
-              guest={guest}
-              onUpdate={(updated) =>
-                setGuests((prev) => prev.map((g) => (g.id === updated.id ? updated : g)))
-              }
-              onDelete={(id) => setGuests((prev) => prev.filter((g) => g.id !== id))}
-            />
-          ))}
-        </ul>
+        <>
+          <div className="text-xs text-foreground/50">
+            <span className="text-brand font-medium">{attending} attending</span>
+            {" · "}
+            <span className="text-red-600 font-medium">{declined} declined</span>
+            {" · "}
+            <span>{pending} pending</span>
+          </div>
+          <ul className="flex flex-col gap-2">
+            {guests.map((guest) => (
+              <GuestRow
+                key={guest.id}
+                weddingId={weddingId}
+                guest={guest}
+                onUpdate={(updated) =>
+                  setGuests((prev) => prev.map((g) => (g.id === updated.id ? updated : g)))
+                }
+                onDelete={(id) => setGuests((prev) => prev.filter((g) => g.id !== id))}
+              />
+            ))}
+          </ul>
+        </>
       )}
 
       <form onSubmit={handleAdd} className="flex gap-2 flex-wrap">

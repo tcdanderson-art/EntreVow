@@ -1,3 +1,5 @@
+export type RsvpStatus = "pending" | "attending" | "declined";
+
 export interface Guest {
   id: number;
   wedding_id: number;
@@ -5,4 +7,7 @@ export interface Guest {
   guest_group: string;
   access_code: string;
   created_at: string;
+  rsvp_status: RsvpStatus;
+  rsvp_note: string | null;
+  rsvp_responded_at: string | null;
 }

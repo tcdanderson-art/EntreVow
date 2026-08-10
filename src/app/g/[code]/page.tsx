@@ -4,6 +4,7 @@ import { Guest } from "@/types/guest";
 import { Wedding } from "@/types/wedding";
 import { ItineraryItem } from "@/types/itinerary";
 import GuestItineraryList from "@/components/GuestItineraryList";
+import GuestRsvp from "@/components/GuestRsvp";
 
 export default async function GuestItineraryPage({
   params,
@@ -49,6 +50,8 @@ export default async function GuestItineraryPage({
             <div className="text-xs text-foreground/60 capitalize">{guest.guest_group} guest</div>
           </div>
         </div>
+
+        <GuestRsvp code={code} initialGuest={guest} />
 
         <div className="px-5 py-3 flex-1">
           <div className="text-xs font-semibold uppercase tracking-wide text-foreground/50 mb-3">
