@@ -17,6 +17,11 @@ const FEATURES = [
     description:
       "Bridal party sees the rehearsal call time. General guests see the ceremony and reception. Everyone sees only what's relevant to them.",
   },
+  {
+    title: "Guest RSVPs",
+    description:
+      "Guests confirm or decline right from their itinerary link, with a note for dietary needs or plus-ones. You'll always know your final headcount.",
+  },
 ];
 
 export default function Home() {
@@ -61,11 +66,11 @@ export default function Home() {
             href="/signup"
             className="inline-block bg-brand text-white px-8 py-3 rounded-md font-medium shadow-lg shadow-brand/20 hover:bg-brand-hover transition-colors"
           >
-            Get Early Access
+            Get Started
           </Link>
         </section>
 
-        <section className="grid sm:grid-cols-3 gap-6 px-6 sm:px-10 py-14 max-w-6xl mx-auto">
+        <section className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 px-6 sm:px-10 py-14 max-w-6xl mx-auto">
           {FEATURES.map((feature) => (
             <div
               key={feature.title}
@@ -76,21 +81,19 @@ export default function Home() {
             </div>
           ))}
         </section>
-
-        <section className="border-t border-border-warm bg-cream-card py-16 px-6 text-center">
-          <h2 className="font-display text-2xl mb-4">Your wedding party, connected.</h2>
-          <blockquote className="max-w-xl mx-auto italic text-foreground/70 text-lg leading-relaxed">
-            &ldquo;Our guests raved about the live shuttle updates. It saved us so much stress
-            and kept everything running on time!&rdquo;
-            <footer className="mt-3 not-italic font-semibold text-foreground text-base">
-              — Sarah &amp; Mike
-            </footer>
-          </blockquote>
-        </section>
       </main>
 
-      <footer className="text-center text-sm text-foreground/50 py-8 border-t border-border-warm">
-        Entrevow — from &ldquo;I do&rdquo; to the last dance.
+      <footer className="text-center text-sm text-foreground/50 py-8 border-t border-border-warm flex flex-col items-center gap-2">
+        <p>Entrevow — from &ldquo;I do&rdquo; to the last dance.</p>
+        <p className="flex items-center gap-3">
+          <Link href="/privacy" className="hover:text-foreground transition-colors">
+            Privacy Policy
+          </Link>
+          <span aria-hidden="true">·</span>
+          <Link href="/terms" className="hover:text-foreground transition-colors">
+            Terms of Service
+          </Link>
+        </p>
       </footer>
     </div>
   );

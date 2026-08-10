@@ -78,7 +78,19 @@ export default function SignupPage() {
           </button>
         </form>
 
-        <p className="text-sm text-foreground/60 text-center mt-6">
+        <p className="text-xs text-foreground/50 text-center mt-4">
+          By creating an account you agree to our{" "}
+          <Link href="/terms" className="text-brand font-medium">
+            Terms
+          </Link>{" "}
+          and{" "}
+          <Link href="/privacy" className="text-brand font-medium">
+            Privacy Policy
+          </Link>
+          .
+        </p>
+
+        <p className="text-sm text-foreground/60 text-center mt-4">
           Already have an account?{" "}
           <Link href="/login" className="text-brand font-medium">
             Log in
