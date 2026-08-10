@@ -3,6 +3,7 @@ import { db } from "@/lib/db";
 import { Guest } from "@/types/guest";
 import { Wedding } from "@/types/wedding";
 import { ItineraryItem } from "@/types/itinerary";
+import GuestItineraryList from "@/components/GuestItineraryList";
 
 export default async function GuestItineraryPage({
   params,
@@ -54,32 +55,7 @@ export default async function GuestItineraryPage({
             Itinerary
           </div>
 
-          {items.length === 0 ? (
-            <p className="text-sm text-foreground/50">
-              No itinerary items yet — check back soon.
-            </p>
-          ) : (
-            <ol className="border-l-2 border-border-warm pl-4 flex flex-col gap-4">
-              {items.map((item) => (
-                <li key={item.id}>
-                  <time className="text-xs font-semibold text-foreground/50">
-                    {new Date(item.start_time).toLocaleString(undefined, {
-                      weekday: "short",
-                      hour: "numeric",
-                      minute: "2-digit",
-                    })}
-                  </time>
-                  <h5 className="font-semibold text-sm">{item.title}</h5>
-                  {item.location && (
-                    <p className="text-sm text-foreground/60">{item.location}</p>
-                  )}
-                  {item.transport_info && (
-                    <p className="text-xs text-brand mt-0.5">{item.transport_info}</p>
-                  )}
-                </li>
-              ))}
-            </ol>
-          )}
+          <GuestItineraryList code={code} initialItems={items} />
         </div>
 
         {wedding?.emergency_phone && (

@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { getSession } from "@/lib/session";
 import { db } from "@/lib/db";
@@ -6,6 +7,7 @@ import { Guest } from "@/types/guest";
 import { ItineraryItem } from "@/types/itinerary";
 import GuestManager from "@/components/GuestManager";
 import ItineraryManager from "@/components/ItineraryManager";
+import DashboardHeader from "@/components/DashboardHeader";
 
 export default async function WeddingDashboardPage({
   params,
@@ -34,8 +36,12 @@ export default async function WeddingDashboardPage({
   const guestGroups = Array.from(new Set(guests.map((g) => g.guest_group)));
 
   return (
-    <div className="flex-1 bg-cream px-6 py-10">
-      <div className="max-w-3xl mx-auto flex flex-col gap-8">
+    <div className="flex-1 bg-cream">
+      <DashboardHeader />
+      <div className="max-w-3xl mx-auto px-6 py-10 flex flex-col gap-8">
+        <Link href="/dashboard" className="text-sm text-brand font-medium -mb-4">
+          ← Your weddings
+        </Link>
         <h1 className="font-display text-3xl">{wedding.title}</h1>
 
         <section className="bg-white border border-border-warm rounded-xl p-6">

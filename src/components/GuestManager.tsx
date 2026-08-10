@@ -44,6 +44,15 @@ export default function GuestManager({
     setTimeout(() => setCopiedId(null), 1500);
   }
 
+  async function removeGuest(guest: Guest) {
+    if (!confirm(`Remove ${guest.name}? Their link will stop working.`)) return;
+
+    const res = await fetch(`/api/weddings/${weddingId}/guests/${guest.id}`, { method: "DELETE" });
+    if (res.ok) {
+      setGuests((prev) => prev.filter((g) => g.id !== guest.id));
+    }
+  }
+
   return (
     <div className="flex flex-col gap-4">
       {guests.length > 0 && (
@@ -57,12 +66,20 @@ export default function GuestManager({
                 {guest.name}{" "}
                 <span className="text-foreground/50">({guest.guest_group})</span>
               </span>
-              <button
-                onClick={() => copyLink(guest)}
-                className="text-brand font-medium whitespace-nowrap"
-              >
-                {copiedId === guest.id ? "Copied!" : "Copy link"}
-              </button>
+              <span className="flex items-center gap-3 whitespace-nowrap">
+                <button
+                  onClick={() => copyLink(guest)}
+                  className="text-brand font-medium"
+                >
+                  {copiedId === guest.id ? "Copied!" : "Copy link"}
+                </button>
+                <button
+                  onClick={() => removeGuest(guest)}
+                  className="text-red-600 font-medium"
+                >
+                  Remove
+                </button>
+              </span>
             </li>
           ))}
         </ul>

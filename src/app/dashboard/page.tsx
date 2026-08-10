@@ -4,6 +4,7 @@ import { getSession } from "@/lib/session";
 import { db } from "@/lib/db";
 import { Wedding } from "@/types/wedding";
 import CreateWeddingForm from "@/components/CreateWeddingForm";
+import DashboardHeader from "@/components/DashboardHeader";
 
 export default async function DashboardPage() {
   const session = await getSession();
@@ -14,8 +15,9 @@ export default async function DashboardPage() {
   `) as Wedding[];
 
   return (
-    <div className="flex-1 bg-cream px-6 py-10">
-      <div className="max-w-2xl mx-auto">
+    <div className="flex-1 bg-cream">
+      <DashboardHeader />
+      <div className="max-w-2xl mx-auto px-6 py-10">
         <h1 className="font-display text-3xl mb-8">Your weddings</h1>
 
         {weddings.length > 0 && (

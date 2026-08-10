@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 
 const FEATURES = [
   {
@@ -21,18 +22,25 @@ const FEATURES = [
 export default function Home() {
   return (
     <div className="flex flex-col min-h-full bg-cream">
-      <header className="flex items-center justify-between px-6 sm:px-10 py-6 max-w-6xl mx-auto w-full">
-        <span className="font-display text-xl tracking-tight text-foreground">Entrevow</span>
-        <nav className="flex items-center gap-4">
+      <header className="flex items-center justify-between gap-3 px-4 sm:px-10 py-6 max-w-6xl mx-auto w-full">
+        <Image
+          src="/brand/wordmark.png"
+          alt="Entrevow"
+          width={663}
+          height={82}
+          className="h-4 sm:h-6 w-auto shrink-0"
+          priority
+        />
+        <nav className="flex items-center gap-2 sm:gap-4 shrink-0">
           <Link
             href="/login"
-            className="text-sm font-medium text-foreground/80 hover:text-foreground transition-colors"
+            className="text-sm font-medium text-foreground/80 hover:text-foreground transition-colors whitespace-nowrap"
           >
             Log in
           </Link>
           <Link
             href="/signup"
-            className="text-sm font-medium bg-brand text-white px-4 py-2 rounded-md hover:bg-brand-hover transition-colors"
+            className="text-sm font-medium bg-brand text-white px-3 sm:px-4 py-2 rounded-md hover:bg-brand-hover transition-colors whitespace-nowrap"
           >
             Get Started
           </Link>

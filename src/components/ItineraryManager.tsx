@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { ItineraryItem } from "@/types/itinerary";
+import ItineraryItemRow from "@/components/ItineraryItemRow";
 
 export default function ItineraryManager({
   weddingId,
@@ -62,23 +63,20 @@ export default function ItineraryManager({
       {items.length > 0 && (
         <ul className="flex flex-col gap-2">
           {items.map((item) => (
-            <li key={item.id} className="border border-border-warm rounded-md px-3 py-2 text-sm">
-              <div className="flex justify-between gap-3">
-                <span className="font-medium">{item.title}</span>
-                <span className="text-foreground/50 whitespace-nowrap">
-                  {new Date(item.start_time).toLocaleString(undefined, {
-                    month: "short",
-                    day: "numeric",
-                    hour: "numeric",
-                    minute: "2-digit",
-                  })}
-                </span>
-              </div>
-              {item.location && <div className="text-foreground/60">{item.location}</div>}
-              <div className="text-foreground/40 text-xs mt-1">
-                visible to: {item.visible_to_groups.join(", ")}
-              </div>
-            </li>
+            <ItineraryItemRow
+              key={item.id}
+              weddingId={weddingId}
+              item={item}
+              knownGroups={knownGroups}
+              onUpdate={(updated) =>
+                setItems((prev) =>
+                  prev
+                    .map((i) => (i.id === updated.id ? updated : i))
+                    .sort((a, b) => new Date(a.start_time).getTime() - new Date(b.start_time).getTime())
+                )
+              }
+              onDelete={(id) => setItems((prev) => prev.filter((i) => i.id !== id))}
+            />
           ))}
         </ul>
       )}
