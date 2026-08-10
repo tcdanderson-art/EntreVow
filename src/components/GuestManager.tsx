@@ -1,7 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Guest } from "@/types/guest";
+import { parseGuestCsv } from "@/lib/csv";
+import GuestRow from "@/components/GuestRow";
 
 export default function GuestManager({
   weddingId,
@@ -14,7 +16,9 @@ export default function GuestManager({
   const [name, setName] = useState("");
   const [guestGroup, setGuestGroup] = useState("general");
   const [loading, setLoading] = useState(false);
-  const [copiedId, setCopiedId] = useState<number | null>(null);
+  const [importing, setImporting] = useState(false);
+  const [importError, setImportError] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   async function handleAdd(e: React.FormEvent) {
     e.preventDefault();
@@ -34,22 +38,36 @@ export default function GuestManager({
     }
   }
 
-  function linkFor(guest: Guest) {
-    return `${window.location.origin}/g/${guest.access_code}`;
-  }
+  async function handleCsvSelected(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setImportError(null);
+    setImporting(true);
 
-  async function copyLink(guest: Guest) {
-    await navigator.clipboard.writeText(linkFor(guest));
-    setCopiedId(guest.id);
-    setTimeout(() => setCopiedId(null), 1500);
-  }
+    const text = await file.text();
+    const rows = parseGuestCsv(text);
 
-  async function removeGuest(guest: Guest) {
-    if (!confirm(`Remove ${guest.name}? Their link will stop working.`)) return;
+    if (rows.length === 0) {
+      setImporting(false);
+      setImportError("No guest rows found in that file.");
+      if (fileInputRef.current) fileInputRef.current.value = "";
+      return;
+    }
 
-    const res = await fetch(`/api/weddings/${weddingId}/guests/${guest.id}`, { method: "DELETE" });
+    const res = await fetch(`/api/weddings/${weddingId}/guests/bulk`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ guests: rows }),
+    });
+    const data = await res.json();
+
+    setImporting(false);
+    if (fileInputRef.current) fileInputRef.current.value = "";
+
     if (res.ok) {
-      setGuests((prev) => prev.filter((g) => g.id !== guest.id));
+      setGuests((prev) => [...prev, ...data.guests]);
+    } else {
+      setImportError(data.error ?? "Import failed");
     }
   }
 
@@ -58,29 +76,15 @@ export default function GuestManager({
       {guests.length > 0 && (
         <ul className="flex flex-col gap-2">
           {guests.map((guest) => (
-            <li
+            <GuestRow
               key={guest.id}
-              className="flex items-center justify-between gap-3 border border-border-warm rounded-md px-3 py-2 text-sm"
-            >
-              <span>
-                {guest.name}{" "}
-                <span className="text-foreground/50">({guest.guest_group})</span>
-              </span>
-              <span className="flex items-center gap-3 whitespace-nowrap">
-                <button
-                  onClick={() => copyLink(guest)}
-                  className="text-brand font-medium"
-                >
-                  {copiedId === guest.id ? "Copied!" : "Copy link"}
-                </button>
-                <button
-                  onClick={() => removeGuest(guest)}
-                  className="text-red-600 font-medium"
-                >
-                  Remove
-                </button>
-              </span>
-            </li>
+              weddingId={weddingId}
+              guest={guest}
+              onUpdate={(updated) =>
+                setGuests((prev) => prev.map((g) => (g.id === updated.id ? updated : g)))
+              }
+              onDelete={(id) => setGuests((prev) => prev.filter((g) => g.id !== id))}
+            />
           ))}
         </ul>
       )}
@@ -109,6 +113,22 @@ export default function GuestManager({
           {loading ? "Adding…" : "Add guest"}
         </button>
       </form>
+
+      <div className="flex items-center gap-3 border-t border-border-warm pt-3">
+        <label className="text-sm font-medium text-brand cursor-pointer">
+          {importing ? "Importing…" : "Import guests from CSV"}
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept=".csv,text/csv"
+            onChange={handleCsvSelected}
+            disabled={importing}
+            className="hidden"
+          />
+        </label>
+        <span className="text-xs text-foreground/40">columns: name, group</span>
+      </div>
+      {importError && <p className="text-sm text-red-600">{importError}</p>}
     </div>
   );
 }

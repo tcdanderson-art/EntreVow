@@ -2,12 +2,7 @@
 
 import { useState } from "react";
 import { ItineraryItem } from "@/types/itinerary";
-
-function toLocalInputValue(isoString: string) {
-  const d = new Date(isoString);
-  const pad = (n: number) => String(n).padStart(2, "0");
-  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
-}
+import { formatWallClockTime, toDatetimeLocalValue } from "@/lib/wall-clock";
 
 export default function ItineraryItemRow({
   weddingId,
@@ -25,7 +20,7 @@ export default function ItineraryItemRow({
   const [editing, setEditing] = useState(false);
   const [title, setTitle] = useState(item.title);
   const [location, setLocation] = useState(item.location ?? "");
-  const [startTime, setStartTime] = useState(toLocalInputValue(item.start_time));
+  const [startTime, setStartTime] = useState(toDatetimeLocalValue(item.start_time));
   const [transportInfo, setTransportInfo] = useState(item.transport_info ?? "");
   const [selectedGroups, setSelectedGroups] = useState<string[]>(item.visible_to_groups);
   const [saving, setSaving] = useState(false);
@@ -142,7 +137,7 @@ export default function ItineraryItemRow({
       <div className="flex justify-between gap-3">
         <span className="font-medium">{item.title}</span>
         <span className="text-foreground/50 whitespace-nowrap">
-          {new Date(item.start_time).toLocaleString(undefined, {
+          {formatWallClockTime(item.start_time, {
             month: "short",
             day: "numeric",
             hour: "numeric",

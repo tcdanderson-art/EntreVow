@@ -1,10 +1,10 @@
-import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getSession } from "@/lib/session";
 import { db } from "@/lib/db";
 import { Wedding } from "@/types/wedding";
 import CreateWeddingForm from "@/components/CreateWeddingForm";
 import DashboardHeader from "@/components/DashboardHeader";
+import WeddingListItem from "@/components/WeddingListItem";
 
 export default async function DashboardPage() {
   const session = await getSession();
@@ -23,19 +23,7 @@ export default async function DashboardPage() {
         {weddings.length > 0 && (
           <ul className="flex flex-col gap-3 mb-10">
             {weddings.map((wedding) => (
-              <li key={wedding.id}>
-                <Link
-                  href={`/dashboard/${wedding.id}`}
-                  className="block bg-white border border-border-warm rounded-lg px-5 py-4 hover:border-brand transition-colors"
-                >
-                  <span className="font-medium">{wedding.title}</span>
-                  {wedding.wedding_date && (
-                    <span className="text-sm text-foreground/60 ml-2">
-                      {new Date(wedding.wedding_date).toLocaleDateString()}
-                    </span>
-                  )}
-                </Link>
-              </li>
+              <WeddingListItem key={wedding.id} wedding={wedding} />
             ))}
           </ul>
         )}

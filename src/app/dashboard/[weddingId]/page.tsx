@@ -8,6 +8,7 @@ import { ItineraryItem } from "@/types/itinerary";
 import GuestManager from "@/components/GuestManager";
 import ItineraryManager from "@/components/ItineraryManager";
 import DashboardHeader from "@/components/DashboardHeader";
+import WeddingHeader from "@/components/WeddingHeader";
 
 export default async function WeddingDashboardPage({
   params,
@@ -42,7 +43,7 @@ export default async function WeddingDashboardPage({
         <Link href="/dashboard" className="text-sm text-brand font-medium -mb-4">
           ← Your weddings
         </Link>
-        <h1 className="font-display text-3xl">{wedding.title}</h1>
+        <WeddingHeader wedding={wedding} />
 
         <section className="bg-white border border-border-warm rounded-xl p-6">
           <h2 className="font-semibold mb-4">Guests</h2>

@@ -48,7 +48,7 @@ export default function ItineraryManager({
     if (res.ok) {
       setItems((prev) =>
         [...prev, data.item].sort(
-          (a, b) => new Date(a.start_time).getTime() - new Date(b.start_time).getTime()
+          (a, b) => a.start_time.localeCompare(b.start_time)
         )
       );
       setTitle("");
@@ -72,7 +72,7 @@ export default function ItineraryManager({
                 setItems((prev) =>
                   prev
                     .map((i) => (i.id === updated.id ? updated : i))
-                    .sort((a, b) => new Date(a.start_time).getTime() - new Date(b.start_time).getTime())
+                    .sort((a, b) => a.start_time.localeCompare(b.start_time))
                 )
               }
               onDelete={(id) => setItems((prev) => prev.filter((i) => i.id !== id))}

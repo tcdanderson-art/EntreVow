@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { ItineraryItem } from "@/types/itinerary";
+import { formatWallClockTime } from "@/lib/wall-clock";
 
 const POLL_INTERVAL_MS = 20000;
 
@@ -44,7 +45,7 @@ export default function GuestItineraryList({
       {items.map((item) => (
         <li key={item.id}>
           <time className="text-xs font-semibold text-foreground/50">
-            {new Date(item.start_time).toLocaleString(undefined, {
+            {formatWallClockTime(item.start_time, {
               weekday: "short",
               hour: "numeric",
               minute: "2-digit",

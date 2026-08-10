@@ -1,0 +1,51 @@
+export interface ParsedGuestRow {
+  name: string;
+  guestGroup: string;
+}
+
+function splitCsvLine(line: string): string[] {
+  const fields: string[] = [];
+  let current = "";
+  let inQuotes = false;
+
+  for (let i = 0; i < line.length; i++) {
+    const char = line[i];
+    if (inQuotes) {
+      if (char === '"' && line[i + 1] === '"') {
+        current += '"';
+        i++;
+      } else if (char === '"') {
+        inQuotes = false;
+      } else {
+        current += char;
+      }
+    } else if (char === '"') {
+      inQuotes = true;
+    } else if (char === ",") {
+      fields.push(current.trim());
+      current = "";
+    } else {
+      current += char;
+    }
+  }
+  fields.push(current.trim());
+  return fields;
+}
+
+// Accepts "name,group" per line, with or without a header row.
+export function parseGuestCsv(text: string): ParsedGuestRow[] {
+  const lines = text.split(/\r?\n/).filter((line) => line.trim().length > 0);
+  if (lines.length === 0) return [];
+
+  const firstFields = splitCsvLine(lines[0]).map((f) => f.toLowerCase());
+  const hasHeader = firstFields[0] === "name";
+  const dataLines = hasHeader ? lines.slice(1) : lines;
+
+  return dataLines
+    .map(splitCsvLine)
+    .filter((fields) => fields[0])
+    .map((fields) => ({
+      name: fields[0],
+      guestGroup: fields[1] || "general",
+    }));
+}
