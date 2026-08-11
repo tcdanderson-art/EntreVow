@@ -20,6 +20,7 @@ export default function WeddingHeader({ wedding }: { wedding: Wedding }) {
   const [weddingDate, setWeddingDate] = useState(toDateInputValue(wedding.wedding_date));
   const [emergencyPhone, setEmergencyPhone] = useState(wedding.emergency_phone ?? "");
   const [slug, setSlug] = useState(wedding.slug ?? "");
+  const [venueAddress, setVenueAddress] = useState(wedding.venue_address ?? "");
   const [saving, setSaving] = useState(false);
   const [copied, setCopied] = useState(false);
 
@@ -42,6 +43,7 @@ export default function WeddingHeader({ wedding }: { wedding: Wedding }) {
         weddingDate: weddingDate || null,
         emergencyPhone: emergencyPhone || null,
         slug: slug || null,
+        venueAddress: venueAddress || null,
       }),
     });
 
@@ -85,6 +87,18 @@ export default function WeddingHeader({ wedding }: { wedding: Wedding }) {
           onChange={(e) => setEmergencyPhone(e.target.value)}
           className="border border-border-warm rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand/30"
         />
+        <div>
+          <input
+            type="text"
+            placeholder="Venue address, e.g. 12 Harbour St, Sydney NSW"
+            value={venueAddress}
+            onChange={(e) => setVenueAddress(e.target.value)}
+            className="w-full border border-border-warm rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand/30"
+          />
+          <p className="text-xs text-foreground/40 mt-1">
+            Used for the day-of weather forecast. Leave blank to skip.
+          </p>
+        </div>
         <div>
           <label className="flex items-center border border-border-warm rounded-md overflow-hidden text-sm focus-within:ring-2 focus-within:ring-brand/30">
             <span className="pl-3 text-foreground/40 whitespace-nowrap">https://</span>
