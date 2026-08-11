@@ -3,6 +3,16 @@ import { NextRequest, NextResponse } from "next/server";
 const COOKIE_NAME = "entrevow_preview";
 const COOKIE_MAX_AGE = 60 * 60 * 24 * 180; // ~6 months
 
+// Scope the cookie to .entrevow.com so it covers per-couple subdomains too
+// (alexandpriya.entrevow.com etc). Never do this for the underlying
+// netlify.app host — that's a shared public suffix, and browsers reject (or
+// worse, could leak across unrelated sites on) a cookie scoped that broadly.
+function cookieDomainFor(hostname: string): string | undefined {
+  return hostname === "entrevow.com" || hostname.endsWith(".entrevow.com")
+    ? ".entrevow.com"
+    : undefined;
+}
+
 // Pre-launch gate: the whole site rewrites to /coming-soon for everyone except
 // whoever has the preview cookie. Visiting with ?preview=<PREVIEW_ACCESS_CODE>
 // once sets that cookie. No-op entirely if the env var isn't set (local dev).
@@ -26,6 +36,7 @@ export function proxy(req: NextRequest) {
       secure: true,
       maxAge: COOKIE_MAX_AGE,
       path: "/",
+      domain: cookieDomainFor(req.nextUrl.hostname),
     });
     return res;
   }

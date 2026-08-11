@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { requireCoupleId } from "@/lib/require-auth";
 import { withErrorHandling } from "@/lib/route-handler";
+import { slugify } from "@/lib/slug";
 import { Wedding } from "@/types/wedding";
 
 export const GET = withErrorHandling(async () => {
@@ -24,9 +25,10 @@ export const POST = withErrorHandling(async (req: NextRequest) => {
   if (!title) return NextResponse.json({ error: "Title is required" }, { status: 400 });
 
   const database = db();
+  const slug = slugify(title) || null;
   const [wedding] = (await database.sql`
-    INSERT INTO weddings (couple_id, title, wedding_date, emergency_phone)
-    VALUES (${coupleId}, ${title}, ${weddingDate ?? null}, ${emergencyPhone ?? null})
+    INSERT INTO weddings (couple_id, title, wedding_date, emergency_phone, slug)
+    VALUES (${coupleId}, ${title}, ${weddingDate ?? null}, ${emergencyPhone ?? null}, ${slug})
     RETURNING *
   `) as Wedding[];
 

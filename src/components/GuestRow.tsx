@@ -17,11 +17,13 @@ const RSVP_COLOR: Record<RsvpStatus, string> = {
 
 export default function GuestRow({
   weddingId,
+  weddingSlug,
   guest,
   onUpdate,
   onDelete,
 }: {
   weddingId: number;
+  weddingSlug: string | null;
   guest: Guest;
   onUpdate: (guest: Guest) => void;
   onDelete: (id: number) => void;
@@ -35,7 +37,8 @@ export default function GuestRow({
   const [copied, setCopied] = useState(false);
 
   function linkFor() {
-    return `${window.location.origin}/g/${guest.access_code}`;
+    const origin = weddingSlug ? `https://${weddingSlug}.entrevow.com` : window.location.origin;
+    return `${origin}/g/${guest.access_code}`;
   }
 
   async function copyLink() {

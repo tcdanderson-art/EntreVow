@@ -19,7 +19,16 @@ export default function WeddingHeader({ wedding }: { wedding: Wedding }) {
   const [title, setTitle] = useState(wedding.title);
   const [weddingDate, setWeddingDate] = useState(toDateInputValue(wedding.wedding_date));
   const [emergencyPhone, setEmergencyPhone] = useState(wedding.emergency_phone ?? "");
+  const [slug, setSlug] = useState(wedding.slug ?? "");
   const [saving, setSaving] = useState(false);
+  const [copied, setCopied] = useState(false);
+
+  async function copyBrandedLink() {
+    if (!wedding.slug) return;
+    await navigator.clipboard.writeText(`https://${wedding.slug}.entrevow.com`);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1500);
+  }
 
   async function handleSave(e: React.FormEvent) {
     e.preventDefault();
@@ -32,6 +41,7 @@ export default function WeddingHeader({ wedding }: { wedding: Wedding }) {
         title,
         weddingDate: weddingDate || null,
         emergencyPhone: emergencyPhone || null,
+        slug: slug || null,
       }),
     });
 
@@ -75,6 +85,22 @@ export default function WeddingHeader({ wedding }: { wedding: Wedding }) {
           onChange={(e) => setEmergencyPhone(e.target.value)}
           className="border border-border-warm rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand/30"
         />
+        <div>
+          <label className="flex items-center border border-border-warm rounded-md overflow-hidden text-sm focus-within:ring-2 focus-within:ring-brand/30">
+            <span className="pl-3 text-foreground/40 whitespace-nowrap">https://</span>
+            <input
+              type="text"
+              placeholder="alexandpriya"
+              value={slug}
+              onChange={(e) => setSlug(e.target.value)}
+              className="flex-1 min-w-0 px-1 py-2 focus:outline-none"
+            />
+            <span className="pr-3 text-foreground/40 whitespace-nowrap">.entrevow.com</span>
+          </label>
+          <p className="text-xs text-foreground/40 mt-1">
+            A memorable link for your guests. Leave blank to skip.
+          </p>
+        </div>
         <div className="flex items-center gap-3">
           <button
             type="submit"
@@ -104,7 +130,17 @@ export default function WeddingHeader({ wedding }: { wedding: Wedding }) {
 
   return (
     <div className="flex items-center justify-between gap-3">
-      <h1 className="font-display text-3xl">{wedding.title}</h1>
+      <div>
+        <h1 className="font-display text-3xl">{wedding.title}</h1>
+        {wedding.slug && (
+          <button
+            onClick={copyBrandedLink}
+            className="text-sm text-brand font-medium mt-1"
+          >
+            {copied ? "Copied!" : `${wedding.slug}.entrevow.com`}
+          </button>
+        )}
+      </div>
       <button
         onClick={() => setEditing(true)}
         className="text-brand text-sm font-medium whitespace-nowrap"

@@ -7,9 +7,11 @@ import GuestRow from "@/components/GuestRow";
 
 export default function GuestManager({
   weddingId,
+  weddingSlug,
   initialGuests,
 }: {
   weddingId: number;
+  weddingSlug: string | null;
   initialGuests: Guest[];
 }) {
   const [guests, setGuests] = useState(initialGuests);
@@ -101,6 +103,7 @@ export default function GuestManager({
               <GuestRow
                 key={guest.id}
                 weddingId={weddingId}
+                weddingSlug={weddingSlug}
                 guest={guest}
                 onUpdate={(updated) =>
                   setGuests((prev) => prev.map((g) => (g.id === updated.id ? updated : g)))

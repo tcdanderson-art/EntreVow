@@ -1,0 +1,2 @@
+ALTER TABLE weddings
+  ADD COLUMN slug TEXT;
