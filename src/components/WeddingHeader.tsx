@@ -90,13 +90,14 @@ export default function WeddingHeader({ wedding }: { wedding: Wedding }) {
         <div>
           <input
             type="text"
-            placeholder="Venue address, e.g. 12 Harbour St, Sydney NSW"
+            placeholder="Nearest suburb or town, e.g. Bondi Beach"
             value={venueAddress}
             onChange={(e) => setVenueAddress(e.target.value)}
             className="w-full border border-border-warm rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand/30"
           />
           <p className="text-xs text-foreground/40 mt-1">
-            Used for the day-of weather forecast. Leave blank to skip.
+            Used for the day-of weather forecast — a suburb or town name works better than a full
+            street address. Leave blank to skip.
           </p>
         </div>
         <div>
