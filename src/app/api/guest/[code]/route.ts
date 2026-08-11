@@ -4,6 +4,7 @@ import { withErrorHandling } from "@/lib/route-handler";
 import { Guest } from "@/types/guest";
 import { Wedding } from "@/types/wedding";
 import { ItineraryItem } from "@/types/itinerary";
+import { Announcement } from "@/types/announcement";
 
 export const GET = withErrorHandling(async (
   _req: NextRequest,
@@ -28,5 +29,12 @@ export const GET = withErrorHandling(async (
     ORDER BY start_time ASC
   `) as ItineraryItem[];
 
-  return NextResponse.json({ guest, wedding, items });
+  const announcements = (await database.sql`
+    SELECT * FROM announcements
+    WHERE wedding_id = ${guest.wedding_id}
+      AND ${guest.guest_group} = ANY(visible_to_groups)
+    ORDER BY created_at DESC
+  `) as Announcement[];
+
+  return NextResponse.json({ guest, wedding, items, announcements });
 });

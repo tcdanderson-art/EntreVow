@@ -10,4 +10,5 @@ export interface Guest {
   rsvp_status: RsvpStatus;
   rsvp_note: string | null;
   rsvp_responded_at: string | null;
+  table_label: string | null;
 }

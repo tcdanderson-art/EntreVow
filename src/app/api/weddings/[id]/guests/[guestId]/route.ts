@@ -18,7 +18,7 @@ export const PATCH = withErrorHandling(async (
     return NextResponse.json({ error: "Not found" }, { status: 404 });
   }
 
-  const { name, guestGroup, rsvpStatus } = await req.json();
+  const { name, guestGroup, rsvpStatus, tableLabel } = await req.json();
   if (!name) return NextResponse.json({ error: "Name is required" }, { status: 400 });
 
   const validStatus = ["pending", "attending", "declined"].includes(rsvpStatus)
@@ -30,13 +30,14 @@ export const PATCH = withErrorHandling(async (
         UPDATE guests
         SET name = ${name}, guest_group = ${guestGroup ?? "general"},
             rsvp_status = ${validStatus},
-            rsvp_responded_at = CASE WHEN ${validStatus} = 'pending' THEN NULL ELSE NOW() END
+            rsvp_responded_at = CASE WHEN ${validStatus} = 'pending' THEN NULL ELSE NOW() END,
+            table_label = ${tableLabel || null}
         WHERE id = ${Number(guestId)} AND wedding_id = ${weddingId}
         RETURNING *
       `) as Guest[])
     : ((await db().sql`
         UPDATE guests
-        SET name = ${name}, guest_group = ${guestGroup ?? "general"}
+        SET name = ${name}, guest_group = ${guestGroup ?? "general"}, table_label = ${tableLabel || null}
         WHERE id = ${Number(guestId)} AND wedding_id = ${weddingId}
         RETURNING *
       `) as Guest[]);

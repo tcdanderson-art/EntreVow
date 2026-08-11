@@ -30,6 +30,7 @@ export default function GuestRow({
   const [name, setName] = useState(guest.name);
   const [guestGroup, setGuestGroup] = useState(guest.guest_group);
   const [rsvpStatus, setRsvpStatus] = useState<RsvpStatus>(guest.rsvp_status);
+  const [tableLabel, setTableLabel] = useState(guest.table_label ?? "");
   const [saving, setSaving] = useState(false);
   const [copied, setCopied] = useState(false);
 
@@ -50,7 +51,7 @@ export default function GuestRow({
     const res = await fetch(`/api/weddings/${weddingId}/guests/${guest.id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, guestGroup, rsvpStatus }),
+      body: JSON.stringify({ name, guestGroup, rsvpStatus, tableLabel }),
     });
     const data = await res.json();
 
@@ -94,6 +95,13 @@ export default function GuestRow({
             <option value="attending">Attending</option>
             <option value="declined">Declined</option>
           </select>
+          <input
+            type="text"
+            placeholder="Table (e.g. Table 5)"
+            value={tableLabel}
+            onChange={(e) => setTableLabel(e.target.value)}
+            className="flex-1 min-w-[120px] border border-border-warm rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand/30"
+          />
           <button
             type="submit"
             disabled={saving}
@@ -120,6 +128,9 @@ export default function GuestRow({
         <span className={`font-medium ${RSVP_COLOR[guest.rsvp_status]}`}>
           · {RSVP_LABEL[guest.rsvp_status]}
         </span>
+        {guest.table_label && (
+          <span className="text-foreground/50"> · {guest.table_label}</span>
+        )}
         {guest.rsvp_note && (
           <span className="block text-xs text-foreground/50 mt-0.5">“{guest.rsvp_note}”</span>
         )}

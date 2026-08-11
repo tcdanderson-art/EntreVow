@@ -5,8 +5,10 @@ import { db } from "@/lib/db";
 import { Wedding } from "@/types/wedding";
 import { Guest } from "@/types/guest";
 import { ItineraryItem } from "@/types/itinerary";
+import { Announcement } from "@/types/announcement";
 import GuestManager from "@/components/GuestManager";
 import ItineraryManager from "@/components/ItineraryManager";
+import AnnouncementManager from "@/components/AnnouncementManager";
 import DashboardHeader from "@/components/DashboardHeader";
 import WeddingHeader from "@/components/WeddingHeader";
 
@@ -34,6 +36,10 @@ export default async function WeddingDashboardPage({
     SELECT * FROM itinerary_items WHERE wedding_id = ${weddingId} ORDER BY start_time ASC
   `) as ItineraryItem[];
 
+  const announcements = (await db().sql`
+    SELECT * FROM announcements WHERE wedding_id = ${weddingId} ORDER BY created_at DESC
+  `) as Announcement[];
+
   const guestGroups = Array.from(new Set(guests.map((g) => g.guest_group)));
 
   return (
@@ -44,6 +50,15 @@ export default async function WeddingDashboardPage({
           ← Your weddings
         </Link>
         <WeddingHeader wedding={wedding} />
+
+        <section className="bg-white border border-border-warm rounded-xl p-6">
+          <h2 className="font-semibold mb-4">Announcements</h2>
+          <AnnouncementManager
+            weddingId={wedding.id}
+            initialAnnouncements={announcements}
+            knownGroups={guestGroups.length > 0 ? guestGroups : ["general"]}
+          />
+        </section>
 
         <section className="bg-white border border-border-warm rounded-xl p-6">
           <h2 className="font-semibold mb-4">Guests</h2>

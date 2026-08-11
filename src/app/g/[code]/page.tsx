@@ -3,8 +3,10 @@ import { db } from "@/lib/db";
 import { Guest } from "@/types/guest";
 import { Wedding } from "@/types/wedding";
 import { ItineraryItem } from "@/types/itinerary";
+import { Announcement } from "@/types/announcement";
 import GuestItineraryList from "@/components/GuestItineraryList";
 import GuestRsvp from "@/components/GuestRsvp";
+import GuestAnnouncements from "@/components/GuestAnnouncements";
 
 export default async function GuestItineraryPage({
   params,
@@ -29,6 +31,13 @@ export default async function GuestItineraryPage({
     ORDER BY start_time ASC
   `) as ItineraryItem[];
 
+  const announcements = (await db().sql`
+    SELECT * FROM announcements
+    WHERE wedding_id = ${guest.wedding_id}
+      AND ${guest.guest_group} = ANY(visible_to_groups)
+    ORDER BY created_at DESC
+  `) as Announcement[];
+
   return (
     <div className="flex-1 flex items-center justify-center bg-cream px-4 py-8">
       <div className="w-full max-w-sm bg-white rounded-3xl shadow-xl border border-border-warm overflow-hidden flex flex-col">
@@ -45,11 +54,19 @@ export default async function GuestItineraryPage({
               .slice(0, 2)
               .toUpperCase()}
           </div>
-          <div>
+          <div className="flex-1">
             <div className="font-semibold text-sm">{guest.name}</div>
             <div className="text-xs text-foreground/60 capitalize">{guest.guest_group} guest</div>
           </div>
+          {guest.table_label && (
+            <div className="text-right shrink-0">
+              <div className="text-[10px] uppercase tracking-wide text-foreground/40">Seated at</div>
+              <div className="text-sm font-semibold text-brand">{guest.table_label}</div>
+            </div>
+          )}
         </div>
+
+        <GuestAnnouncements code={code} initialAnnouncements={announcements} />
 
         <GuestRsvp code={code} initialGuest={guest} />
 
