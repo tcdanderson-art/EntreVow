@@ -142,7 +142,7 @@ export default function StaffScanner({
   );
 
   return (
-    <div className="flex-1 flex flex-col bg-foreground text-white min-h-screen">
+    <div className="flex-1 flex flex-col bg-foreground text-white min-h-dvh pb-[env(safe-area-inset-bottom)]">
       <div className="px-4 pt-5 pb-3 text-center border-b border-white/10">
         <h1 className="font-display text-lg">{weddingTitle}</h1>
         <p className="text-sm text-white/60 mt-0.5">
@@ -153,21 +153,21 @@ export default function StaffScanner({
       <div className="flex border-b border-white/10">
         <button
           onClick={() => setMode("scan")}
-          className={`flex-1 py-3 text-sm font-medium ${mode === "scan" ? "text-brand border-b-2 border-brand" : "text-white/50"}`}
+          className={`flex-1 py-3 text-sm font-medium touch-manipulation ${mode === "scan" ? "text-brand border-b-2 border-brand" : "text-white/50"}`}
         >
           Scan pass
         </button>
         <button
           onClick={() => setMode("search")}
-          className={`flex-1 py-3 text-sm font-medium ${mode === "search" ? "text-brand border-b-2 border-brand" : "text-white/50"}`}
+          className={`flex-1 py-3 text-sm font-medium touch-manipulation ${mode === "search" ? "text-brand border-b-2 border-brand" : "text-white/50"}`}
         >
           Search list
         </button>
       </div>
 
       {mode === "scan" ? (
-        <div className="relative flex-1 flex items-center justify-center bg-black">
-          <video ref={videoRef} playsInline muted className="w-full max-h-[70vh] object-cover" />
+        <div className="relative flex-1 flex items-center justify-center bg-black [-webkit-touch-callout:none] select-none">
+          <video ref={videoRef} playsInline muted className="w-full max-h-[70vh] object-cover pointer-events-none" />
           <canvas ref={canvasRef} className="hidden" />
           <div className="absolute inset-6 border-2 border-white/40 rounded-2xl pointer-events-none" />
           {cameraError && (
@@ -205,7 +205,7 @@ export default function StaffScanner({
                   <button
                     onClick={() => submitCheckin(g.access_code)}
                     disabled={pendingCode === g.access_code}
-                    className="bg-brand text-white text-sm font-medium rounded-md px-4 py-2 shrink-0 disabled:opacity-60"
+                    className="bg-brand text-white text-sm font-medium rounded-md px-4 py-2 shrink-0 touch-manipulation disabled:opacity-60"
                   >
                     {pendingCode === g.access_code ? "…" : "Check in"}
                   </button>
