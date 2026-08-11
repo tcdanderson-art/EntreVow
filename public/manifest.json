@@ -1,0 +1,13 @@
+{
+  "name": "Entrevow",
+  "short_name": "Entrevow",
+  "description": "The guest list, the timeline, the whole day — all in one tap.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f7f5f0",
+  "theme_color": "#b07d5c",
+  "icons": [
+    { "src": "/icon.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "/apple-icon.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}

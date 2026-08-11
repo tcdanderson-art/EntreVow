@@ -8,6 +8,7 @@ import GuestItineraryList from "@/components/GuestItineraryList";
 import GuestRsvp from "@/components/GuestRsvp";
 import GuestAnnouncements from "@/components/GuestAnnouncements";
 import GuestPass from "@/components/GuestPass";
+import OfflineSupport from "@/components/OfflineSupport";
 
 export default async function GuestItineraryPage({
   params,
@@ -41,6 +42,7 @@ export default async function GuestItineraryPage({
 
   return (
     <div className="flex-1 flex items-center justify-center bg-cream px-4 py-8">
+      <OfflineSupport />
       <div className="w-full max-w-sm bg-white rounded-3xl shadow-xl border border-border-warm overflow-hidden flex flex-col">
         <div className="text-center px-6 py-5 border-b border-border-warm">
           <h1 className="font-display text-lg">{wedding?.title}</h1>

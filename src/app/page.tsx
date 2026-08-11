@@ -1,5 +1,13 @@
 import Link from "next/link";
 import Image from "next/image";
+import type { Metadata } from "next";
+
+// Only the homepage links the manifest — guests reach the app via their own
+// personal /g/[code] link, and a manifest's fixed start_url would redirect
+// an installed shortcut away from that link back to this marketing page.
+export const metadata: Metadata = {
+  manifest: "/manifest.json",
+};
 
 const FEATURES = [
   {
