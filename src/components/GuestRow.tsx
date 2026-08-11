@@ -131,6 +131,9 @@ export default function GuestRow({
         {guest.table_label && (
           <span className="text-foreground/50"> · {guest.table_label}</span>
         )}
+        {guest.checked_in_at && (
+          <span className="text-brand font-medium"> · ✓ Checked in</span>
+        )}
         {guest.rsvp_note && (
           <span className="block text-xs text-foreground/50 mt-0.5">“{guest.rsvp_note}”</span>
         )}

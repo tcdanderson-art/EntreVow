@@ -11,4 +11,5 @@ export interface Guest {
   rsvp_note: string | null;
   rsvp_responded_at: string | null;
   table_label: string | null;
+  checked_in_at: string | null;
 }

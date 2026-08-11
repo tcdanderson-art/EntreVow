@@ -11,6 +11,7 @@ import ItineraryManager from "@/components/ItineraryManager";
 import AnnouncementManager from "@/components/AnnouncementManager";
 import DashboardHeader from "@/components/DashboardHeader";
 import WeddingHeader from "@/components/WeddingHeader";
+import StaffCodeManager from "@/components/StaffCodeManager";
 
 export default async function WeddingDashboardPage({
   params,
@@ -63,6 +64,11 @@ export default async function WeddingDashboardPage({
         <section className="bg-white border border-border-warm rounded-xl p-6">
           <h2 className="font-semibold mb-4">Guests</h2>
           <GuestManager weddingId={wedding.id} initialGuests={guests} />
+        </section>
+
+        <section className="bg-white border border-border-warm rounded-xl p-6">
+          <h2 className="font-semibold mb-4">Door check-in</h2>
+          <StaffCodeManager wedding={wedding} guestCount={guests.length} />
         </section>
 
         <section className="bg-white border border-border-warm rounded-xl p-6">

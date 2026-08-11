@@ -4,5 +4,6 @@ export interface Wedding {
   title: string;
   wedding_date: string | null;
   emergency_phone: string | null;
+  staff_code: string | null;
   created_at: string;
 }
