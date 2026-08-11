@@ -7,6 +7,7 @@ import { Announcement } from "@/types/announcement";
 import GuestItineraryList from "@/components/GuestItineraryList";
 import GuestRsvp from "@/components/GuestRsvp";
 import GuestAnnouncements from "@/components/GuestAnnouncements";
+import GuestPass from "@/components/GuestPass";
 
 export default async function GuestItineraryPage({
   params,
@@ -65,6 +66,8 @@ export default async function GuestItineraryPage({
             </div>
           )}
         </div>
+
+        <GuestPass guestName={guest.name} />
 
         <GuestAnnouncements code={code} initialAnnouncements={announcements} />
 

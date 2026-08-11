@@ -1,3 +1,5 @@
+import { Guest } from "@/types/guest";
+
 export interface ParsedGuestRow {
   name: string;
   guestGroup: string;
@@ -48,4 +50,17 @@ export function parseGuestCsv(text: string): ParsedGuestRow[] {
       name: fields[0],
       guestGroup: fields[1] || "general",
     }));
+}
+
+function csvField(value: string): string {
+  return /[",\n]/.test(value) ? `"${value.replace(/"/g, '""')}"` : value;
+}
+
+export function guestsToCsv(guests: Guest[]): string {
+  const header = ["name", "group", "table", "rsvp_status", "rsvp_note"];
+  const rows = guests.map((g) =>
+    [g.name, g.guest_group, g.table_label ?? "", g.rsvp_status, g.rsvp_note ?? ""].map(csvField)
+  );
+
+  return [header, ...rows].map((row) => row.join(",")).join("\r\n");
 }

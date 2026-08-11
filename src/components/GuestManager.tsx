@@ -2,7 +2,7 @@
 
 import { useRef, useState } from "react";
 import { Guest } from "@/types/guest";
-import { parseGuestCsv } from "@/lib/csv";
+import { parseGuestCsv, guestsToCsv } from "@/lib/csv";
 import GuestRow from "@/components/GuestRow";
 
 export default function GuestManager({
@@ -69,6 +69,16 @@ export default function GuestManager({
     } else {
       setImportError(data.error ?? "Import failed");
     }
+  }
+
+  function handleExport() {
+    const blob = new Blob([guestsToCsv(guests)], { type: "text/csv;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "guest-list.csv";
+    link.click();
+    URL.revokeObjectURL(url);
   }
 
   const attending = guests.filter((g) => g.rsvp_status === "attending").length;
@@ -142,6 +152,15 @@ export default function GuestManager({
         <span className="text-xs text-foreground/40">columns: name, group</span>
       </div>
       {importError && <p className="text-sm text-red-600">{importError}</p>}
+
+      {guests.length > 0 && (
+        <button
+          onClick={handleExport}
+          className="self-start text-sm font-medium text-brand"
+        >
+          Export guest list (CSV)
+        </button>
+      )}
     </div>
   );
 }
