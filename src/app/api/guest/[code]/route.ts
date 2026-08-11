@@ -6,6 +6,7 @@ import { Wedding } from "@/types/wedding";
 import { ItineraryItem } from "@/types/itinerary";
 import { Announcement } from "@/types/announcement";
 import { Photo } from "@/types/photo";
+import { Shuttle } from "@/types/shuttle";
 
 export const GET = withErrorHandling(async (
   _req: NextRequest,
@@ -44,5 +45,9 @@ export const GET = withErrorHandling(async (
     ORDER BY photos.created_at DESC
   `) as Photo[];
 
-  return NextResponse.json({ guest, wedding, items, announcements, photos });
+  const shuttles = (await database.sql`
+    SELECT * FROM shuttles WHERE wedding_id = ${guest.wedding_id} ORDER BY created_at ASC
+  `) as Shuttle[];
+
+  return NextResponse.json({ guest, wedding, items, announcements, photos, shuttles });
 });

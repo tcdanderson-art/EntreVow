@@ -5,11 +5,13 @@ import { Wedding } from "@/types/wedding";
 import { ItineraryItem } from "@/types/itinerary";
 import { Announcement } from "@/types/announcement";
 import { Photo } from "@/types/photo";
+import { Shuttle } from "@/types/shuttle";
 import GuestItineraryList from "@/components/GuestItineraryList";
 import GuestRsvp from "@/components/GuestRsvp";
 import GuestAnnouncements from "@/components/GuestAnnouncements";
 import GuestPass from "@/components/GuestPass";
 import GuestPhotos from "@/components/GuestPhotos";
+import GuestShuttleTracker from "@/components/GuestShuttleTracker";
 import OfflineSupport from "@/components/OfflineSupport";
 
 export default async function GuestItineraryPage({
@@ -48,6 +50,10 @@ export default async function GuestItineraryPage({
     WHERE photos.wedding_id = ${guest.wedding_id}
     ORDER BY photos.created_at DESC
   `) as Photo[];
+
+  const shuttles = (await db().sql`
+    SELECT * FROM shuttles WHERE wedding_id = ${guest.wedding_id} ORDER BY created_at ASC
+  `) as Shuttle[];
 
   return (
     <div className="flex-1 flex items-center justify-center bg-cream px-4 py-8">
@@ -93,6 +99,8 @@ export default async function GuestItineraryPage({
         </div>
 
         <GuestPhotos code={code} initialPhotos={photos} />
+
+        <GuestShuttleTracker code={code} initialShuttles={shuttles} />
 
         {wedding?.emergency_phone && (
           <div className="text-center text-xs text-foreground/50 py-3 border-t border-border-warm bg-cream-card">
