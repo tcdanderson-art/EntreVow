@@ -120,9 +120,8 @@ export default function PrivacyPage() {
           <h2 className="font-semibold text-lg text-brand">Contact us</h2>
           <p className="text-foreground/70 leading-relaxed">
             Questions or requests about this policy can be sent to{" "}
-            {/* TODO: swap in a real inbox once one exists — this address doesn't receive mail yet */}
-            <a href="mailto:privacy@entrevow.com" className="text-brand font-medium">
-              privacy@entrevow.com
+            <a href="mailto:hello@entrevow.com" className="text-brand font-medium">
+              hello@entrevow.com
             </a>
             .
           </p>
