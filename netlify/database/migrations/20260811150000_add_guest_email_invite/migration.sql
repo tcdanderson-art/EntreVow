@@ -1,0 +1,3 @@
+ALTER TABLE guests
+  ADD COLUMN email TEXT,
+  ADD COLUMN invite_sent_at TIMESTAMPTZ;

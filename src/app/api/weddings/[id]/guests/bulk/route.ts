@@ -24,16 +24,17 @@ export const POST = withErrorHandling(async (
   }
 
   const database = db();
-  const rows = guests.map((g: { name: string; guestGroup?: string }) => [
+  const rows = guests.map((g: { name: string; guestGroup?: string; email?: string }) => [
     weddingId,
     g.name,
     g.guestGroup || "general",
     generateAccessCode(),
+    g.email || null,
   ]);
 
   const values = database.sql.values(rows);
   const inserted = (await database.sql`
-    INSERT INTO guests (wedding_id, name, guest_group, access_code)
+    INSERT INTO guests (wedding_id, name, guest_group, access_code, email)
     VALUES ${values}
     RETURNING *
   `) as Guest[];

@@ -17,9 +17,12 @@ export default function GuestManager({
   const [guests, setGuests] = useState(initialGuests);
   const [name, setName] = useState("");
   const [guestGroup, setGuestGroup] = useState("general");
+  const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [importing, setImporting] = useState(false);
   const [importError, setImportError] = useState<string | null>(null);
+  const [invitingAll, setInvitingAll] = useState(false);
+  const [inviteAllResult, setInviteAllResult] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   async function handleAdd(e: React.FormEvent) {
@@ -29,7 +32,7 @@ export default function GuestManager({
     const res = await fetch(`/api/weddings/${weddingId}/guests`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, guestGroup }),
+      body: JSON.stringify({ name, guestGroup, email }),
     });
     const data = await res.json();
 
@@ -37,6 +40,30 @@ export default function GuestManager({
     if (res.ok) {
       setGuests((prev) => [...prev, data.guest]);
       setName("");
+      setEmail("");
+    }
+  }
+
+  async function handleInviteAll() {
+    setInvitingAll(true);
+    setInviteAllResult(null);
+
+    const res = await fetch(`/api/weddings/${weddingId}/guests/invite-all`, { method: "POST" });
+    const data = await res.json();
+
+    setInvitingAll(false);
+    if (res.ok) {
+      setGuests((prev) => {
+        const byId = new Map(data.guests.map((g: Guest) => [g.id, g]));
+        return prev.map((g) => (byId.has(g.id) ? (byId.get(g.id) as Guest) : g));
+      });
+      setInviteAllResult(
+        data.sent === 0
+          ? "No new invites to send — every guest with an email has already been invited."
+          : `Sent ${data.sent} invite${data.sent === 1 ? "" : "s"}${data.failed ? `, ${data.failed} failed` : ""}.`
+      );
+    } else {
+      setInviteAllResult(data.error ?? "Failed to send invites");
     }
   }
 
@@ -86,6 +113,7 @@ export default function GuestManager({
   const attending = guests.filter((g) => g.rsvp_status === "attending").length;
   const declined = guests.filter((g) => g.rsvp_status === "declined").length;
   const pending = guests.length - attending - declined;
+  const uninvitedCount = guests.filter((g) => g.email && !g.invite_sent_at).length;
 
   return (
     <div className="flex flex-col gap-4">
@@ -131,6 +159,13 @@ export default function GuestManager({
           onChange={(e) => setGuestGroup(e.target.value)}
           className="flex-1 min-w-[180px] border border-border-warm rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand/30"
         />
+        <input
+          type="email"
+          placeholder="Email (optional)"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          className="flex-1 min-w-[160px] border border-border-warm rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand/30"
+        />
         <button
           type="submit"
           disabled={loading}
@@ -152,18 +187,30 @@ export default function GuestManager({
             className="hidden"
           />
         </label>
-        <span className="text-xs text-foreground/40">columns: name, group</span>
+        <span className="text-xs text-foreground/40">columns: name, group, email</span>
       </div>
       {importError && <p className="text-sm text-red-600">{importError}</p>}
 
-      {guests.length > 0 && (
-        <button
-          onClick={handleExport}
-          className="self-start text-sm font-medium text-brand"
-        >
-          Export guest list (CSV)
-        </button>
-      )}
+      <div className="flex items-center gap-4 flex-wrap">
+        {guests.length > 0 && (
+          <button
+            onClick={handleExport}
+            className="text-sm font-medium text-brand"
+          >
+            Export guest list (CSV)
+          </button>
+        )}
+        {uninvitedCount > 0 && (
+          <button
+            onClick={handleInviteAll}
+            disabled={invitingAll}
+            className="text-sm font-medium text-brand disabled:opacity-60"
+          >
+            {invitingAll ? "Sending…" : `Email invites to ${uninvitedCount} guest${uninvitedCount === 1 ? "" : "s"}`}
+          </button>
+        )}
+      </div>
+      {inviteAllResult && <p className="text-sm text-foreground/60">{inviteAllResult}</p>}
     </div>
   );
 }

@@ -33,8 +33,11 @@ export default function GuestRow({
   const [guestGroup, setGuestGroup] = useState(guest.guest_group);
   const [rsvpStatus, setRsvpStatus] = useState<RsvpStatus>(guest.rsvp_status);
   const [tableLabel, setTableLabel] = useState(guest.table_label ?? "");
+  const [email, setEmail] = useState(guest.email ?? "");
   const [saving, setSaving] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [inviting, setInviting] = useState(false);
+  const [inviteError, setInviteError] = useState<string | null>(null);
 
   function linkFor() {
     const origin = weddingSlug ? `https://${weddingSlug}.entrevow.com` : window.location.origin;
@@ -54,7 +57,7 @@ export default function GuestRow({
     const res = await fetch(`/api/weddings/${weddingId}/guests/${guest.id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, guestGroup, rsvpStatus, tableLabel }),
+      body: JSON.stringify({ name, guestGroup, rsvpStatus, tableLabel, email }),
     });
     const data = await res.json();
 
@@ -70,6 +73,23 @@ export default function GuestRow({
 
     const res = await fetch(`/api/weddings/${weddingId}/guests/${guest.id}`, { method: "DELETE" });
     if (res.ok) onDelete(guest.id);
+  }
+
+  async function handleInvite() {
+    setInviteError(null);
+    setInviting(true);
+
+    const res = await fetch(`/api/weddings/${weddingId}/guests/${guest.id}/invite`, {
+      method: "POST",
+    });
+    const data = await res.json();
+
+    setInviting(false);
+    if (res.ok) {
+      onUpdate(data.guest);
+    } else {
+      setInviteError(data.error ?? "Failed to send invite");
+    }
   }
 
   if (editing) {
@@ -105,6 +125,13 @@ export default function GuestRow({
             onChange={(e) => setTableLabel(e.target.value)}
             className="flex-1 min-w-[120px] border border-border-warm rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand/30"
           />
+          <input
+            type="email"
+            placeholder="Email (optional, for invites)"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="flex-1 min-w-[180px] border border-border-warm rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand/30"
+          />
           <button
             type="submit"
             disabled={saving}
@@ -125,7 +152,7 @@ export default function GuestRow({
   }
 
   return (
-    <li className="flex items-center justify-between gap-3 border border-border-warm rounded-md px-3 py-2 text-sm">
+    <li className="flex items-center justify-between gap-3 border border-border-warm rounded-md px-3 py-2 text-sm flex-wrap">
       <span>
         {guest.name} <span className="text-foreground/50">({guest.guest_group})</span>{" "}
         <span className={`font-medium ${RSVP_COLOR[guest.rsvp_status]}`}>
@@ -137,11 +164,20 @@ export default function GuestRow({
         {guest.checked_in_at && (
           <span className="text-brand font-medium"> · ✓ Checked in</span>
         )}
+        {guest.invite_sent_at && (
+          <span className="text-foreground/40"> · invited</span>
+        )}
         {guest.rsvp_note && (
           <span className="block text-xs text-foreground/50 mt-0.5">“{guest.rsvp_note}”</span>
         )}
+        {inviteError && <span className="block text-xs text-red-600 mt-0.5">{inviteError}</span>}
       </span>
       <span className="flex items-center gap-3 whitespace-nowrap">
+        {guest.email && (
+          <button onClick={handleInvite} disabled={inviting} className="text-brand font-medium disabled:opacity-60">
+            {inviting ? "Sending…" : guest.invite_sent_at ? "Resend invite" : "Send invite"}
+          </button>
+        )}
         <button onClick={copyLink} className="text-brand font-medium">
           {copied ? "Copied!" : "Copy link"}
         </button>

@@ -3,6 +3,7 @@ import { Guest } from "@/types/guest";
 export interface ParsedGuestRow {
   name: string;
   guestGroup: string;
+  email?: string;
 }
 
 function splitCsvLine(line: string): string[] {
@@ -34,7 +35,7 @@ function splitCsvLine(line: string): string[] {
   return fields;
 }
 
-// Accepts "name,group" per line, with or without a header row.
+// Accepts "name,group,email" per line, with or without a header row. Email is optional.
 export function parseGuestCsv(text: string): ParsedGuestRow[] {
   const lines = text.split(/\r?\n/).filter((line) => line.trim().length > 0);
   if (lines.length === 0) return [];
@@ -49,6 +50,7 @@ export function parseGuestCsv(text: string): ParsedGuestRow[] {
     .map((fields) => ({
       name: fields[0],
       guestGroup: fields[1] || "general",
+      email: fields[2] || undefined,
     }));
 }
 
@@ -57,9 +59,11 @@ function csvField(value: string): string {
 }
 
 export function guestsToCsv(guests: Guest[]): string {
-  const header = ["name", "group", "table", "rsvp_status", "rsvp_note"];
+  const header = ["name", "group", "email", "table", "rsvp_status", "rsvp_note"];
   const rows = guests.map((g) =>
-    [g.name, g.guest_group, g.table_label ?? "", g.rsvp_status, g.rsvp_note ?? ""].map(csvField)
+    [g.name, g.guest_group, g.email ?? "", g.table_label ?? "", g.rsvp_status, g.rsvp_note ?? ""].map(
+      csvField
+    )
   );
 
   return [header, ...rows].map((row) => row.join(",")).join("\r\n");

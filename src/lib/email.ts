@@ -22,3 +22,21 @@ export async function sendPasswordResetEmail(to: string, resetUrl: string) {
     `,
   });
 }
+
+export async function sendGuestInviteEmail(
+  to: string,
+  guestName: string,
+  weddingTitle: string,
+  guestUrl: string
+) {
+  await client().emails.send({
+    from: fromAddress(),
+    to,
+    subject: `Your invite: ${weddingTitle}`,
+    html: `
+      <p>Hi ${guestName},</p>
+      <p>Here's your personal link for ${weddingTitle} — schedule, RSVP, and everything else you need for the day:</p>
+      <p><a href="${guestUrl}">${guestUrl}</a></p>
+    `,
+  });
+}
