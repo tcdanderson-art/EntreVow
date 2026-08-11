@@ -3,9 +3,13 @@ import { db } from "@/lib/db";
 import { hashPassword } from "@/lib/password";
 import { createSession } from "@/lib/session";
 import { withErrorHandling } from "@/lib/route-handler";
+import { rateLimit } from "@/lib/rate-limit";
 import { Couple } from "@/types/couple";
 
 export const POST = withErrorHandling(async (req: NextRequest) => {
+  const limited = rateLimit(req, "signup", 5, 60 * 60_000);
+  if (limited) return limited;
+
   const { email, password, displayName } = await req.json();
 
   if (!email || !password || !displayName) {

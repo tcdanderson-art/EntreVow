@@ -2,6 +2,7 @@ import { randomUUID } from "crypto";
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { withErrorHandling } from "@/lib/route-handler";
+import { rateLimit } from "@/lib/rate-limit";
 import { getPhotoStore } from "@/lib/photo-store";
 import { Guest } from "@/types/guest";
 import { Photo } from "@/types/photo";
@@ -14,6 +15,10 @@ export const POST = withErrorHandling(async (
   { params }: { params: Promise<{ code: string }> }
 ) => {
   const { code } = await params;
+
+  const limited = rateLimit(req, "guest-photo", 10, 60 * 60_000, code);
+  if (limited) return limited;
+
   const database = db();
 
   const guests = (await database.sql`SELECT * FROM guests WHERE access_code = ${code}`) as Guest[];

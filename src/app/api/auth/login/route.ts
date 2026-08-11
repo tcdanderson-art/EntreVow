@@ -3,6 +3,7 @@ import { db } from "@/lib/db";
 import { verifyPassword } from "@/lib/password";
 import { createSession } from "@/lib/session";
 import { withErrorHandling } from "@/lib/route-handler";
+import { rateLimit } from "@/lib/rate-limit";
 
 interface CoupleRow {
   id: number;
@@ -12,6 +13,9 @@ interface CoupleRow {
 }
 
 export const POST = withErrorHandling(async (req: NextRequest) => {
+  const limited = rateLimit(req, "login", 10, 5 * 60_000);
+  if (limited) return limited;
+
   const { email, password } = await req.json();
 
   if (!email || !password) {

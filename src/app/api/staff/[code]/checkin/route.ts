@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { withErrorHandling } from "@/lib/route-handler";
+import { rateLimit } from "@/lib/rate-limit";
 import { Wedding } from "@/types/wedding";
 import { Guest } from "@/types/guest";
 
@@ -9,6 +10,11 @@ export const POST = withErrorHandling(async (
   { params }: { params: Promise<{ code: string }> }
 ) => {
   const { code } = await params;
+
+  // Generous limit — real ushers scan dozens of guests per minute at the door.
+  const limited = rateLimit(req, "staff-checkin", 60, 60_000, code);
+  if (limited) return limited;
+
   const { guestCode } = await req.json();
   if (!guestCode) return NextResponse.json({ error: "guestCode is required" }, { status: 400 });
 

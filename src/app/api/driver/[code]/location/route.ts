@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { withErrorHandling } from "@/lib/route-handler";
+import { rateLimit } from "@/lib/rate-limit";
 import { Shuttle } from "@/types/shuttle";
 
 export const POST = withErrorHandling(async (
@@ -8,6 +9,12 @@ export const POST = withErrorHandling(async (
   { params }: { params: Promise<{ code: string }> }
 ) => {
   const { code } = await params;
+
+  // Client throttles to 1 update/10s already; this is a server-side backstop
+  // against a compromised or scripted client, not the primary rate control.
+  const limited = rateLimit(req, "driver-location", 30, 60_000, code);
+  if (limited) return limited;
+
   const { lat, lng } = await req.json();
 
   if (typeof lat !== "number" || typeof lng !== "number") {

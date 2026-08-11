@@ -3,10 +3,14 @@ import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { withErrorHandling } from "@/lib/route-handler";
 import { sendPasswordResetEmail } from "@/lib/email";
+import { rateLimit } from "@/lib/rate-limit";
 
 const TOKEN_TTL_MS = 60 * 60 * 1000;
 
 export const POST = withErrorHandling(async (req: NextRequest) => {
+  const limited = rateLimit(req, "forgot-password", 5, 60 * 60_000);
+  if (limited) return limited;
+
   const { email } = await req.json();
   if (!email) return NextResponse.json({ error: "Email is required" }, { status: 400 });
 

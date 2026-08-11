@@ -3,8 +3,12 @@ import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { withErrorHandling } from "@/lib/route-handler";
 import { hashPassword } from "@/lib/password";
+import { rateLimit } from "@/lib/rate-limit";
 
 export const POST = withErrorHandling(async (req: NextRequest) => {
+  const limited = rateLimit(req, "reset-password", 10, 15 * 60_000);
+  if (limited) return limited;
+
   const { token, password } = await req.json();
   if (!token || !password) {
     return NextResponse.json({ error: "Missing token or password" }, { status: 400 });
