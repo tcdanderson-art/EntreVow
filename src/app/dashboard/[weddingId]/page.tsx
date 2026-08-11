@@ -6,12 +6,14 @@ import { Wedding } from "@/types/wedding";
 import { Guest } from "@/types/guest";
 import { ItineraryItem } from "@/types/itinerary";
 import { Announcement } from "@/types/announcement";
+import { Photo } from "@/types/photo";
 import GuestManager from "@/components/GuestManager";
 import ItineraryManager from "@/components/ItineraryManager";
 import AnnouncementManager from "@/components/AnnouncementManager";
 import DashboardHeader from "@/components/DashboardHeader";
 import WeddingHeader from "@/components/WeddingHeader";
 import StaffCodeManager from "@/components/StaffCodeManager";
+import PhotoManager from "@/components/PhotoManager";
 
 export default async function WeddingDashboardPage({
   params,
@@ -41,6 +43,13 @@ export default async function WeddingDashboardPage({
     SELECT * FROM announcements WHERE wedding_id = ${weddingId} ORDER BY created_at DESC
   `) as Announcement[];
 
+  const photos = (await db().sql`
+    SELECT photos.*, guests.name AS guest_name
+    FROM photos JOIN guests ON guests.id = photos.guest_id
+    WHERE photos.wedding_id = ${weddingId}
+    ORDER BY photos.created_at DESC
+  `) as Photo[];
+
   const guestGroups = Array.from(new Set(guests.map((g) => g.guest_group)));
 
   return (
@@ -69,6 +78,11 @@ export default async function WeddingDashboardPage({
         <section className="bg-white border border-border-warm rounded-xl p-6">
           <h2 className="font-semibold mb-4">Door check-in</h2>
           <StaffCodeManager wedding={wedding} guestCount={guests.length} />
+        </section>
+
+        <section className="bg-white border border-border-warm rounded-xl p-6">
+          <h2 className="font-semibold mb-4">Photos</h2>
+          <PhotoManager weddingId={wedding.id} initialPhotos={photos} />
         </section>
 
         <section className="bg-white border border-border-warm rounded-xl p-6">

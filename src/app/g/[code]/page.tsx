@@ -4,10 +4,12 @@ import { Guest } from "@/types/guest";
 import { Wedding } from "@/types/wedding";
 import { ItineraryItem } from "@/types/itinerary";
 import { Announcement } from "@/types/announcement";
+import { Photo } from "@/types/photo";
 import GuestItineraryList from "@/components/GuestItineraryList";
 import GuestRsvp from "@/components/GuestRsvp";
 import GuestAnnouncements from "@/components/GuestAnnouncements";
 import GuestPass from "@/components/GuestPass";
+import GuestPhotos from "@/components/GuestPhotos";
 import OfflineSupport from "@/components/OfflineSupport";
 
 export default async function GuestItineraryPage({
@@ -39,6 +41,13 @@ export default async function GuestItineraryPage({
       AND ${guest.guest_group} = ANY(visible_to_groups)
     ORDER BY created_at DESC
   `) as Announcement[];
+
+  const photos = (await db().sql`
+    SELECT photos.*, guests.name AS guest_name
+    FROM photos JOIN guests ON guests.id = photos.guest_id
+    WHERE photos.wedding_id = ${guest.wedding_id}
+    ORDER BY photos.created_at DESC
+  `) as Photo[];
 
   return (
     <div className="flex-1 flex items-center justify-center bg-cream px-4 py-8">
@@ -82,6 +91,8 @@ export default async function GuestItineraryPage({
 
           <GuestItineraryList code={code} initialItems={items} />
         </div>
+
+        <GuestPhotos code={code} initialPhotos={photos} />
 
         {wedding?.emergency_phone && (
           <div className="text-center text-xs text-foreground/50 py-3 border-t border-border-warm bg-cream-card">
