@@ -17,6 +17,7 @@ import StaffCodeManager from "@/components/StaffCodeManager";
 import PhotoManager from "@/components/PhotoManager";
 import WeatherWidget from "@/components/WeatherWidget";
 import ShuttleManager from "@/components/ShuttleManager";
+import DashboardSummary from "@/components/DashboardSummary";
 
 export default async function WeddingDashboardPage({
   params,
@@ -67,6 +68,8 @@ export default async function WeddingDashboardPage({
           ← Your weddings
         </Link>
         <WeddingHeader wedding={wedding} />
+
+        <DashboardSummary guests={guests} shuttles={shuttles} />
 
         <section className="bg-white border border-border-warm rounded-xl p-6">
           <h2 className="font-semibold mb-4">Weather</h2>
