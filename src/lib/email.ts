@@ -23,6 +23,25 @@ export async function sendPasswordResetEmail(to: string, resetUrl: string) {
   });
 }
 
+export async function sendPaymentReceiptEmail(
+  to: string,
+  weddingTitle: string,
+  tierLabel: string,
+  amount: string,
+  dashboardUrl: string
+) {
+  await client().emails.send({
+    from: fromAddress(),
+    to,
+    subject: `Payment received — ${weddingTitle}`,
+    html: `
+      <p>Thanks! Your payment of ${amount} for the ${tierLabel} plan on ${weddingTitle} has gone through.</p>
+      <p>Guest access is now live — guests can view their itinerary, RSVP, and everything else at their personal links.</p>
+      <p><a href="${dashboardUrl}">View your dashboard</a></p>
+    `,
+  });
+}
+
 export async function sendGuestInviteEmail(
   to: string,
   guestName: string,
