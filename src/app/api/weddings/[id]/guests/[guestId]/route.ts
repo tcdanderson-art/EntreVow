@@ -18,12 +18,13 @@ export const PATCH = withErrorHandling(async (
     return NextResponse.json({ error: "Not found" }, { status: 404 });
   }
 
-  const { name, guestGroup, rsvpStatus, tableLabel, email } = await req.json();
+  const { name, guestGroup, rsvpStatus, tableLabel, email, plusOneAllowed } = await req.json();
   if (!name) return NextResponse.json({ error: "Name is required" }, { status: 400 });
 
   const validStatus = ["pending", "attending", "declined"].includes(rsvpStatus)
     ? rsvpStatus
     : null;
+  const plusOneAllowedBool = !!plusOneAllowed;
 
   const [guest] = validStatus
     ? ((await db().sql`
@@ -31,14 +32,18 @@ export const PATCH = withErrorHandling(async (
         SET name = ${name}, guest_group = ${guestGroup ?? "general"},
             rsvp_status = ${validStatus},
             rsvp_responded_at = CASE WHEN ${validStatus} = 'pending' THEN NULL ELSE NOW() END,
-            table_label = ${tableLabel || null}, email = ${email || null}
+            table_label = ${tableLabel || null}, email = ${email || null},
+            plus_one_allowed = ${plusOneAllowedBool},
+            plus_one_name = CASE WHEN ${plusOneAllowedBool} THEN plus_one_name ELSE NULL END
         WHERE id = ${Number(guestId)} AND wedding_id = ${weddingId}
         RETURNING *
       `) as Guest[])
     : ((await db().sql`
         UPDATE guests
         SET name = ${name}, guest_group = ${guestGroup ?? "general"}, table_label = ${tableLabel || null},
-            email = ${email || null}
+            email = ${email || null},
+            plus_one_allowed = ${plusOneAllowedBool},
+            plus_one_name = CASE WHEN ${plusOneAllowedBool} THEN plus_one_name ELSE NULL END
         WHERE id = ${Number(guestId)} AND wedding_id = ${weddingId}
         RETURNING *
       `) as Guest[]);

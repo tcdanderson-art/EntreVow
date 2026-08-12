@@ -59,11 +59,27 @@ function csvField(value: string): string {
 }
 
 export function guestsToCsv(guests: Guest[]): string {
-  const header = ["name", "group", "email", "table", "rsvp_status", "rsvp_note"];
+  const header = [
+    "name",
+    "group",
+    "email",
+    "table",
+    "rsvp_status",
+    "rsvp_note",
+    "plus_one_allowed",
+    "plus_one_name",
+  ];
   const rows = guests.map((g) =>
-    [g.name, g.guest_group, g.email ?? "", g.table_label ?? "", g.rsvp_status, g.rsvp_note ?? ""].map(
-      csvField
-    )
+    [
+      g.name,
+      g.guest_group,
+      g.email ?? "",
+      g.table_label ?? "",
+      g.rsvp_status,
+      g.rsvp_note ?? "",
+      g.plus_one_allowed ? "yes" : "no",
+      g.plus_one_name ?? "",
+    ].map(csvField)
   );
 
   return [header, ...rows].map((row) => row.join(",")).join("\r\n");

@@ -15,7 +15,7 @@ export const PATCH = withErrorHandling(async (
   const limited = rateLimit(req, "guest-rsvp", 20, 10 * 60_000, code);
   if (limited) return limited;
 
-  const { status, note } = await req.json();
+  const { status, note, plusOneName } = await req.json();
 
   if (!VALID_STATUSES.includes(status)) {
     return NextResponse.json({ error: "Invalid RSVP status" }, { status: 400 });
@@ -23,7 +23,11 @@ export const PATCH = withErrorHandling(async (
 
   const [guest] = (await db().sql`
     UPDATE guests
-    SET rsvp_status = ${status}, rsvp_note = ${note || null}, rsvp_responded_at = NOW()
+    SET rsvp_status = ${status}, rsvp_note = ${note || null}, rsvp_responded_at = NOW(),
+        plus_one_name = CASE
+          WHEN plus_one_allowed AND ${status} = 'attending' THEN ${plusOneName || null}
+          ELSE NULL
+        END
     WHERE access_code = ${code}
     RETURNING *
   `) as Guest[];

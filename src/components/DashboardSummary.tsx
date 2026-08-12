@@ -23,6 +23,7 @@ export default function DashboardSummary({
   const declined = guests.filter((g) => g.rsvp_status === "declined").length;
   const pending = total - attending - declined;
   const checkedIn = guests.filter((g) => g.checked_in_at).length;
+  const plusOnes = guests.filter((g) => g.plus_one_name).length;
 
   const liveShuttles = shuttles.filter(isShuttleLive).length;
 
@@ -37,6 +38,12 @@ export default function DashboardSummary({
             <p className="text-xs text-foreground/50 mt-1">
               attending · <span className="text-red-600">{declined} declined</span> · {pending} pending
             </p>
+            {plusOnes > 0 && (
+              <p className="text-xs text-foreground/50 mt-1">
+                +{plusOnes} plus-one{plusOnes === 1 ? "" : "s"} ·{" "}
+                <span className="font-medium text-brand">{attending + plusOnes} total heads</span>
+              </p>
+            )}
           </>
         )}
       </SummaryTile>

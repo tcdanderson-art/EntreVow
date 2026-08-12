@@ -37,13 +37,13 @@ export const POST = withErrorHandling(async (
     return NextResponse.json({ error: "Not found" }, { status: 404 });
   }
 
-  const { name, guestGroup, email } = await req.json();
+  const { name, guestGroup, email, plusOneAllowed } = await req.json();
   if (!name) return NextResponse.json({ error: "Name is required" }, { status: 400 });
 
   const accessCode = generateAccessCode();
   const [guest] = (await db().sql`
-    INSERT INTO guests (wedding_id, name, guest_group, access_code, email)
-    VALUES (${weddingId}, ${name}, ${guestGroup ?? "general"}, ${accessCode}, ${email || null})
+    INSERT INTO guests (wedding_id, name, guest_group, access_code, email, plus_one_allowed)
+    VALUES (${weddingId}, ${name}, ${guestGroup ?? "general"}, ${accessCode}, ${email || null}, ${!!plusOneAllowed})
     RETURNING *
   `) as Guest[];
 

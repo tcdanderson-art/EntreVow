@@ -14,4 +14,6 @@ export interface Guest {
   checked_in_at: string | null;
   email: string | null;
   invite_sent_at: string | null;
+  plus_one_allowed: boolean;
+  plus_one_name: string | null;
 }

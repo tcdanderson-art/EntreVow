@@ -18,6 +18,7 @@ export default function GuestManager({
   const [name, setName] = useState("");
   const [guestGroup, setGuestGroup] = useState("general");
   const [email, setEmail] = useState("");
+  const [plusOneAllowed, setPlusOneAllowed] = useState(false);
   const [loading, setLoading] = useState(false);
   const [importing, setImporting] = useState(false);
   const [importError, setImportError] = useState<string | null>(null);
@@ -32,7 +33,7 @@ export default function GuestManager({
     const res = await fetch(`/api/weddings/${weddingId}/guests`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, guestGroup, email }),
+      body: JSON.stringify({ name, guestGroup, email, plusOneAllowed }),
     });
     const data = await res.json();
 
@@ -41,6 +42,7 @@ export default function GuestManager({
       setGuests((prev) => [...prev, data.guest]);
       setName("");
       setEmail("");
+      setPlusOneAllowed(false);
     }
   }
 
@@ -113,6 +115,7 @@ export default function GuestManager({
   const attending = guests.filter((g) => g.rsvp_status === "attending").length;
   const declined = guests.filter((g) => g.rsvp_status === "declined").length;
   const pending = guests.length - attending - declined;
+  const plusOnes = guests.filter((g) => g.plus_one_name).length;
   const uninvitedCount = guests.filter((g) => g.email && !g.invite_sent_at).length;
 
   return (
@@ -125,6 +128,14 @@ export default function GuestManager({
             <span className="text-red-600 font-medium">{declined} declined</span>
             {" · "}
             <span>{pending} pending</span>
+            {plusOnes > 0 && (
+              <>
+                {" · "}
+                <span>
+                  {plusOnes} plus-one{plusOnes === 1 ? "" : "s"} ({attending + plusOnes} total heads)
+                </span>
+              </>
+            )}
           </div>
           <ul className="flex flex-col gap-2">
             {guests.map((guest) => (
@@ -166,6 +177,14 @@ export default function GuestManager({
           onChange={(e) => setEmail(e.target.value)}
           className="flex-1 min-w-[160px] border border-border-warm rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand/30"
         />
+        <label className="flex items-center gap-2 text-sm text-foreground/70 whitespace-nowrap">
+          <input
+            type="checkbox"
+            checked={plusOneAllowed}
+            onChange={(e) => setPlusOneAllowed(e.target.checked)}
+          />
+          Allow a plus-one
+        </label>
         <button
           type="submit"
           disabled={loading}

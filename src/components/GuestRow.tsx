@@ -34,6 +34,7 @@ export default function GuestRow({
   const [rsvpStatus, setRsvpStatus] = useState<RsvpStatus>(guest.rsvp_status);
   const [tableLabel, setTableLabel] = useState(guest.table_label ?? "");
   const [email, setEmail] = useState(guest.email ?? "");
+  const [plusOneAllowed, setPlusOneAllowed] = useState(guest.plus_one_allowed);
   const [saving, setSaving] = useState(false);
   const [copied, setCopied] = useState(false);
   const [inviting, setInviting] = useState(false);
@@ -57,7 +58,7 @@ export default function GuestRow({
     const res = await fetch(`/api/weddings/${weddingId}/guests/${guest.id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, guestGroup, rsvpStatus, tableLabel, email }),
+      body: JSON.stringify({ name, guestGroup, rsvpStatus, tableLabel, email, plusOneAllowed }),
     });
     const data = await res.json();
 
@@ -132,6 +133,14 @@ export default function GuestRow({
             onChange={(e) => setEmail(e.target.value)}
             className="flex-1 min-w-[180px] border border-border-warm rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand/30"
           />
+          <label className="flex items-center gap-2 text-sm text-foreground/70 whitespace-nowrap">
+            <input
+              type="checkbox"
+              checked={plusOneAllowed}
+              onChange={(e) => setPlusOneAllowed(e.target.checked)}
+            />
+            Allow a plus-one
+          </label>
           <button
             type="submit"
             disabled={saving}
@@ -166,6 +175,11 @@ export default function GuestRow({
         )}
         {guest.invite_sent_at && (
           <span className="text-foreground/40"> · invited</span>
+        )}
+        {guest.plus_one_name ? (
+          <span className="text-foreground/50"> · +{guest.plus_one_name}</span>
+        ) : (
+          guest.plus_one_allowed && <span className="text-foreground/40"> · plus-one allowed</span>
         )}
         {guest.rsvp_note && (
           <span className="block text-xs text-foreground/50 mt-0.5">“{guest.rsvp_note}”</span>

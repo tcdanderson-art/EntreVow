@@ -7,6 +7,7 @@ export default function GuestRsvp({ code, initialGuest }: { code: string; initia
   const [guest, setGuest] = useState(initialGuest);
   const [editing, setEditing] = useState(guest.rsvp_status === "pending");
   const [note, setNote] = useState(guest.rsvp_note ?? "");
+  const [plusOneName, setPlusOneName] = useState(guest.plus_one_name ?? "");
   const [saving, setSaving] = useState<RsvpStatus | null>(null);
 
   async function respond(status: RsvpStatus) {
@@ -14,7 +15,7 @@ export default function GuestRsvp({ code, initialGuest }: { code: string; initia
     const res = await fetch(`/api/guest/${code}/rsvp`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ status, note }),
+      body: JSON.stringify({ status, note, plusOneName }),
     });
     const data = await res.json();
     setSaving(null);
@@ -32,6 +33,9 @@ export default function GuestRsvp({ code, initialGuest }: { code: string; initia
           <div className={`text-sm font-semibold ${guest.rsvp_status === "attending" ? "text-brand" : "text-foreground/70"}`}>
             {guest.rsvp_status === "attending" ? "You're attending 🎉" : "You can't make it"}
           </div>
+          {guest.plus_one_name && (
+            <div className="text-xs text-foreground/60 mt-0.5">+ {guest.plus_one_name}</div>
+          )}
         </div>
         <button onClick={() => setEditing(true)} className="text-brand text-sm font-medium whitespace-nowrap">
           Change
@@ -61,6 +65,15 @@ export default function GuestRsvp({ code, initialGuest }: { code: string; initia
           {saving === "declined" ? "Saving…" : "Can't make it"}
         </button>
       </div>
+      {guest.plus_one_allowed && (
+        <input
+          type="text"
+          placeholder="Bringing a plus-one? Their name (optional)"
+          value={plusOneName}
+          onChange={(e) => setPlusOneName(e.target.value)}
+          className="border border-border-warm rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand/30"
+        />
+      )}
       <input
         type="text"
         placeholder="Note for the couple (optional, e.g. dietary needs)"
