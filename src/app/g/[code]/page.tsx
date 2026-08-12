@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import type { Metadata } from "next";
 import { db } from "@/lib/db";
 import { Guest } from "@/types/guest";
 import { Wedding } from "@/types/wedding";
@@ -13,6 +14,15 @@ import GuestPass from "@/components/GuestPass";
 import GuestPhotos from "@/components/GuestPhotos";
 import GuestShuttleTracker from "@/components/GuestShuttleTracker";
 import OfflineSupport from "@/components/OfflineSupport";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ code: string }>;
+}): Promise<Metadata> {
+  const { code } = await params;
+  return { manifest: `/api/guest/${code}/manifest` };
+}
 
 export default async function GuestItineraryPage({
   params,
