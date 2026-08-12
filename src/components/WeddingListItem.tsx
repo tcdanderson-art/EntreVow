@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Wedding } from "@/types/wedding";
 import { formatWallClockDate } from "@/lib/wall-clock";
+import { TIER_LABELS } from "@/lib/plan";
 
 export default function WeddingListItem({ wedding }: { wedding: Wedding }) {
   const router = useRouter();
@@ -30,7 +31,7 @@ export default function WeddingListItem({ wedding }: { wedding: Wedding }) {
         )}
         {wedding.plan_tier && (
           <span className="text-xs font-medium text-brand bg-cream-card border border-border-warm rounded-full px-2 py-0.5 ml-2">
-            {wedding.plan_tier === "full" ? "Full Day-Of" : "Essentials"}
+            {TIER_LABELS[wedding.plan_tier]}
           </span>
         )}
       </Link>

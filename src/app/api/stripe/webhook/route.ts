@@ -3,14 +3,50 @@ import { db } from "@/lib/db";
 import { stripe } from "@/lib/stripe";
 import { withErrorHandling } from "@/lib/route-handler";
 import { sendPaymentReceiptEmail, sendRefundNoticeEmail } from "@/lib/email";
+import { TIER_LABELS } from "@/lib/plan";
 import { Wedding } from "@/types/wedding";
 import { Couple } from "@/types/couple";
 import Stripe from "stripe";
 
-const TIER_LABELS: Record<"essentials" | "full", string> = {
-  essentials: "Essentials",
-  full: "Full Day-Of",
-};
+async function notifyCouple(coupleId: number, send: (email: string) => Promise<unknown>) {
+  const [couple] = (await db().sql`
+    SELECT email FROM couples WHERE id = ${coupleId}
+  `) as Pick<Couple, "email">[];
+
+  if (couple?.email) {
+    await send(couple.email).catch((err) => console.error("Failed to send billing email", err));
+  }
+}
+
+async function fulfillCheckout(session: Stripe.Checkout.Session, dashboardOrigin: string) {
+  const weddingId = Number(session.metadata?.weddingId);
+  const tier = session.metadata?.tier;
+  if (!weddingId || (tier !== "essentials" && tier !== "full")) return;
+
+  const [wedding] = (await db().sql`
+    UPDATE weddings
+    SET plan_tier = ${tier}, paid_at = NOW(), stripe_checkout_session_id = ${session.id}
+    WHERE id = ${weddingId}
+    RETURNING *
+  `) as Wedding[];
+
+  if (!wedding || session.amount_total == null) return;
+
+  const amount = (session.amount_total / 100).toLocaleString("en-AU", {
+    style: "currency",
+    currency: (session.currency ?? "aud").toUpperCase(),
+  });
+
+  await notifyCouple(wedding.couple_id, (email) =>
+    sendPaymentReceiptEmail(
+      email,
+      wedding.title,
+      TIER_LABELS[tier],
+      amount,
+      `${dashboardOrigin}/dashboard/${weddingId}`
+    )
+  );
+}
 
 export const POST = withErrorHandling(async (req: NextRequest) => {
   const secret = process.env.STRIPE_WEBHOOK_SECRET;
@@ -32,76 +68,65 @@ export const POST = withErrorHandling(async (req: NextRequest) => {
     return NextResponse.json({ error: "Invalid signature" }, { status: 400 });
   }
 
+  // Dedupe by Stripe's own event id, not by comparing session ids against a
+  // wedding's single "last session" column — that comparison broke once a
+  // wedding could have more than one checkout session (essentials, then an
+  // upgrade), since a redelivered *older* event would no longer match the
+  // *newer* stored session id and would re-apply as if it were new. An
+  // atomic INSERT ... ON CONFLICT is also race-free, unlike a SELECT-then-
+  // UPDATE check, so concurrent redeliveries of the same event can't both
+  // slip through and double-send an email.
+  const [claimed] = (await db().sql`
+    INSERT INTO stripe_webhook_events (event_id) VALUES (${event.id})
+    ON CONFLICT DO NOTHING
+    RETURNING event_id
+  `) as { event_id: string }[];
+  if (!claimed) {
+    return NextResponse.json({ received: true });
+  }
+
   if (event.type === "checkout.session.completed") {
     const session = event.data.object as Stripe.Checkout.Session;
-    const weddingId = Number(session.metadata?.weddingId);
-    const tier = session.metadata?.tier;
-
-    if (weddingId && (tier === "essentials" || tier === "full")) {
-      // Stripe can redeliver the same event — skip if this exact session was
-      // already applied, so a retry doesn't re-send the receipt email.
-      const [existing] = (await db().sql`
-        SELECT stripe_checkout_session_id FROM weddings WHERE id = ${weddingId}
-      `) as Pick<Wedding, "stripe_checkout_session_id">[];
-
-      if (existing && existing.stripe_checkout_session_id !== session.id) {
-        const [wedding] = (await db().sql`
-          UPDATE weddings
-          SET plan_tier = ${tier}, paid_at = NOW(), stripe_checkout_session_id = ${session.id}
-          WHERE id = ${weddingId}
-          RETURNING *
-        `) as Wedding[];
-
-        if (wedding && session.amount_total != null) {
-          const [couple] = (await db().sql`
-            SELECT email FROM couples WHERE id = ${wedding.couple_id}
-          `) as Pick<Couple, "email">[];
-
-          if (couple?.email) {
-            const amount = (session.amount_total / 100).toLocaleString("en-AU", {
-              style: "currency",
-              currency: (session.currency ?? "aud").toUpperCase(),
-            });
-            await sendPaymentReceiptEmail(
-              couple.email,
-              wedding.title,
-              TIER_LABELS[tier],
-              amount,
-              `${req.nextUrl.origin}/dashboard/${weddingId}`
-            ).catch((err) => console.error("Failed to send payment receipt email", err));
-          }
-        }
-      }
+    // Delayed-confirmation payment methods (e.g. BECS Direct Debit) fire this
+    // event immediately with payment_status "unpaid" — fulfillment happens
+    // later via checkout.session.async_payment_succeeded instead.
+    if (session.payment_status === "paid") {
+      await fulfillCheckout(session, req.nextUrl.origin);
     }
+  }
+
+  if (event.type === "checkout.session.async_payment_succeeded") {
+    const session = event.data.object as Stripe.Checkout.Session;
+    await fulfillCheckout(session, req.nextUrl.origin);
   }
 
   if (event.type === "charge.refunded") {
     const charge = event.data.object as Stripe.Charge;
     const weddingId = Number(charge.metadata?.weddingId);
+    const isUpgrade = charge.metadata?.isUpgrade === "true";
 
-    // Simplification: any fully-refunded charge revokes access entirely,
-    // even if it was only the essentials->full upgrade differential being
-    // refunded rather than the original purchase. Good enough for now —
-    // a partial-refund-aware downgrade would need to track which charge
-    // paid for which tier, not just the wedding's current plan_tier.
     if (weddingId && charge.refunded) {
-      const [wedding] = (await db().sql`
-        UPDATE weddings
-        SET plan_tier = NULL, paid_at = NULL, stripe_checkout_session_id = NULL
-        WHERE id = ${weddingId}
-        RETURNING *
-      `) as Wedding[];
+      // A refund of the essentials->full upgrade differential downgrades the
+      // wedding back to Essentials rather than revoking access entirely —
+      // the couple's original Essentials purchase wasn't refunded, so they
+      // keep what they paid for.
+      const [wedding] = isUpgrade
+        ? ((await db().sql`
+            UPDATE weddings SET plan_tier = 'essentials'
+            WHERE id = ${weddingId}
+            RETURNING *
+          `) as Wedding[])
+        : ((await db().sql`
+            UPDATE weddings
+            SET plan_tier = NULL, paid_at = NULL, stripe_checkout_session_id = NULL
+            WHERE id = ${weddingId}
+            RETURNING *
+          `) as Wedding[]);
 
       if (wedding) {
-        const [couple] = (await db().sql`
-          SELECT email FROM couples WHERE id = ${wedding.couple_id}
-        `) as Pick<Couple, "email">[];
-
-        if (couple?.email) {
-          await sendRefundNoticeEmail(couple.email, wedding.title).catch((err) =>
-            console.error("Failed to send refund notice email", err)
-          );
-        }
+        await notifyCouple(wedding.couple_id, (email) =>
+          sendRefundNoticeEmail(email, wedding.title, isUpgrade ? TIER_LABELS.essentials : undefined)
+        );
       }
     }
   }

@@ -42,15 +42,21 @@ export async function sendPaymentReceiptEmail(
   });
 }
 
-export async function sendRefundNoticeEmail(to: string, weddingTitle: string) {
+export async function sendRefundNoticeEmail(
+  to: string,
+  weddingTitle: string,
+  downgradedToLabel?: string
+) {
+  const body = downgradedToLabel
+    ? `<p>A refund was processed for ${weddingTitle}. Your plan has been adjusted to ${downgradedToLabel} — guest access stays live.</p>`
+    : `<p>A refund was processed for ${weddingTitle}, so guest access has been turned off.</p>
+      <p>You can pay again any time from your dashboard to turn it back on.</p>`;
+
   await client().emails.send({
     from: fromAddress(),
     to,
     subject: `Refund processed — ${weddingTitle}`,
-    html: `
-      <p>A refund was processed for ${weddingTitle}, so guest access has been turned off.</p>
-      <p>You can pay again any time from your dashboard to turn it back on.</p>
-    `,
+    html: body,
   });
 }
 

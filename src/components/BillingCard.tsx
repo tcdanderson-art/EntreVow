@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { PlanTier } from "@/types/wedding";
+import { TIER_LABELS } from "@/lib/plan";
 
 export default function BillingCard({
   weddingId,
@@ -34,8 +35,8 @@ export default function BillingCard({
       <section className="bg-white border border-border-warm rounded-xl p-6">
         <h2 className="font-semibold mb-2">Plan</h2>
         <p className="text-sm text-foreground/70">
-          ✓ <span className="font-medium text-brand">Full Day-Of</span> plan active — guest access
-          is live.
+          ✓ <span className="font-medium text-brand">{TIER_LABELS.full}</span> plan active — guest
+          access is live.
         </p>
       </section>
     );
@@ -46,8 +47,8 @@ export default function BillingCard({
       <section className="bg-white border border-border-warm rounded-xl p-6">
         <h2 className="font-semibold mb-2">Plan</h2>
         <p className="text-sm text-foreground/70 mb-4">
-          ✓ <span className="font-medium text-brand">Essentials</span> plan active — guest access
-          is live.
+          ✓ <span className="font-medium text-brand">{TIER_LABELS.essentials}</span> plan active —
+          guest access is live.
         </p>
 
         {checkoutStatus === "cancelled" && (

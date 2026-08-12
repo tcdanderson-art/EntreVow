@@ -68,8 +68,11 @@ export default function TermsPage() {
           <p className="text-foreground/70 leading-relaxed">
             Because access unlocks immediately, purchases are refundable within 7 days of payment,
             provided no guests have RSVP&apos;d yet. Outside that window, or once a guest has
-            RSVP&apos;d, refunds are at our discretion. If a refund is processed, guest access for
-            that wedding is turned off. To request a refund, contact{" "}
+            RSVP&apos;d, refunds are at our discretion. If your purchase is refunded in full, guest
+            access for that wedding is turned off — unless it was an upgrade from Essentials to Full
+            Day-Of, in which case the wedding reverts to Essentials access rather than losing access
+            entirely. A partial or goodwill refund may be issued without affecting access. To request
+            a refund, contact{" "}
             <a href="mailto:hello@entrevow.com" className="text-brand font-medium">
               hello@entrevow.com
             </a>
