@@ -15,6 +15,7 @@ export default function GuestManager({
   initialGuests: Guest[];
 }) {
   const [guests, setGuests] = useState(initialGuests);
+  const [search, setSearch] = useState("");
   const [name, setName] = useState("");
   const [guestGroup, setGuestGroup] = useState("general");
   const [email, setEmail] = useState("");
@@ -118,6 +119,13 @@ export default function GuestManager({
   const plusOnes = guests.filter((g) => g.plus_one_name).length;
   const uninvitedCount = guests.filter((g) => g.email && !g.invite_sent_at).length;
 
+  const query = search.trim().toLowerCase();
+  const filteredGuests = query
+    ? guests.filter(
+        (g) => g.name.toLowerCase().includes(query) || g.guest_group.toLowerCase().includes(query)
+      )
+    : guests;
+
   return (
     <div className="flex flex-col gap-4">
       {guests.length > 0 && (
@@ -137,20 +145,33 @@ export default function GuestManager({
               </>
             )}
           </div>
-          <ul className="flex flex-col gap-2">
-            {guests.map((guest) => (
-              <GuestRow
-                key={guest.id}
-                weddingId={weddingId}
-                weddingSlug={weddingSlug}
-                guest={guest}
-                onUpdate={(updated) =>
-                  setGuests((prev) => prev.map((g) => (g.id === updated.id ? updated : g)))
-                }
-                onDelete={(id) => setGuests((prev) => prev.filter((g) => g.id !== id))}
-              />
-            ))}
-          </ul>
+          {guests.length > 5 && (
+            <input
+              type="text"
+              placeholder="Search by name or group…"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="border border-border-warm rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand/30"
+            />
+          )}
+          {filteredGuests.length === 0 ? (
+            <p className="text-sm text-foreground/50">No guests match &ldquo;{search}&rdquo;.</p>
+          ) : (
+            <ul className="flex flex-col gap-2">
+              {filteredGuests.map((guest) => (
+                <GuestRow
+                  key={guest.id}
+                  weddingId={weddingId}
+                  weddingSlug={weddingSlug}
+                  guest={guest}
+                  onUpdate={(updated) =>
+                    setGuests((prev) => prev.map((g) => (g.id === updated.id ? updated : g)))
+                  }
+                  onDelete={(id) => setGuests((prev) => prev.filter((g) => g.id !== id))}
+                />
+              ))}
+            </ul>
+          )}
         </>
       )}
 
