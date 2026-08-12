@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { requireCoupleId } from "@/lib/require-auth";
 import { withErrorHandling } from "@/lib/route-handler";
-import { stripe, PLAN_PRICES } from "@/lib/stripe";
+import { stripe, PLAN_PRICES, UPGRADE_PRICE } from "@/lib/stripe";
 import { Wedding } from "@/types/wedding";
 
 export const POST = withErrorHandling(async (
@@ -25,12 +25,22 @@ export const POST = withErrorHandling(async (
   const wedding = weddings[0];
   if (!wedding) return NextResponse.json({ error: "Not found" }, { status: 404 });
 
-  const plan = PLAN_PRICES[tier];
+  if (wedding.plan_tier === tier) {
+    return NextResponse.json({ error: "This wedding is already on that plan" }, { status: 400 });
+  }
+  if (wedding.plan_tier === "full" && tier === "essentials") {
+    return NextResponse.json({ error: "Can't downgrade from Full Day-Of" }, { status: 400 });
+  }
+
+  // An Essentials wedding upgrading to Full Day-Of pays only the difference,
+  // not the full $249 again.
+  const priceId =
+    wedding.plan_tier === "essentials" && tier === "full" ? UPGRADE_PRICE.priceId : PLAN_PRICES[tier].priceId;
   const origin = req.nextUrl.origin;
 
   const session = await stripe().checkout.sessions.create({
     mode: "payment",
-    line_items: [{ price: plan.priceId, quantity: 1 }],
+    line_items: [{ price: priceId, quantity: 1 }],
     metadata: { weddingId: String(weddingId), tier },
     success_url: `${origin}/dashboard/${weddingId}?checkout=success`,
     cancel_url: `${origin}/dashboard/${weddingId}?checkout=cancelled`,

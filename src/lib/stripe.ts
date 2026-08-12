@@ -20,3 +20,10 @@ export const PLAN_PRICES: Record<"essentials" | "full", { amount: number; label:
   essentials: { amount: 6900, label: "Entrevow Essentials", priceId: "price_1U3aWC4Aa8t6g1kPt3cuYmTh" },
   full: { amount: 24900, label: "Entrevow Full Day-Of", priceId: "price_1U3aWD4Aa8t6g1kPwzbHZ0c2" },
 };
+
+// Price difference for upgrading an already-paid Essentials wedding straight
+// to Full Day-Of, rather than charging the full $249 again.
+export const UPGRADE_PRICE = {
+  amount: PLAN_PRICES.full.amount - PLAN_PRICES.essentials.amount,
+  priceId: "price_1U3ag94Aa8t6g1kP2OAT217J",
+};

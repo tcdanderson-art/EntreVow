@@ -4,11 +4,6 @@ import { useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { PlanTier } from "@/types/wedding";
 
-const TIER_LABELS: Record<PlanTier, string> = {
-  essentials: "Essentials",
-  full: "Full Day-Of",
-};
-
 export default function BillingCard({
   weddingId,
   planTier,
@@ -34,14 +29,52 @@ export default function BillingCard({
     }
   }
 
-  if (planTier) {
+  if (planTier === "full") {
     return (
       <section className="bg-white border border-border-warm rounded-xl p-6">
         <h2 className="font-semibold mb-2">Plan</h2>
         <p className="text-sm text-foreground/70">
-          ✓ <span className="font-medium text-brand">{TIER_LABELS[planTier]}</span> plan active —
-          guest access is live.
+          ✓ <span className="font-medium text-brand">Full Day-Of</span> plan active — guest access
+          is live.
         </p>
+      </section>
+    );
+  }
+
+  if (planTier === "essentials") {
+    return (
+      <section className="bg-white border border-border-warm rounded-xl p-6">
+        <h2 className="font-semibold mb-2">Plan</h2>
+        <p className="text-sm text-foreground/70 mb-4">
+          ✓ <span className="font-medium text-brand">Essentials</span> plan active — guest access
+          is live.
+        </p>
+
+        {checkoutStatus === "cancelled" && (
+          <p className="text-sm text-red-600 mb-4">Checkout was cancelled — no charge was made.</p>
+        )}
+        {checkoutStatus === "success" && (
+          <p className="text-sm text-brand mb-4">
+            Payment received — activating Full Day-Of now (refresh in a few seconds if it
+            doesn&apos;t update automatically).
+          </p>
+        )}
+
+        <div className="border border-brand rounded-lg p-4 flex items-center justify-between gap-4">
+          <div>
+            <div className="font-semibold text-brand">Upgrade to Full Day-Of — $180</div>
+            <p className="text-xs text-foreground/60">
+              Adds live shuttle tracking, weather alerts, QR usher check-in, and unlimited guests.
+            </p>
+          </div>
+          <button
+            onClick={() => startCheckout("full")}
+            disabled={loadingTier !== null}
+            className="shrink-0 text-sm font-medium bg-brand text-white rounded-md px-4 py-2 disabled:opacity-60"
+          >
+            {loadingTier === "full" ? "Redirecting…" : "Upgrade"}
+          </button>
+        </div>
       </section>
     );
   }
