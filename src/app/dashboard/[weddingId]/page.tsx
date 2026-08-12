@@ -18,6 +18,7 @@ import PhotoManager from "@/components/PhotoManager";
 import WeatherWidget from "@/components/WeatherWidget";
 import ShuttleManager from "@/components/ShuttleManager";
 import DashboardSummary from "@/components/DashboardSummary";
+import ExportDataButton from "@/components/ExportDataButton";
 
 export default async function WeddingDashboardPage({
   params,
@@ -70,6 +71,8 @@ export default async function WeddingDashboardPage({
         <WeddingHeader wedding={wedding} />
 
         <DashboardSummary guests={guests} shuttles={shuttles} />
+
+        <ExportDataButton weddingId={wedding.id} weddingTitle={wedding.title} />
 
         <section className="bg-white border border-border-warm rounded-xl p-6">
           <h2 className="font-semibold mb-4">Weather</h2>
