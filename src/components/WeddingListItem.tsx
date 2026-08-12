@@ -28,6 +28,11 @@ export default function WeddingListItem({ wedding }: { wedding: Wedding }) {
             {formatWallClockDate(wedding.wedding_date)}
           </span>
         )}
+        {wedding.plan_tier && (
+          <span className="text-xs font-medium text-brand bg-cream-card border border-border-warm rounded-full px-2 py-0.5 ml-2">
+            {wedding.plan_tier === "full" ? "Full Day-Of" : "Essentials"}
+          </span>
+        )}
       </Link>
       <button
         onClick={handleDelete}
