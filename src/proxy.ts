@@ -23,6 +23,9 @@ export function proxy(req: NextRequest) {
   const { pathname, searchParams } = req.nextUrl;
   if (pathname === "/coming-soon") return NextResponse.next();
 
+  // Stripe's servers call this with no preview cookie — never gate it.
+  if (pathname === "/api/stripe/webhook") return NextResponse.next();
+
   const queryCode = searchParams.get("preview");
   const cookieCode = req.cookies.get(COOKIE_NAME)?.value;
 

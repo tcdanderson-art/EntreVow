@@ -7,6 +7,7 @@ import { ItineraryItem } from "@/types/itinerary";
 import { Announcement } from "@/types/announcement";
 import { Photo } from "@/types/photo";
 import { Shuttle } from "@/types/shuttle";
+import { isPaid, isFullTier } from "@/lib/plan";
 
 export const GET = withErrorHandling(async (
   _req: NextRequest,
@@ -23,6 +24,10 @@ export const GET = withErrorHandling(async (
 
   const weddings = (await database.sql`SELECT * FROM weddings WHERE id = ${guest.wedding_id}`) as Wedding[];
   const wedding = weddings[0];
+
+  if (!wedding || !isPaid(wedding)) {
+    return NextResponse.json({ error: "Guest access isn't active yet", notActive: true }, { status: 402 });
+  }
 
   const items = (await database.sql`
     SELECT * FROM itinerary_items
@@ -45,9 +50,11 @@ export const GET = withErrorHandling(async (
     ORDER BY photos.created_at DESC
   `) as Photo[];
 
-  const shuttles = (await database.sql`
-    SELECT * FROM shuttles WHERE wedding_id = ${guest.wedding_id} ORDER BY created_at ASC
-  `) as Shuttle[];
+  const shuttles = isFullTier(wedding)
+    ? ((await database.sql`
+        SELECT * FROM shuttles WHERE wedding_id = ${guest.wedding_id} ORDER BY created_at ASC
+      `) as Shuttle[])
+    : [];
 
   return NextResponse.json({ guest, wedding, items, announcements, photos, shuttles });
 });

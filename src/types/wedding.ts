@@ -9,5 +9,10 @@ export interface Wedding {
   venue_address: string | null;
   venue_lat: number | null;
   venue_lng: number | null;
+  plan_tier: PlanTier | null;
+  paid_at: string | null;
+  stripe_checkout_session_id: string | null;
   created_at: string;
 }
+
+export type PlanTier = "essentials" | "full";

@@ -4,6 +4,7 @@ import { requireCoupleId } from "@/lib/require-auth";
 import { coupleOwnsWedding } from "@/lib/wedding-ownership";
 import { withErrorHandling } from "@/lib/route-handler";
 import { getForecastForDate, contingencySuggestion, FORECAST_HORIZON_DAYS } from "@/lib/weather";
+import { isFullTier } from "@/lib/plan";
 import { Wedding } from "@/types/wedding";
 
 function toDateOnly(value: string | Date): string {
@@ -29,6 +30,9 @@ export const GET = withErrorHandling(async (
   const weddings = (await db().sql`SELECT * FROM weddings WHERE id = ${weddingId}`) as Wedding[];
   const wedding = weddings[0];
 
+  if (!isFullTier(wedding)) {
+    return NextResponse.json({ available: false, reason: "requires_full_tier" });
+  }
   if (wedding.venue_lat == null || wedding.venue_lng == null) {
     return NextResponse.json({ available: false, reason: "no_location" });
   }

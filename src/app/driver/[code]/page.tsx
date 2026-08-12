@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { db } from "@/lib/db";
 import { Shuttle } from "@/types/shuttle";
 import { Wedding } from "@/types/wedding";
+import { isFullTier } from "@/lib/plan";
 import DriverTracker from "@/components/DriverTracker";
 
 export default async function DriverPage({
@@ -17,6 +18,7 @@ export default async function DriverPage({
 
   const weddings = (await db().sql`SELECT * FROM weddings WHERE id = ${shuttle.wedding_id}`) as Wedding[];
   const wedding = weddings[0];
+  if (!wedding || !isFullTier(wedding)) notFound();
 
-  return <DriverTracker driverCode={code} shuttleLabel={shuttle.label} weddingTitle={wedding?.title ?? ""} />;
+  return <DriverTracker driverCode={code} shuttleLabel={shuttle.label} weddingTitle={wedding.title} />;
 }

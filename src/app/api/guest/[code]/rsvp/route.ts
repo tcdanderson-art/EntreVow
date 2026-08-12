@@ -2,7 +2,9 @@ import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { withErrorHandling } from "@/lib/route-handler";
 import { rateLimit } from "@/lib/rate-limit";
+import { isPaid } from "@/lib/plan";
 import { Guest, RsvpStatus } from "@/types/guest";
+import { Wedding } from "@/types/wedding";
 
 const VALID_STATUSES: RsvpStatus[] = ["attending", "declined"];
 
@@ -19,6 +21,18 @@ export const PATCH = withErrorHandling(async (
 
   if (!VALID_STATUSES.includes(status)) {
     return NextResponse.json({ error: "Invalid RSVP status" }, { status: 400 });
+  }
+
+  const database = db();
+
+  const existingGuests = (await database.sql`SELECT wedding_id FROM guests WHERE access_code = ${code}`) as Pick<Guest, "wedding_id">[];
+  if (!existingGuests[0]) return NextResponse.json({ error: "Guest link not found" }, { status: 404 });
+
+  const weddings = (await database.sql`
+    SELECT paid_at FROM weddings WHERE id = ${existingGuests[0].wedding_id}
+  `) as Pick<Wedding, "paid_at">[];
+  if (!weddings[0] || !isPaid(weddings[0])) {
+    return NextResponse.json({ error: "Guest access isn't active yet" }, { status: 402 });
   }
 
   const [guest] = (await db().sql`

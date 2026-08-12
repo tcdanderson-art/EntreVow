@@ -19,6 +19,7 @@ import WeatherWidget from "@/components/WeatherWidget";
 import ShuttleManager from "@/components/ShuttleManager";
 import DashboardSummary from "@/components/DashboardSummary";
 import ExportDataButton from "@/components/ExportDataButton";
+import BillingCard from "@/components/BillingCard";
 
 export default async function WeddingDashboardPage({
   params,
@@ -71,6 +72,8 @@ export default async function WeddingDashboardPage({
         <WeddingHeader wedding={wedding} />
 
         <DashboardSummary guests={guests} shuttles={shuttles} />
+
+        <BillingCard weddingId={wedding.id} planTier={wedding.plan_tier} />
 
         <ExportDataButton weddingId={wedding.id} weddingTitle={wedding.title} />
 

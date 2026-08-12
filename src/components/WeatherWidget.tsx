@@ -6,7 +6,7 @@ import { WeatherForecast, FORECAST_HORIZON_DAYS } from "@/lib/weather";
 
 type WeatherResponse =
   | { available: true; forecast: WeatherForecast; suggestion: string | null }
-  | { available: false; reason: "no_location" | "no_date" | "past" | "fetch_failed" }
+  | { available: false; reason: "no_location" | "no_date" | "past" | "fetch_failed" | "requires_full_tier" }
   | { available: false; reason: "too_far"; daysUntil: number };
 
 export default function WeatherWidget({
@@ -55,6 +55,7 @@ export default function WeatherWidget({
             no_date: "Set a wedding date above to see the day-of weather forecast.",
             past: "The wedding date has passed.",
             fetch_failed: "Couldn't reach the weather service — try again shortly.",
+            requires_full_tier: "Weather contingency alerts are part of the Full Day-Of plan.",
           }[data.reason];
 
     return <p className="text-sm text-foreground/50">{message}</p>;

@@ -21,6 +21,7 @@ export default function GuestManager({
   const [email, setEmail] = useState("");
   const [plusOneAllowed, setPlusOneAllowed] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [addError, setAddError] = useState<string | null>(null);
   const [importing, setImporting] = useState(false);
   const [importError, setImportError] = useState<string | null>(null);
   const [invitingAll, setInvitingAll] = useState(false);
@@ -30,6 +31,7 @@ export default function GuestManager({
   async function handleAdd(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
+    setAddError(null);
 
     const res = await fetch(`/api/weddings/${weddingId}/guests`, {
       method: "POST",
@@ -44,6 +46,8 @@ export default function GuestManager({
       setName("");
       setEmail("");
       setPlusOneAllowed(false);
+    } else {
+      setAddError(data.error ?? "Failed to add guest");
     }
   }
 
@@ -214,6 +218,7 @@ export default function GuestManager({
           {loading ? "Adding…" : "Add guest"}
         </button>
       </form>
+      {addError && <p className="text-sm text-red-600">{addError}</p>}
 
       <div className="flex items-center gap-3 border-t border-border-warm pt-3">
         <label className="text-sm font-medium text-brand cursor-pointer">

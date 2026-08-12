@@ -4,8 +4,10 @@ import { db } from "@/lib/db";
 import { withErrorHandling } from "@/lib/route-handler";
 import { rateLimit } from "@/lib/rate-limit";
 import { getPhotoStore } from "@/lib/photo-store";
+import { isPaid } from "@/lib/plan";
 import { Guest } from "@/types/guest";
 import { Photo } from "@/types/photo";
+import { Wedding } from "@/types/wedding";
 
 const MAX_BYTES = 8 * 1024 * 1024; // 8MB — client compresses before upload, this is a server-side backstop
 const ALLOWED_TYPES = new Set(["image/jpeg", "image/png", "image/webp"]);
@@ -24,6 +26,11 @@ export const POST = withErrorHandling(async (
   const guests = (await database.sql`SELECT * FROM guests WHERE access_code = ${code}`) as Guest[];
   const guest = guests[0];
   if (!guest) return NextResponse.json({ error: "Guest link not found" }, { status: 404 });
+
+  const weddings = (await database.sql`SELECT paid_at FROM weddings WHERE id = ${guest.wedding_id}`) as Pick<Wedding, "paid_at">[];
+  if (!weddings[0] || !isPaid(weddings[0])) {
+    return NextResponse.json({ error: "Guest access isn't active yet" }, { status: 402 });
+  }
 
   const form = await req.formData();
   const file = form.get("photo");

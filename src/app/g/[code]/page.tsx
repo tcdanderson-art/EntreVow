@@ -14,6 +14,7 @@ import GuestPass from "@/components/GuestPass";
 import GuestPhotos from "@/components/GuestPhotos";
 import GuestShuttleTracker from "@/components/GuestShuttleTracker";
 import OfflineSupport from "@/components/OfflineSupport";
+import { isPaid, isFullTier } from "@/lib/plan";
 
 export async function generateMetadata({
   params,
@@ -39,6 +40,19 @@ export default async function GuestItineraryPage({
     SELECT * FROM weddings WHERE id = ${guest.wedding_id}
   `) as Wedding[];
   const wedding = weddings[0];
+
+  if (!wedding || !isPaid(wedding)) {
+    return (
+      <div className="flex-1 flex items-center justify-center bg-cream px-4 py-8">
+        <div className="w-full max-w-sm bg-white rounded-3xl shadow-xl border border-border-warm p-8 text-center">
+          <h1 className="font-display text-lg mb-2">{wedding?.title ?? "Wedding"}</h1>
+          <p className="text-sm text-foreground/60">
+            This guest link isn&apos;t active yet — check back closer to the wedding day.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   const items = (await db().sql`
     SELECT * FROM itinerary_items
@@ -110,7 +124,7 @@ export default async function GuestItineraryPage({
 
         <GuestPhotos code={code} initialPhotos={photos} />
 
-        <GuestShuttleTracker code={code} initialShuttles={shuttles} />
+        {isFullTier(wedding) && <GuestShuttleTracker code={code} initialShuttles={shuttles} />}
 
         {wedding?.emergency_phone && (
           <div className="text-center text-xs text-foreground/50 py-3 border-t border-border-warm bg-cream-card">

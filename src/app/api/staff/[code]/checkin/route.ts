@@ -4,6 +4,7 @@ import { withErrorHandling } from "@/lib/route-handler";
 import { rateLimit } from "@/lib/rate-limit";
 import { Wedding } from "@/types/wedding";
 import { Guest } from "@/types/guest";
+import { isFullTier } from "@/lib/plan";
 
 export const POST = withErrorHandling(async (
   req: NextRequest,
@@ -24,7 +25,7 @@ export const POST = withErrorHandling(async (
     SELECT * FROM weddings WHERE staff_code = ${code}
   `) as Wedding[];
   const wedding = weddings[0];
-  if (!wedding) {
+  if (!wedding || !isFullTier(wedding)) {
     return NextResponse.json({ error: "Staff link not found" }, { status: 404 });
   }
 

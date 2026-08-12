@@ -3,6 +3,7 @@ import { db } from "@/lib/db";
 import { withErrorHandling } from "@/lib/route-handler";
 import { Shuttle } from "@/types/shuttle";
 import { Wedding } from "@/types/wedding";
+import { isFullTier } from "@/lib/plan";
 
 export const GET = withErrorHandling(async (
   _req: NextRequest,
@@ -22,6 +23,10 @@ export const GET = withErrorHandling(async (
   const weddings = (await database.sql`
     SELECT * FROM weddings WHERE id = ${shuttle.wedding_id}
   `) as Wedding[];
+  const wedding = weddings[0];
+  if (!wedding || !isFullTier(wedding)) {
+    return NextResponse.json({ error: "Driver link not found" }, { status: 404 });
+  }
 
-  return NextResponse.json({ shuttle, wedding: weddings[0] });
+  return NextResponse.json({ shuttle, wedding });
 });
