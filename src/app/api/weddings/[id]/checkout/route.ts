@@ -42,6 +42,10 @@ export const POST = withErrorHandling(async (
     mode: "payment",
     line_items: [{ price: priceId, quantity: 1 }],
     metadata: { weddingId: String(weddingId), tier },
+    // Also stamp metadata onto the resulting Charge (not just the Checkout
+    // Session) — a charge.refunded event only carries the Charge's own
+    // metadata, and we need weddingId there to revoke access on refund.
+    payment_intent_data: { metadata: { weddingId: String(weddingId), tier } },
     success_url: `${origin}/dashboard/${weddingId}?checkout=success`,
     cancel_url: `${origin}/dashboard/${weddingId}?checkout=cancelled`,
   });

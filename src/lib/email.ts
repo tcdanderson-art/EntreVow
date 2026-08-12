@@ -42,6 +42,18 @@ export async function sendPaymentReceiptEmail(
   });
 }
 
+export async function sendRefundNoticeEmail(to: string, weddingTitle: string) {
+  await client().emails.send({
+    from: fromAddress(),
+    to,
+    subject: `Refund processed — ${weddingTitle}`,
+    html: `
+      <p>A refund was processed for ${weddingTitle}, so guest access has been turned off.</p>
+      <p>You can pay again any time from your dashboard to turn it back on.</p>
+    `,
+  });
+}
+
 export async function sendGuestInviteEmail(
   to: string,
   guestName: string,
