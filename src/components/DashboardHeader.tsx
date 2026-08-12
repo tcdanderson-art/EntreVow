@@ -18,12 +18,20 @@ export default function DashboardHeader() {
       <Link href="/dashboard">
         <Image src="/brand/wordmark.png" alt="Entrevow" width={663} height={82} className="h-5 w-auto" />
       </Link>
-      <button
-        onClick={handleLogout}
-        className="text-sm font-medium text-foreground/60 hover:text-foreground transition-colors"
-      >
-        Log out
-      </button>
+      <span className="flex items-center gap-4">
+        <Link
+          href="/account"
+          className="text-sm font-medium text-foreground/60 hover:text-foreground transition-colors"
+        >
+          Account
+        </Link>
+        <button
+          onClick={handleLogout}
+          className="text-sm font-medium text-foreground/60 hover:text-foreground transition-colors"
+        >
+          Log out
+        </button>
+      </span>
     </header>
   );
 }
