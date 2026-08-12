@@ -8,7 +8,7 @@ export default function TermsPage() {
       <div className="max-w-2xl mx-auto bg-white border border-border-warm rounded-xl p-8 sm:p-10 flex flex-col gap-6">
         <div>
           <h1 className="font-display text-3xl mb-2">Terms of Service</h1>
-          <p className="text-sm text-foreground/50">Last updated August 10, 2026</p>
+          <p className="text-sm text-foreground/50">Last updated August 12, 2026</p>
         </div>
 
         <p className="text-foreground/70 leading-relaxed">
@@ -60,9 +60,20 @@ export default function TermsPage() {
         <section className="flex flex-col gap-2">
           <h2 className="font-semibold text-lg text-brand">Paid features</h2>
           <p className="text-foreground/70 leading-relaxed">
-            Some features of Entrevow may require payment now or in the future. Where that&apos;s
-            the case, pricing and billing terms will be shown to you before you&apos;re charged,
-            and separate payment terms will apply to that purchase.
+            Guest-facing access for a wedding (guest links, RSVPs, and other live features) requires
+            a one-time, per-wedding payment rather than a recurring subscription — see the pricing
+            shown on your dashboard for current tiers and amounts. You can build your wedding for
+            free before paying. Payment unlocks guest access for that wedding immediately.
+          </p>
+          <p className="text-foreground/70 leading-relaxed">
+            Because access unlocks immediately, purchases are refundable within 7 days of payment,
+            provided no guests have RSVP&apos;d yet. Outside that window, or once a guest has
+            RSVP&apos;d, refunds are at our discretion. If a refund is processed, guest access for
+            that wedding is turned off. To request a refund, contact{" "}
+            <a href="mailto:hello@entrevow.com" className="text-brand font-medium">
+              hello@entrevow.com
+            </a>
+            .
           </p>
         </section>
 
