@@ -30,16 +30,7 @@ export const POST = withErrorHandling(async (
 
   const session = await stripe().checkout.sessions.create({
     mode: "payment",
-    line_items: [
-      {
-        price_data: {
-          currency: "aud",
-          product_data: { name: `${plan.label} — ${wedding.title}` },
-          unit_amount: plan.amount,
-        },
-        quantity: 1,
-      },
-    ],
+    line_items: [{ price: plan.priceId, quantity: 1 }],
     metadata: { weddingId: String(weddingId), tier },
     success_url: `${origin}/dashboard/${weddingId}?checkout=success`,
     cancel_url: `${origin}/dashboard/${weddingId}?checkout=cancelled`,
