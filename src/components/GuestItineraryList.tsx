@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { ItineraryItem } from "@/types/itinerary";
 import { formatWallClockTime } from "@/lib/wall-clock";
+import { buildItineraryIcs } from "@/lib/ics";
 
 const POLL_INTERVAL_MS = 20000;
 
@@ -12,12 +13,25 @@ function directionsUrl(location: string) {
 
 export default function GuestItineraryList({
   code,
+  weddingTitle,
   initialItems,
 }: {
   code: string;
+  weddingTitle: string;
   initialItems: ItineraryItem[];
 }) {
   const [items, setItems] = useState(initialItems);
+
+  function handleAddToCalendar() {
+    const ics = buildItineraryIcs(weddingTitle, items);
+    const blob = new Blob([ics], { type: "text/calendar;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `${weddingTitle.replace(/[^a-z0-9]+/gi, "-").toLowerCase()}-itinerary.ics`;
+    link.click();
+    URL.revokeObjectURL(url);
+  }
 
   useEffect(() => {
     const interval = setInterval(async () => {
@@ -41,7 +55,14 @@ export default function GuestItineraryList({
   }
 
   return (
-    <ol className="border-l-2 border-border-warm pl-4 flex flex-col gap-4">
+    <>
+      <button
+        onClick={handleAddToCalendar}
+        className="text-xs font-medium text-brand mb-3 block"
+      >
+        Add to calendar
+      </button>
+      <ol className="border-l-2 border-border-warm pl-4 flex flex-col gap-4">
       {items.map((item) => (
         <li key={item.id}>
           <time className="text-xs font-semibold text-foreground/50">
@@ -70,6 +91,7 @@ export default function GuestItineraryList({
           )}
         </li>
       ))}
-    </ol>
+      </ol>
+    </>
   );
 }

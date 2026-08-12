@@ -95,7 +95,7 @@ export default async function GuestItineraryPage({
             Itinerary
           </div>
 
-          <GuestItineraryList code={code} initialItems={items} />
+          <GuestItineraryList code={code} weddingTitle={wedding?.title ?? "Wedding"} initialItems={items} />
         </div>
 
         <GuestPhotos code={code} initialPhotos={photos} />
