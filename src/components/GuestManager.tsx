@@ -9,10 +9,12 @@ export default function GuestManager({
   weddingId,
   weddingSlug,
   initialGuests,
+  mealOptions,
 }: {
   weddingId: number;
   weddingSlug: string | null;
   initialGuests: Guest[];
+  mealOptions: string[];
 }) {
   const [guests, setGuests] = useState(initialGuests);
   const [search, setSearch] = useState("");
@@ -168,6 +170,7 @@ export default function GuestManager({
                   weddingId={weddingId}
                   weddingSlug={weddingSlug}
                   guest={guest}
+                  mealOptions={mealOptions}
                   onUpdate={(updated) =>
                     setGuests((prev) => prev.map((g) => (g.id === updated.id ? updated : g)))
                   }

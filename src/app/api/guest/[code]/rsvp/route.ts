@@ -3,6 +3,7 @@ import { db } from "@/lib/db";
 import { withErrorHandling } from "@/lib/route-handler";
 import { rateLimit } from "@/lib/rate-limit";
 import { isPaid } from "@/lib/plan";
+import { mealOptionsFor } from "@/lib/meal-options";
 import { Guest, RsvpStatus } from "@/types/guest";
 import { Wedding } from "@/types/wedding";
 
@@ -17,7 +18,7 @@ export const PATCH = withErrorHandling(async (
   const limited = rateLimit(req, "guest-rsvp", 20, 10 * 60_000, code);
   if (limited) return limited;
 
-  const { status, note, plusOneName } = await req.json();
+  const { status, note, plusOneName, mealChoice, songRequest } = await req.json();
 
   if (!VALID_STATUSES.includes(status)) {
     return NextResponse.json({ error: "Invalid RSVP status" }, { status: 400 });
@@ -29,11 +30,13 @@ export const PATCH = withErrorHandling(async (
   if (!existingGuests[0]) return NextResponse.json({ error: "Guest link not found" }, { status: 404 });
 
   const weddings = (await database.sql`
-    SELECT paid_at FROM weddings WHERE id = ${existingGuests[0].wedding_id}
-  `) as Pick<Wedding, "paid_at">[];
+    SELECT paid_at, meal_options FROM weddings WHERE id = ${existingGuests[0].wedding_id}
+  `) as Pick<Wedding, "paid_at" | "meal_options">[];
   if (!weddings[0] || !isPaid(weddings[0])) {
     return NextResponse.json({ error: "Guest access isn't active yet" }, { status: 402 });
   }
+
+  const validMealChoice = mealOptionsFor(weddings[0]).includes(mealChoice) ? mealChoice : null;
 
   const [guest] = (await db().sql`
     UPDATE guests
@@ -41,7 +44,9 @@ export const PATCH = withErrorHandling(async (
         plus_one_name = CASE
           WHEN plus_one_allowed AND ${status} = 'attending' THEN ${plusOneName || null}
           ELSE NULL
-        END
+        END,
+        meal_choice = CASE WHEN ${status} = 'attending' THEN ${validMealChoice} ELSE NULL END,
+        song_request = CASE WHEN ${status} = 'attending' THEN ${songRequest || null} ELSE NULL END
     WHERE access_code = ${code}
     RETURNING *
   `) as Guest[];

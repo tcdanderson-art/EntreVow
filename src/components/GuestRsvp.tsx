@@ -3,11 +3,21 @@
 import { useState } from "react";
 import { Guest, RsvpStatus } from "@/types/guest";
 
-export default function GuestRsvp({ code, initialGuest }: { code: string; initialGuest: Guest }) {
+export default function GuestRsvp({
+  code,
+  initialGuest,
+  mealOptions,
+}: {
+  code: string;
+  initialGuest: Guest;
+  mealOptions: string[];
+}) {
   const [guest, setGuest] = useState(initialGuest);
   const [editing, setEditing] = useState(guest.rsvp_status === "pending");
   const [note, setNote] = useState(guest.rsvp_note ?? "");
   const [plusOneName, setPlusOneName] = useState(guest.plus_one_name ?? "");
+  const [mealChoice, setMealChoice] = useState(guest.meal_choice ?? "");
+  const [songRequest, setSongRequest] = useState(guest.song_request ?? "");
   const [saving, setSaving] = useState<RsvpStatus | null>(null);
 
   async function respond(status: RsvpStatus) {
@@ -15,7 +25,7 @@ export default function GuestRsvp({ code, initialGuest }: { code: string; initia
     const res = await fetch(`/api/guest/${code}/rsvp`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ status, note, plusOneName }),
+      body: JSON.stringify({ status, note, plusOneName, mealChoice, songRequest }),
     });
     const data = await res.json();
     setSaving(null);
@@ -35,6 +45,9 @@ export default function GuestRsvp({ code, initialGuest }: { code: string; initia
           </div>
           {guest.plus_one_name && (
             <div className="text-xs text-foreground/60 mt-0.5">+ {guest.plus_one_name}</div>
+          )}
+          {guest.meal_choice && (
+            <div className="text-xs text-foreground/60 mt-0.5">Meal: {guest.meal_choice}</div>
           )}
         </div>
         <button onClick={() => setEditing(true)} className="text-brand text-sm font-medium whitespace-nowrap">
@@ -74,6 +87,25 @@ export default function GuestRsvp({ code, initialGuest }: { code: string; initia
           className="border border-border-warm rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand/30"
         />
       )}
+      <select
+        value={mealChoice}
+        onChange={(e) => setMealChoice(e.target.value)}
+        className="border border-border-warm rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand/30"
+      >
+        <option value="">Meal choice (optional)</option>
+        {mealOptions.map((option) => (
+          <option key={option} value={option}>
+            {option}
+          </option>
+        ))}
+      </select>
+      <input
+        type="text"
+        placeholder="Song request (optional)"
+        value={songRequest}
+        onChange={(e) => setSongRequest(e.target.value)}
+        className="border border-border-warm rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand/30"
+      />
       <input
         type="text"
         placeholder="Note for the couple (optional, e.g. dietary needs)"

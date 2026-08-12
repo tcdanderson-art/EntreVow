@@ -68,6 +68,8 @@ export function guestsToCsv(guests: Guest[]): string {
     "rsvp_note",
     "plus_one_allowed",
     "plus_one_name",
+    "meal_choice",
+    "song_request",
   ];
   const rows = guests.map((g) =>
     [
@@ -79,6 +81,8 @@ export function guestsToCsv(guests: Guest[]): string {
       g.rsvp_note ?? "",
       g.plus_one_allowed ? "yes" : "no",
       g.plus_one_name ?? "",
+      g.meal_choice ?? "",
+      g.song_request ?? "",
     ].map(csvField)
   );
 

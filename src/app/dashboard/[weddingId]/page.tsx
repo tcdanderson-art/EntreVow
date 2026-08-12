@@ -8,7 +8,10 @@ import { ItineraryItem } from "@/types/itinerary";
 import { Announcement } from "@/types/announcement";
 import { Photo } from "@/types/photo";
 import { Shuttle } from "@/types/shuttle";
+import { WeddingTable } from "@/types/table";
+import { mealOptionsFor } from "@/lib/meal-options";
 import GuestManager from "@/components/GuestManager";
+import SeatingChart from "@/components/SeatingChart";
 import ItineraryManager from "@/components/ItineraryManager";
 import AnnouncementManager from "@/components/AnnouncementManager";
 import DashboardHeader from "@/components/DashboardHeader";
@@ -60,6 +63,10 @@ export default async function WeddingDashboardPage({
     SELECT * FROM shuttles WHERE wedding_id = ${weddingId} ORDER BY created_at ASC
   `) as Shuttle[];
 
+  const tables = (await db().sql`
+    SELECT * FROM wedding_tables WHERE wedding_id = ${weddingId} ORDER BY sort_order ASC, id ASC
+  `) as WeddingTable[];
+
   const guestGroups = Array.from(new Set(guests.map((g) => g.guest_group)));
 
   return (
@@ -96,7 +103,17 @@ export default async function WeddingDashboardPage({
 
         <section className="bg-white border border-border-warm rounded-xl p-6">
           <h2 className="font-semibold mb-4">Guests</h2>
-          <GuestManager weddingId={wedding.id} weddingSlug={wedding.slug} initialGuests={guests} />
+          <GuestManager
+            weddingId={wedding.id}
+            weddingSlug={wedding.slug}
+            initialGuests={guests}
+            mealOptions={mealOptionsFor(wedding)}
+          />
+        </section>
+
+        <section className="bg-white border border-border-warm rounded-xl p-6">
+          <h2 className="font-semibold mb-4">Seating chart</h2>
+          <SeatingChart weddingId={wedding.id} initialTables={tables} initialGuests={guests} />
         </section>
 
         <section className="bg-white border border-border-warm rounded-xl p-6">

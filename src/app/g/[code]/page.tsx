@@ -15,6 +15,7 @@ import GuestPhotos from "@/components/GuestPhotos";
 import GuestShuttleTracker from "@/components/GuestShuttleTracker";
 import OfflineSupport from "@/components/OfflineSupport";
 import { isPaid, isFullTier } from "@/lib/plan";
+import { mealOptionsFor } from "@/lib/meal-options";
 
 export async function generateMetadata({
   params,
@@ -112,7 +113,7 @@ export default async function GuestItineraryPage({
 
         <GuestAnnouncements code={code} initialAnnouncements={announcements} />
 
-        <GuestRsvp code={code} initialGuest={guest} />
+        <GuestRsvp code={code} initialGuest={guest} mealOptions={mealOptionsFor(wedding)} />
 
         <div className="px-5 py-3 flex-1">
           <div className="text-xs font-semibold uppercase tracking-wide text-foreground/50 mb-3">

@@ -21,6 +21,7 @@ export default function WeddingHeader({ wedding }: { wedding: Wedding }) {
   const [emergencyPhone, setEmergencyPhone] = useState(wedding.emergency_phone ?? "");
   const [slug, setSlug] = useState(wedding.slug ?? "");
   const [venueAddress, setVenueAddress] = useState(wedding.venue_address ?? "");
+  const [mealOptions, setMealOptions] = useState((wedding.meal_options ?? []).join(", "));
   const [saving, setSaving] = useState(false);
   const [copied, setCopied] = useState(false);
 
@@ -44,6 +45,10 @@ export default function WeddingHeader({ wedding }: { wedding: Wedding }) {
         emergencyPhone: emergencyPhone || null,
         slug: slug || null,
         venueAddress: venueAddress || null,
+        mealOptions: mealOptions
+          .split(",")
+          .map((o) => o.trim())
+          .filter(Boolean),
       }),
     });
 
@@ -98,6 +103,19 @@ export default function WeddingHeader({ wedding }: { wedding: Wedding }) {
           <p className="text-xs text-foreground/40 mt-1">
             Used for the day-of weather forecast — a suburb or town name works better than a full
             street address. Leave blank to skip.
+          </p>
+        </div>
+        <div>
+          <input
+            type="text"
+            placeholder="Meal options, comma-separated (e.g. Chicken, Beef, Vegetarian)"
+            value={mealOptions}
+            onChange={(e) => setMealOptions(e.target.value)}
+            className="w-full border border-border-warm rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand/30"
+          />
+          <p className="text-xs text-foreground/40 mt-1">
+            Shown as a dropdown when guests RSVP. Leave blank for the default options (Chicken,
+            Beef, Fish, Vegetarian, Vegan).
           </p>
         </div>
         <div>

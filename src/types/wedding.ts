@@ -12,6 +12,7 @@ export interface Wedding {
   plan_tier: PlanTier | null;
   paid_at: string | null;
   stripe_checkout_session_id: string | null;
+  meal_options: string[] | null;
   created_at: string;
 }
 

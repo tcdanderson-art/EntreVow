@@ -9,6 +9,7 @@ import { ItineraryItem } from "@/types/itinerary";
 import { Announcement } from "@/types/announcement";
 import { Shuttle } from "@/types/shuttle";
 import { Photo } from "@/types/photo";
+import { WeddingTable } from "@/types/table";
 
 export const GET = withErrorHandling(async (
   _req: NextRequest,
@@ -44,6 +45,10 @@ export const GET = withErrorHandling(async (
     SELECT * FROM shuttles WHERE wedding_id = ${weddingId} ORDER BY created_at ASC
   `) as Shuttle[];
 
+  const tables = (await database.sql`
+    SELECT * FROM wedding_tables WHERE wedding_id = ${weddingId} ORDER BY sort_order ASC, id ASC
+  `) as WeddingTable[];
+
   // Metadata only — the actual photo files stay in Blob storage, not embedded here.
   const photos = (await database.sql`
     SELECT photos.id, photos.guest_id, guests.name AS guest_name, photos.caption, photos.created_at
@@ -59,6 +64,7 @@ export const GET = withErrorHandling(async (
     itinerary,
     announcements,
     shuttles,
+    tables,
     photos,
   });
 });

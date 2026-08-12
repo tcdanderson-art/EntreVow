@@ -18,7 +18,8 @@ export const PATCH = withErrorHandling(async (
     return NextResponse.json({ error: "Not found" }, { status: 404 });
   }
 
-  const { name, guestGroup, rsvpStatus, tableLabel, email, plusOneAllowed } = await req.json();
+  const { name, guestGroup, rsvpStatus, tableLabel, email, plusOneAllowed, mealChoice, songRequest } =
+    await req.json();
   if (!name) return NextResponse.json({ error: "Name is required" }, { status: 400 });
 
   const validStatus = ["pending", "attending", "declined"].includes(rsvpStatus)
@@ -34,7 +35,8 @@ export const PATCH = withErrorHandling(async (
             rsvp_responded_at = CASE WHEN ${validStatus} = 'pending' THEN NULL ELSE NOW() END,
             table_label = ${tableLabel || null}, email = ${email || null},
             plus_one_allowed = ${plusOneAllowedBool},
-            plus_one_name = CASE WHEN ${plusOneAllowedBool} THEN plus_one_name ELSE NULL END
+            plus_one_name = CASE WHEN ${plusOneAllowedBool} THEN plus_one_name ELSE NULL END,
+            meal_choice = ${mealChoice || null}, song_request = ${songRequest || null}
         WHERE id = ${Number(guestId)} AND wedding_id = ${weddingId}
         RETURNING *
       `) as Guest[])
@@ -43,7 +45,8 @@ export const PATCH = withErrorHandling(async (
         SET name = ${name}, guest_group = ${guestGroup ?? "general"}, table_label = ${tableLabel || null},
             email = ${email || null},
             plus_one_allowed = ${plusOneAllowedBool},
-            plus_one_name = CASE WHEN ${plusOneAllowedBool} THEN plus_one_name ELSE NULL END
+            plus_one_name = CASE WHEN ${plusOneAllowedBool} THEN plus_one_name ELSE NULL END,
+            meal_choice = ${mealChoice || null}, song_request = ${songRequest || null}
         WHERE id = ${Number(guestId)} AND wedding_id = ${weddingId}
         RETURNING *
       `) as Guest[]);

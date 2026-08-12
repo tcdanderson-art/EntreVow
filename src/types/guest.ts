@@ -16,4 +16,6 @@ export interface Guest {
   invite_sent_at: string | null;
   plus_one_allowed: boolean;
   plus_one_name: string | null;
+  meal_choice: string | null;
+  song_request: string | null;
 }

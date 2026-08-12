@@ -19,12 +19,14 @@ export default function GuestRow({
   weddingId,
   weddingSlug,
   guest,
+  mealOptions,
   onUpdate,
   onDelete,
 }: {
   weddingId: number;
   weddingSlug: string | null;
   guest: Guest;
+  mealOptions: string[];
   onUpdate: (guest: Guest) => void;
   onDelete: (id: number) => void;
 }) {
@@ -35,6 +37,8 @@ export default function GuestRow({
   const [tableLabel, setTableLabel] = useState(guest.table_label ?? "");
   const [email, setEmail] = useState(guest.email ?? "");
   const [plusOneAllowed, setPlusOneAllowed] = useState(guest.plus_one_allowed);
+  const [mealChoice, setMealChoice] = useState(guest.meal_choice ?? "");
+  const [songRequest, setSongRequest] = useState(guest.song_request ?? "");
   const [saving, setSaving] = useState(false);
   const [copied, setCopied] = useState(false);
   const [inviting, setInviting] = useState(false);
@@ -58,7 +62,16 @@ export default function GuestRow({
     const res = await fetch(`/api/weddings/${weddingId}/guests/${guest.id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, guestGroup, rsvpStatus, tableLabel, email, plusOneAllowed }),
+      body: JSON.stringify({
+        name,
+        guestGroup,
+        rsvpStatus,
+        tableLabel,
+        email,
+        plusOneAllowed,
+        mealChoice,
+        songRequest,
+      }),
     });
     const data = await res.json();
 
@@ -141,6 +154,25 @@ export default function GuestRow({
             />
             Allow a plus-one
           </label>
+          <select
+            value={mealChoice}
+            onChange={(e) => setMealChoice(e.target.value)}
+            className="border border-border-warm rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand/30"
+          >
+            <option value="">Meal choice</option>
+            {mealOptions.map((option) => (
+              <option key={option} value={option}>
+                {option}
+              </option>
+            ))}
+          </select>
+          <input
+            type="text"
+            placeholder="Song request"
+            value={songRequest}
+            onChange={(e) => setSongRequest(e.target.value)}
+            className="flex-1 min-w-[140px] border border-border-warm rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand/30"
+          />
           <button
             type="submit"
             disabled={saving}
@@ -180,6 +212,12 @@ export default function GuestRow({
           <span className="text-foreground/50"> · +{guest.plus_one_name}</span>
         ) : (
           guest.plus_one_allowed && <span className="text-foreground/40"> · plus-one allowed</span>
+        )}
+        {guest.meal_choice && (
+          <span className="text-foreground/50"> · {guest.meal_choice}</span>
+        )}
+        {guest.song_request && (
+          <span className="text-foreground/50"> · 🎵 {guest.song_request}</span>
         )}
         {guest.rsvp_note && (
           <span className="block text-xs text-foreground/50 mt-0.5">“{guest.rsvp_note}”</span>

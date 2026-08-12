@@ -14,8 +14,13 @@ export const PATCH = withErrorHandling(async (
   if (!coupleId) return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
 
   const weddingId = Number((await params).id);
-  const { title, weddingDate, emergencyPhone, slug, venueAddress } = await req.json();
+  const { title, weddingDate, emergencyPhone, slug, venueAddress, mealOptions } = await req.json();
   if (!title) return NextResponse.json({ error: "Title is required" }, { status: 400 });
+
+  const cleanMealOptions: string[] | null =
+    Array.isArray(mealOptions) && mealOptions.length > 0
+      ? mealOptions.map((o: string) => o.trim()).filter(Boolean)
+      : null;
 
   const cleanSlug = slug ? slugify(slug) : null;
 
@@ -46,7 +51,8 @@ export const PATCH = withErrorHandling(async (
     UPDATE weddings
     SET title = ${title}, wedding_date = ${weddingDate ?? null},
         emergency_phone = ${emergencyPhone ?? null}, slug = ${cleanSlug || null},
-        venue_address = ${cleanAddress}, venue_lat = ${venueLat}, venue_lng = ${venueLng}
+        venue_address = ${cleanAddress}, venue_lat = ${venueLat}, venue_lng = ${venueLng},
+        meal_options = ${cleanMealOptions}
     WHERE id = ${weddingId} AND couple_id = ${coupleId}
     RETURNING *
   `) as Wedding[];
