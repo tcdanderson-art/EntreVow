@@ -4,15 +4,17 @@ import type { NextConfig } from "next";
 // anything. Policy below reflects the app's actual external-origin surface —
 // next/font self-hosts fonts, weather/photos proxy server-side, Stripe
 // Checkout is a full-page redirect (no Stripe.js) — so the only external
-// origin needed is the Leaflet/OSM tile server for the shuttle map. Review
-// real violations before ever switching this to an enforcing CSP.
+// origins are the Leaflet/OSM tile server for the shuttle map and Google
+// Analytics (gtag.js, loaded only on marketing/dashboard pages — see
+// GoogleAnalytics.tsx). Review real violations before ever switching this to
+// an enforcing CSP.
 const cspDirectives = [
   "default-src 'self'",
-  "script-src 'self' 'unsafe-inline'",
+  "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com",
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data: blob: https://*.tile.openstreetmap.org",
   "font-src 'self'",
-  "connect-src 'self'",
+  "connect-src 'self' https://www.googletagmanager.com https://*.google-analytics.com https://*.analytics.google.com",
   "object-src 'none'",
   "base-uri 'self'",
   "form-action 'self'",

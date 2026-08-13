@@ -8,7 +8,7 @@ export default function PrivacyPage() {
       <div className="max-w-2xl mx-auto bg-white border border-border-warm rounded-xl p-8 sm:p-10 flex flex-col gap-6">
         <div>
           <h1 className="font-display text-3xl mb-2">Privacy Policy</h1>
-          <p className="text-sm text-foreground/50">Last updated August 10, 2026</p>
+          <p className="text-sm text-foreground/50">Last updated August 13, 2026</p>
         </div>
 
         <p className="text-foreground/70 leading-relaxed">
@@ -39,7 +39,10 @@ export default function PrivacyPage() {
           </p>
           <p className="text-foreground/70 leading-relaxed">
             <strong>Technical data:</strong> a single essential session cookie used to keep
-            couples logged in. We do not use analytics or advertising cookies at this time.
+            couples logged in, plus Google Analytics cookies on our marketing pages and couple
+            dashboard (see below). We never load Google Analytics on a guest, usher, or driver
+            link, so guest activity on the event itself is not tracked by it. We do not use
+            advertising cookies.
           </p>
         </section>
 
@@ -64,6 +67,10 @@ export default function PrivacyPage() {
             <li>Netlify — application hosting and serverless functions</li>
             <li>Neon (via Netlify DB) — our Postgres database</li>
             <li>Resend — delivery of transactional emails (e.g. password resets)</li>
+            <li>
+              Google Analytics — usage analytics on our marketing pages and couple dashboard only,
+              never on a guest, usher, or driver link
+            </li>
           </ul>
           <p className="text-foreground/70 leading-relaxed">
             These providers may process data on infrastructure located outside Australia. We
