@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { db } from "@/lib/db";
 import { Guest } from "@/types/guest";
 import { Wedding } from "@/types/wedding";
@@ -25,6 +25,10 @@ export async function generateMetadata({
   const { code } = await params;
   return { manifest: `/api/guest/${code}/manifest` };
 }
+
+// Matches the manifest's theme_color — iOS Safari reads this meta tag for the
+// status bar / address bar color rather than the manifest.
+export const viewport: Viewport = { themeColor: "#b07d5c" };
 
 export default async function GuestItineraryPage({
   params,

@@ -36,6 +36,9 @@ export const GET = withErrorHandling(async (
       icons: [
         { src: "/icon.png", sizes: "512x512", type: "image/png", purpose: "any" },
         { src: "/apple-icon.png", sizes: "512x512", type: "image/png", purpose: "any" },
+        // Logo redrawn with generous padding so it isn't clipped when Android
+        // applies its own mask shape (circle/squircle) over the icon.
+        { src: "/maskable-icon-512.png", sizes: "512x512", type: "image/png", purpose: "maskable" },
       ],
     },
     { headers: { "Content-Type": "application/manifest+json" } }
