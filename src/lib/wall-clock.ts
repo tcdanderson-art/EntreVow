@@ -19,8 +19,12 @@ function toLocalDate(value: string) {
   return new Date(year, month - 1, day, hour, minute);
 }
 
+// Locale is fixed (not `undefined`) so formatting is identical on the server's render
+// pass and the browser's hydration pass — `undefined` defers to the runtime's default
+// locale, which differs between Node's OS locale and the browser's `navigator.language`
+// and causes a hydration mismatch.
 export function formatWallClockTime(value: string, options: Intl.DateTimeFormatOptions) {
-  return toLocalDate(value).toLocaleString(undefined, options);
+  return toLocalDate(value).toLocaleString("en-AU", options);
 }
 
 // Truncates/pads a stored value to exactly what <input type="datetime-local"> expects.
@@ -42,5 +46,5 @@ export function formatWallClockDate(value: string | Date, options?: Intl.DateTim
   } else {
     [year, month, day] = value.slice(0, 10).split("-").map(Number);
   }
-  return new Date(year, month - 1, day).toLocaleDateString(undefined, options);
+  return new Date(year, month - 1, day).toLocaleDateString("en-AU", options);
 }

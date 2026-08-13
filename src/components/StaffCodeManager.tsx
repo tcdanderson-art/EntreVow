@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Wedding } from "@/types/wedding";
 
 export default function StaffCodeManager({
@@ -13,9 +13,16 @@ export default function StaffCodeManager({
   const [staffCode, setStaffCode] = useState(wedding.staff_code);
   const [loading, setLoading] = useState(false);
   const [copied, setCopied] = useState(false);
+  // "use client" components still render once on the server to produce the initial
+  // HTML, where `window` doesn't exist — origin is only known once mounted in the browser.
+  const [origin, setOrigin] = useState("");
+
+  useEffect(() => {
+    setOrigin(window.location.origin);
+  }, []);
 
   function linkFor(code: string) {
-    return `${window.location.origin}/staff/${code}`;
+    return `${origin}/staff/${code}`;
   }
 
   async function generate() {
