@@ -3,7 +3,7 @@ import { db } from "@/lib/db";
 import { requireCoupleId } from "@/lib/require-auth";
 import { coupleOwnsWedding } from "@/lib/wedding-ownership";
 import { withErrorHandling } from "@/lib/route-handler";
-import { getPhotoStore } from "@/lib/photo-store";
+import { supabaseAdmin } from "@/lib/supabase";
 import { Photo } from "@/types/photo";
 
 export const DELETE = withErrorHandling(async (
@@ -27,7 +27,7 @@ export const DELETE = withErrorHandling(async (
 
   if (!photo) return NextResponse.json({ error: "Not found" }, { status: 404 });
 
-  await getPhotoStore().delete(photo.blob_key);
+  await supabaseAdmin().storage.from("photos").remove([photo.blob_key]);
 
   return NextResponse.json({ ok: true });
 });

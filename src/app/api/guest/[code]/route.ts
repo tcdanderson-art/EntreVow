@@ -7,6 +7,7 @@ import { ItineraryItem } from "@/types/itinerary";
 import { Announcement } from "@/types/announcement";
 import { Photo } from "@/types/photo";
 import { Shuttle } from "@/types/shuttle";
+import { Video } from "@/types/video";
 import { isPaid, isFullTier } from "@/lib/plan";
 
 export const GET = withErrorHandling(async (
@@ -56,5 +57,12 @@ export const GET = withErrorHandling(async (
       `) as Shuttle[])
     : [];
 
-  return NextResponse.json({ guest, wedding, items, announcements, photos, shuttles });
+  const videos = (await database.sql`
+    SELECT videos.*, guests.name AS guest_name
+    FROM videos JOIN guests ON guests.id = videos.guest_id
+    WHERE videos.wedding_id = ${guest.wedding_id} AND videos.status = 'approved'
+    ORDER BY videos.created_at DESC
+  `) as Video[];
+
+  return NextResponse.json({ guest, wedding, items, announcements, photos, shuttles, videos });
 });

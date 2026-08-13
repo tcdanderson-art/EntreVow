@@ -3,6 +3,8 @@ import { db } from "@/lib/db";
 import { requireCoupleId } from "@/lib/require-auth";
 import { coupleOwnsWedding } from "@/lib/wedding-ownership";
 import { withErrorHandling } from "@/lib/route-handler";
+import { supabaseAdmin } from "@/lib/supabase";
+import { Announcement } from "@/types/announcement";
 
 export const DELETE = withErrorHandling(async (
   _req: NextRequest,
@@ -17,9 +19,14 @@ export const DELETE = withErrorHandling(async (
     return NextResponse.json({ error: "Not found" }, { status: 404 });
   }
 
-  await db().sql`
+  const [announcement] = (await db().sql`
     DELETE FROM announcements WHERE id = ${Number(announcementId)} AND wedding_id = ${weddingId}
-  `;
+    RETURNING *
+  `) as Announcement[];
+
+  if (announcement?.video_key) {
+    await supabaseAdmin().storage.from("videos").remove([announcement.video_key]);
+  }
 
   return NextResponse.json({ ok: true });
 });

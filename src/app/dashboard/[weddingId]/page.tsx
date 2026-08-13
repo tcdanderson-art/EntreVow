@@ -9,6 +9,7 @@ import { Announcement } from "@/types/announcement";
 import { Photo } from "@/types/photo";
 import { Shuttle } from "@/types/shuttle";
 import { WeddingTable } from "@/types/table";
+import { Video } from "@/types/video";
 import { mealOptionsFor } from "@/lib/meal-options";
 import GuestManager from "@/components/GuestManager";
 import SeatingChart from "@/components/SeatingChart";
@@ -18,6 +19,7 @@ import DashboardHeader from "@/components/DashboardHeader";
 import WeddingHeader from "@/components/WeddingHeader";
 import StaffCodeManager from "@/components/StaffCodeManager";
 import PhotoManager from "@/components/PhotoManager";
+import VideoManager from "@/components/VideoManager";
 import WeatherWidget from "@/components/WeatherWidget";
 import ShuttleManager from "@/components/ShuttleManager";
 import DashboardSummary from "@/components/DashboardSummary";
@@ -66,6 +68,13 @@ export default async function WeddingDashboardPage({
   const tables = (await db().sql`
     SELECT * FROM wedding_tables WHERE wedding_id = ${weddingId} ORDER BY sort_order ASC, id ASC
   `) as WeddingTable[];
+
+  const videos = (await db().sql`
+    SELECT videos.*, guests.name AS guest_name
+    FROM videos JOIN guests ON guests.id = videos.guest_id
+    WHERE videos.wedding_id = ${weddingId}
+    ORDER BY (videos.status = 'pending') DESC, videos.created_at DESC
+  `) as Video[];
 
   const guestGroups = Array.from(new Set(guests.map((g) => g.guest_group)));
 
@@ -129,6 +138,15 @@ export default async function WeddingDashboardPage({
         <section className="bg-white border border-border-warm rounded-xl p-6">
           <h2 className="font-semibold mb-4">Photos</h2>
           <PhotoManager weddingId={wedding.id} initialPhotos={photos} />
+        </section>
+
+        <section className="bg-white border border-border-warm rounded-xl p-6">
+          <h2 className="font-semibold mb-4">Videos</h2>
+          <VideoManager
+            weddingId={wedding.id}
+            initialWelcomeVideoKey={wedding.welcome_video_key}
+            initialVideos={videos}
+          />
         </section>
 
         <section className="bg-white border border-border-warm rounded-xl p-6">

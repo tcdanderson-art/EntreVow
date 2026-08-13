@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Photo } from "@/types/photo";
+import { publicStorageUrl } from "@/lib/storage-url";
 
 export default function PhotoManager({
   weddingId,
@@ -28,7 +29,7 @@ export default function PhotoManager({
       {photos.map((p) => (
         <div key={p.id} className="relative group">
           <img
-            src={`/api/photos/${p.blob_key}`}
+            src={publicStorageUrl("photos", p.blob_key)}
             alt={p.caption ?? `Photo by ${p.guest_name}`}
             loading="lazy"
             className="w-full aspect-square object-cover rounded-md bg-cream"

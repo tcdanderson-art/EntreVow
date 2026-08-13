@@ -13,6 +13,7 @@ export interface Wedding {
   paid_at: string | null;
   stripe_checkout_session_id: string | null;
   meal_options: string[] | null;
+  welcome_video_key: string | null;
   created_at: string;
 }
 

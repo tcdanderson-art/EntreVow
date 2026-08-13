@@ -37,7 +37,7 @@ export const POST = withErrorHandling(async (
     return NextResponse.json({ error: "Not found" }, { status: 404 });
   }
 
-  const { message, visibleToGroups } = await req.json();
+  const { message, visibleToGroups, videoKey } = await req.json();
   if (!message) return NextResponse.json({ error: "Message is required" }, { status: 400 });
 
   const groups: string[] = Array.isArray(visibleToGroups) && visibleToGroups.length > 0
@@ -45,8 +45,8 @@ export const POST = withErrorHandling(async (
     : ["general"];
 
   const [announcement] = (await db().sql`
-    INSERT INTO announcements (wedding_id, message, visible_to_groups)
-    VALUES (${weddingId}, ${message}, ${groups})
+    INSERT INTO announcements (wedding_id, message, visible_to_groups, video_key)
+    VALUES (${weddingId}, ${message}, ${groups}, ${typeof videoKey === "string" && videoKey ? videoKey : null})
     RETURNING *
   `) as Announcement[];
 

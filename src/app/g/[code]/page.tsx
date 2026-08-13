@@ -7,11 +7,14 @@ import { ItineraryItem } from "@/types/itinerary";
 import { Announcement } from "@/types/announcement";
 import { Photo } from "@/types/photo";
 import { Shuttle } from "@/types/shuttle";
+import { Video } from "@/types/video";
 import GuestItineraryList from "@/components/GuestItineraryList";
 import GuestRsvp from "@/components/GuestRsvp";
 import GuestAnnouncements from "@/components/GuestAnnouncements";
 import GuestPass from "@/components/GuestPass";
+import WelcomeVideo from "@/components/WelcomeVideo";
 import GuestPhotos from "@/components/GuestPhotos";
+import GuestVideoGuestbook from "@/components/GuestVideoGuestbook";
 import GuestShuttleTracker from "@/components/GuestShuttleTracker";
 import GuestPushOptIn from "@/components/GuestPushOptIn";
 import OfflineSupport from "@/components/OfflineSupport";
@@ -86,6 +89,13 @@ export default async function GuestItineraryPage({
     SELECT * FROM shuttles WHERE wedding_id = ${guest.wedding_id} ORDER BY created_at ASC
   `) as Shuttle[];
 
+  const videos = (await db().sql`
+    SELECT videos.*, guests.name AS guest_name
+    FROM videos JOIN guests ON guests.id = videos.guest_id
+    WHERE videos.wedding_id = ${guest.wedding_id} AND videos.status = 'approved'
+    ORDER BY videos.created_at DESC
+  `) as Video[];
+
   const vapidPublicKey = getVapidPublicKey();
 
   return (
@@ -117,6 +127,8 @@ export default async function GuestItineraryPage({
           )}
         </div>
 
+        {wedding.welcome_video_key && <WelcomeVideo storageKey={wedding.welcome_video_key} />}
+
         <GuestPass guestName={guest.name} />
 
         <GuestAnnouncements code={code} initialAnnouncements={announcements} />
@@ -136,6 +148,8 @@ export default async function GuestItineraryPage({
         </div>
 
         <GuestPhotos code={code} initialPhotos={photos} />
+
+        <GuestVideoGuestbook code={code} initialVideos={videos} />
 
         {isFullTier(wedding) && <GuestShuttleTracker code={code} initialShuttles={shuttles} />}
 

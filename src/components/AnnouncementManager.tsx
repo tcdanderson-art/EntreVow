@@ -2,6 +2,11 @@
 
 import { useState } from "react";
 import { Announcement } from "@/types/announcement";
+import { publicStorageUrl } from "@/lib/storage-url";
+import { supabaseBrowser } from "@/lib/supabase-browser";
+
+const MAX_VIDEO_BYTES = 60 * 1024 * 1024;
+const ALLOWED_VIDEO_TYPES = new Set(["video/webm", "video/mp4"]);
 
 export default function AnnouncementManager({
   weddingId,
@@ -15,7 +20,27 @@ export default function AnnouncementManager({
   const [announcements, setAnnouncements] = useState(initialAnnouncements);
   const [message, setMessage] = useState("");
   const [selectedGroups, setSelectedGroups] = useState<string[]>(knownGroups);
+  const [videoFile, setVideoFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
+  const [videoError, setVideoError] = useState<string | null>(null);
+
+  function handleVideoSelected(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setVideoError(null);
+
+    if (!ALLOWED_VIDEO_TYPES.has(file.type)) {
+      setVideoError("Only MP4 or WebM video is allowed");
+      e.target.value = "";
+      return;
+    }
+    if (file.size > MAX_VIDEO_BYTES) {
+      setVideoError("Video is too large");
+      e.target.value = "";
+      return;
+    }
+    setVideoFile(file);
+  }
 
   function toggleGroup(group: string) {
     setSelectedGroups((prev) =>
@@ -26,18 +51,47 @@ export default function AnnouncementManager({
   async function handlePost(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
+    setVideoError(null);
 
-    const res = await fetch(`/api/weddings/${weddingId}/announcements`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ message, visibleToGroups: selectedGroups }),
-    });
-    const data = await res.json();
+    try {
+      let videoKey: string | null = null;
+      if (videoFile) {
+        const mintRes = await fetch(`/api/weddings/${weddingId}/announcement-video/upload-url`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ contentType: videoFile.type, size: videoFile.size }),
+        });
+        const mintData = await mintRes.json();
+        if (!mintRes.ok) {
+          setVideoError(mintData.error ?? "Video upload failed");
+          return;
+        }
 
-    setLoading(false);
-    if (res.ok) {
-      setAnnouncements((prev) => [data.announcement, ...prev]);
-      setMessage("");
+        const { error: uploadError } = await supabaseBrowser()
+          .storage.from("videos")
+          .uploadToSignedUrl(mintData.path, mintData.token, videoFile, { contentType: videoFile.type });
+        if (uploadError) {
+          setVideoError("Video upload failed — try again");
+          return;
+        }
+
+        videoKey = mintData.path;
+      }
+
+      const res = await fetch(`/api/weddings/${weddingId}/announcements`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message, visibleToGroups: selectedGroups, videoKey }),
+      });
+      const data = await res.json();
+
+      if (res.ok) {
+        setAnnouncements((prev) => [data.announcement, ...prev]);
+        setMessage("");
+        setVideoFile(null);
+      }
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -66,6 +120,14 @@ export default function AnnouncementManager({
             >
               <div>
                 <p>{a.message}</p>
+                {a.video_key && (
+                  <video
+                    src={publicStorageUrl("videos", a.video_key)}
+                    controls
+                    playsInline
+                    className="w-full max-w-[200px] aspect-video rounded-md bg-black mt-1.5"
+                  />
+                )}
                 <p className="text-xs text-foreground/50 mt-0.5">
                   visible to: {a.visible_to_groups.join(", ")}
                 </p>
@@ -104,6 +166,12 @@ export default function AnnouncementManager({
             </label>
           ))}
         </div>
+
+        <label className="self-start text-sm font-medium text-brand cursor-pointer">
+          {videoFile ? `Video: ${videoFile.name}` : "+ Attach a video (optional)"}
+          <input type="file" accept="video/mp4,video/webm" onChange={handleVideoSelected} className="hidden" />
+        </label>
+        {videoError && <p className="text-sm text-red-600">{videoError}</p>}
 
         <button
           type="submit"

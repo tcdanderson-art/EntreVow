@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Announcement } from "@/types/announcement";
+import { publicStorageUrl } from "@/lib/storage-url";
 
 const POLL_INTERVAL_MS = 20000;
 
@@ -39,6 +40,14 @@ export default function GuestAnnouncements({
           className="bg-brand/10 border border-brand/30 rounded-lg px-3 py-2 text-sm text-foreground"
         >
           {a.message}
+          {a.video_key && (
+            <video
+              src={publicStorageUrl("videos", a.video_key)}
+              controls
+              playsInline
+              className="w-full aspect-video rounded-md bg-black mt-2"
+            />
+          )}
         </div>
       ))}
     </div>

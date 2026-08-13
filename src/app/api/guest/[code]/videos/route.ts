@@ -4,18 +4,18 @@ import { withErrorHandling } from "@/lib/route-handler";
 import { rateLimit } from "@/lib/rate-limit";
 import { isPaid } from "@/lib/plan";
 import { Guest } from "@/types/guest";
-import { Photo } from "@/types/photo";
+import { Video } from "@/types/video";
 import { Wedding } from "@/types/wedding";
 
-// Confirms a photo already uploaded direct-to-storage via the upload-url route —
-// the server never sees the bytes, just records the key once the client's PUT succeeds.
+// Confirms a guestbook video already uploaded direct-to-storage — the server never
+// sees the bytes, just records the key. Starts "pending" until the couple approves it.
 export const POST = withErrorHandling(async (
   req: NextRequest,
   { params }: { params: Promise<{ code: string }> }
 ) => {
   const { code } = await params;
 
-  const limited = rateLimit(req, "guest-photo", 10, 60 * 60_000, code);
+  const limited = rateLimit(req, "guest-video", 5, 60 * 60_000, code);
   if (limited) return limited;
 
   const database = db();
@@ -29,16 +29,19 @@ export const POST = withErrorHandling(async (
     return NextResponse.json({ error: "Guest access isn't active yet" }, { status: 402 });
   }
 
-  const { storage_key, caption } = await req.json();
+  const { storage_key, duration_seconds, caption } = await req.json();
   if (typeof storage_key !== "string" || !storage_key) {
     return NextResponse.json({ error: "storage_key is required" }, { status: 400 });
   }
+  if (typeof duration_seconds !== "number" || duration_seconds > 31) {
+    return NextResponse.json({ error: "Video must be 30 seconds or less" }, { status: 400 });
+  }
 
-  const [photo] = (await database.sql`
-    INSERT INTO photos (wedding_id, guest_id, blob_key, caption)
-    VALUES (${guest.wedding_id}, ${guest.id}, ${storage_key}, ${typeof caption === "string" && caption.trim() ? caption.trim() : null})
+  const [video] = (await database.sql`
+    INSERT INTO videos (wedding_id, guest_id, storage_key, duration_seconds, caption, status)
+    VALUES (${guest.wedding_id}, ${guest.id}, ${storage_key}, ${duration_seconds}, ${typeof caption === "string" && caption.trim() ? caption.trim() : null}, 'pending')
     RETURNING *
-  `) as Photo[];
+  `) as Video[];
 
-  return NextResponse.json({ photo: { ...photo, guest_name: guest.name } });
+  return NextResponse.json({ video: { ...video, guest_name: guest.name } });
 });

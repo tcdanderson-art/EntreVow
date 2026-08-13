@@ -3,6 +3,8 @@
 import { useEffect, useRef, useState } from "react";
 import { Photo } from "@/types/photo";
 import { compressImage } from "@/lib/compress-image";
+import { supabaseBrowser } from "@/lib/supabase-browser";
+import { publicStorageUrl } from "@/lib/storage-url";
 
 const POLL_INTERVAL_MS = 20000;
 
@@ -42,10 +44,31 @@ export default function GuestPhotos({
     setUploading(true);
     try {
       const compressed = await compressImage(file);
-      const form = new FormData();
-      form.set("photo", compressed, "photo.jpg");
 
-      const res = await fetch(`/api/guest/${code}/photos`, { method: "POST", body: form });
+      const mintRes = await fetch(`/api/guest/${code}/photos/upload-url`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ contentType: "image/jpeg", size: compressed.size }),
+      });
+      const mintData = await mintRes.json();
+      if (!mintRes.ok) {
+        setError(mintData.error ?? "Upload failed");
+        return;
+      }
+
+      const { error: uploadError } = await supabaseBrowser()
+        .storage.from("photos")
+        .uploadToSignedUrl(mintData.path, mintData.token, compressed, { contentType: "image/jpeg" });
+      if (uploadError) {
+        setError("Upload failed — try again");
+        return;
+      }
+
+      const res = await fetch(`/api/guest/${code}/photos`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ storage_key: mintData.path }),
+      });
       const data = await res.json();
 
       if (res.ok) {
@@ -90,7 +113,7 @@ export default function GuestPhotos({
           {photos.map((p) => (
             <img
               key={p.id}
-              src={`/api/photos/${p.blob_key}`}
+              src={publicStorageUrl("photos", p.blob_key)}
               alt={p.caption ?? `Photo by ${p.guest_name}`}
               loading="lazy"
               className="w-full aspect-square object-cover rounded-md bg-cream"

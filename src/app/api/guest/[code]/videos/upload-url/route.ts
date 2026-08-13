@@ -2,20 +2,20 @@ import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { withErrorHandling } from "@/lib/route-handler";
 import { rateLimit } from "@/lib/rate-limit";
+import { validateVideoUpload, mintVideoUploadUrl } from "@/lib/video-upload";
 import { isPaid } from "@/lib/plan";
 import { Guest } from "@/types/guest";
-import { Photo } from "@/types/photo";
 import { Wedding } from "@/types/wedding";
 
-// Confirms a photo already uploaded direct-to-storage via the upload-url route —
-// the server never sees the bytes, just records the key once the client's PUT succeeds.
+const MAX_BYTES = 40 * 1024 * 1024; // sanity backstop on the declared size — bucket-level limit is the hard enforcement
+
 export const POST = withErrorHandling(async (
   req: NextRequest,
   { params }: { params: Promise<{ code: string }> }
 ) => {
   const { code } = await params;
 
-  const limited = rateLimit(req, "guest-photo", 10, 60 * 60_000, code);
+  const limited = rateLimit(req, "guest-video-mint", 5, 60 * 60_000, code);
   if (limited) return limited;
 
   const database = db();
@@ -29,16 +29,12 @@ export const POST = withErrorHandling(async (
     return NextResponse.json({ error: "Guest access isn't active yet" }, { status: 402 });
   }
 
-  const { storage_key, caption } = await req.json();
-  if (typeof storage_key !== "string" || !storage_key) {
-    return NextResponse.json({ error: "storage_key is required" }, { status: 400 });
-  }
+  const { contentType, size } = await req.json();
+  const validationError = validateVideoUpload(contentType, size, MAX_BYTES);
+  if (validationError) return NextResponse.json({ error: validationError }, { status: 400 });
 
-  const [photo] = (await database.sql`
-    INSERT INTO photos (wedding_id, guest_id, blob_key, caption)
-    VALUES (${guest.wedding_id}, ${guest.id}, ${storage_key}, ${typeof caption === "string" && caption.trim() ? caption.trim() : null})
-    RETURNING *
-  `) as Photo[];
+  const { data, error } = await mintVideoUploadUrl(guest.wedding_id, contentType);
+  if (error || !data) return NextResponse.json({ error: "Could not prepare upload" }, { status: 500 });
 
-  return NextResponse.json({ photo: { ...photo, guest_name: guest.name } });
+  return NextResponse.json({ path: data.path, token: data.token });
 });
