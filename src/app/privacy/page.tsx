@@ -12,11 +12,12 @@ export default function PrivacyPage() {
         </div>
 
         <p className="text-foreground/70 leading-relaxed">
-          Entrevow (&ldquo;Entrevow&rdquo;, &ldquo;we&rdquo;, &ldquo;us&rdquo;) provides a wedding-day
-          logistics tool that lets couples build a guest list and itinerary, and share it with
-          guests via a private link. This policy explains what personal information we collect,
-          how we use it, and the choices you have. We handle personal information in accordance
-          with the Australian Privacy Principles (APPs) under the Privacy Act 1988 (Cth).
+          Entrevow (&ldquo;Entrevow&rdquo;, &ldquo;we&rdquo;, &ldquo;us&rdquo;), operated by
+          Timothy D Anderson, ABN 24 461 519 751, provides a wedding-day logistics tool that lets
+          couples build a guest list and itinerary, and share it with guests via a private link.
+          This policy explains what personal information we collect, how we use it, and the
+          choices you have. We handle personal information in accordance with the Australian
+          Privacy Principles (APPs) under the Privacy Act 1988 (Cth).
         </p>
 
         <section className="flex flex-col gap-2">

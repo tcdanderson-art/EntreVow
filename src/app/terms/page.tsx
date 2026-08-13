@@ -12,10 +12,9 @@ export default function TermsPage() {
         </div>
 
         <p className="text-foreground/70 leading-relaxed">
-          These terms govern your use of Entrevow (&ldquo;the Service&rdquo;), operated by{" "}
-          {/* TODO: replace with real legal entity name and ABN before launch */}
-          [Legal entity name], ABN [ABN] (&ldquo;we&rdquo;, &ldquo;us&rdquo;). By creating an
-          account or otherwise using the Service, you agree to them. If you don&apos;t agree,
+          These terms govern your use of Entrevow (&ldquo;the Service&rdquo;), operated by
+          Timothy D Anderson, ABN 24 461 519 751 (&ldquo;we&rdquo;, &ldquo;us&rdquo;). By creating
+          an account or otherwise using the Service, you agree to them. If you don&apos;t agree,
           please don&apos;t use the Service.
         </p>
 
