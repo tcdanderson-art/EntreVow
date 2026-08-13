@@ -31,23 +31,25 @@ export function proxy(req: NextRequest) {
   const queryCode = searchParams.get("preview");
   const cookieCode = req.cookies.get(COOKIE_NAME)?.value;
 
-  if (queryCode === accessCode && cookieCode !== accessCode) {
-    const url = req.nextUrl.clone();
-    url.searchParams.delete("preview");
-    const res = NextResponse.redirect(url);
-    res.cookies.set(COOKIE_NAME, accessCode, {
-      httpOnly: true,
-      sameSite: "lax",
-      secure: true,
-      maxAge: COOKIE_MAX_AGE,
-      path: "/",
-      domain: cookieDomainFor(req.nextUrl.hostname),
-    });
-    return res;
-  }
-
   if (cookieCode === accessCode || queryCode === accessCode) {
-    return NextResponse.next();
+    // Serve the real page directly rather than redirecting to a clean URL
+    // first — Set-Cookie on a 307 redirect response has been unreliable on
+    // iOS Safari in the wild, while a cookie set on the normal 200 response
+    // that's already rendering the real page is the standard, most-tested
+    // path every browser handles the same way. The ?preview= param just
+    // stays visible in the address bar this one time, which is harmless.
+    const res = NextResponse.next();
+    if (queryCode === accessCode && cookieCode !== accessCode) {
+      res.cookies.set(COOKIE_NAME, accessCode, {
+        httpOnly: true,
+        sameSite: "lax",
+        secure: true,
+        maxAge: COOKIE_MAX_AGE,
+        path: "/",
+        domain: cookieDomainFor(req.nextUrl.hostname),
+      });
+    }
+    return res;
   }
 
   const comingSoon = req.nextUrl.clone();
