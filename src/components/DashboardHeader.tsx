@@ -16,7 +16,14 @@ export default function DashboardHeader() {
   return (
     <header className="flex items-center justify-between max-w-3xl mx-auto px-6 pt-6">
       <Link href="/dashboard">
-        <Image src="/brand/wordmark.png" alt="Entrevow" width={663} height={82} className="h-5 w-auto" />
+        <Image
+          src="/brand/wordmark.png"
+          alt="Entrevow"
+          width={663}
+          height={82}
+          className="h-5 w-auto"
+          unoptimized
+        />
       </Link>
       <span className="flex items-center gap-4">
         <Link

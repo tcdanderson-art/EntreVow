@@ -43,6 +43,7 @@ export default function Home() {
           height={82}
           className="h-4 sm:h-6 w-auto shrink-0"
           priority
+          unoptimized
         />
         <nav className="flex items-center gap-2 sm:gap-4 shrink-0">
           <Link

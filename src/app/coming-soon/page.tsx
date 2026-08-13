@@ -17,6 +17,7 @@ export default function ComingSoonPage() {
           height={82}
           className="h-6 w-auto"
           priority
+          unoptimized
         />
         <h1 className="font-display text-xl">Launching soon</h1>
         <p className="text-sm text-foreground/60 leading-relaxed">
