@@ -8,11 +8,13 @@ export default function TermsPage() {
       <div className="max-w-2xl mx-auto bg-white border border-border-warm rounded-xl p-8 sm:p-10 flex flex-col gap-6">
         <div>
           <h1 className="font-display text-3xl mb-2">Terms of Service</h1>
-          <p className="text-sm text-foreground/50">Last updated August 12, 2026</p>
+          <p className="text-sm text-foreground/50">Last updated August 13, 2026</p>
         </div>
 
         <p className="text-foreground/70 leading-relaxed">
-          These terms govern your use of Entrevow (&ldquo;the Service&rdquo;). By creating an
+          These terms govern your use of Entrevow (&ldquo;the Service&rdquo;), operated by{" "}
+          {/* TODO: replace with real legal entity name and ABN before launch */}
+          [Legal entity name], ABN [ABN] (&ldquo;we&rdquo;, &ldquo;us&rdquo;). By creating an
           account or otherwise using the Service, you agree to them. If you don&apos;t agree,
           please don&apos;t use the Service.
         </p>
@@ -78,13 +80,24 @@ export default function TermsPage() {
             </a>
             .
           </p>
+          <p className="text-foreground/70 leading-relaxed">
+            This policy is in addition to, and doesn&apos;t limit, your rights under the Australian
+            Consumer Law. If the Service has a major failure, you&apos;re entitled to a refund (or
+            other remedy of your choice) regardless of the 7-day window, whether a guest has
+            RSVP&apos;d, or anything else in this policy.
+          </p>
         </section>
 
         <section className="flex flex-col gap-2">
           <h2 className="font-semibold text-lg text-brand">Termination</h2>
           <p className="text-foreground/70 leading-relaxed">
-            You may stop using the Service and request deletion of your account at any time. We
-            may suspend or terminate access to the Service for anyone who breaches these terms.
+            You may stop using the Service and request deletion of your account at any time. If
+            you breach these terms, we&apos;ll generally let you know and give you a reasonable
+            opportunity to fix it before suspending or terminating your access. We may act
+            immediately, without notice, for serious breaches — for example fraud, abuse of other
+            users&apos; data, or attempts to compromise the Service&apos;s security. Terminating
+            your access for a breach doesn&apos;t forfeit any refund you&apos;d otherwise be
+            entitled to under the Paid features section above or the Australian Consumer Law.
           </p>
         </section>
 
@@ -103,9 +116,12 @@ export default function TermsPage() {
         <section className="flex flex-col gap-2">
           <h2 className="font-semibold text-lg text-brand">Changes to these terms</h2>
           <p className="text-foreground/70 leading-relaxed">
-            We may update these terms from time to time. We&apos;ll update the &ldquo;last
-            updated&rdquo; date above when we do, and continued use of the Service after a
-            change means you accept the updated terms.
+            We may update these terms from time to time. For material changes, we&apos;ll give at
+            least 14 days&apos; notice (by email or a notice in the dashboard) before they take
+            effect, and update the &ldquo;last updated&rdquo; date above. A change never applies
+            retroactively to a wedding you&apos;ve already paid for — it only affects new purchases
+            and continued use going forward. Continuing to use the Service after a change takes
+            effect means you accept it.
           </p>
         </section>
 
