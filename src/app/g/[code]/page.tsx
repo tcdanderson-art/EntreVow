@@ -13,9 +13,11 @@ import GuestAnnouncements from "@/components/GuestAnnouncements";
 import GuestPass from "@/components/GuestPass";
 import GuestPhotos from "@/components/GuestPhotos";
 import GuestShuttleTracker from "@/components/GuestShuttleTracker";
+import GuestPushOptIn from "@/components/GuestPushOptIn";
 import OfflineSupport from "@/components/OfflineSupport";
 import { isPaid, isFullTier } from "@/lib/plan";
 import { mealOptionsFor } from "@/lib/meal-options";
+import { getVapidPublicKey } from "@/lib/push";
 
 export async function generateMetadata({
   params,
@@ -84,6 +86,8 @@ export default async function GuestItineraryPage({
     SELECT * FROM shuttles WHERE wedding_id = ${guest.wedding_id} ORDER BY created_at ASC
   `) as Shuttle[];
 
+  const vapidPublicKey = getVapidPublicKey();
+
   return (
     <div className="flex-1 flex items-center justify-center bg-cream px-4 py-8">
       <OfflineSupport />
@@ -118,6 +122,10 @@ export default async function GuestItineraryPage({
         <GuestAnnouncements code={code} initialAnnouncements={announcements} />
 
         <GuestRsvp code={code} initialGuest={guest} mealOptions={mealOptionsFor(wedding)} />
+
+        {isFullTier(wedding) && vapidPublicKey && (
+          <GuestPushOptIn code={code} vapidPublicKey={vapidPublicKey} />
+        )}
 
         <div className="px-5 py-3 flex-1">
           <div className="text-xs font-semibold uppercase tracking-wide text-foreground/50 mb-3">

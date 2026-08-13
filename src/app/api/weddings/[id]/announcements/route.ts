@@ -3,6 +3,7 @@ import { db } from "@/lib/db";
 import { requireCoupleId } from "@/lib/require-auth";
 import { coupleOwnsWedding } from "@/lib/wedding-ownership";
 import { withErrorHandling } from "@/lib/route-handler";
+import { notifyGuests } from "@/lib/push";
 import { Announcement } from "@/types/announcement";
 
 export const GET = withErrorHandling(async (
@@ -48,6 +49,14 @@ export const POST = withErrorHandling(async (
     VALUES (${weddingId}, ${message}, ${groups})
     RETURNING *
   `) as Announcement[];
+
+  await notifyGuests({
+    weddingId,
+    visibleToGroups: announcement.visible_to_groups,
+    title: "New announcement",
+    body: announcement.message.length > 120 ? `${announcement.message.slice(0, 117)}...` : announcement.message,
+    tag: "announcement",
+  });
 
   return NextResponse.json({ announcement });
 });
