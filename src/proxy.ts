@@ -53,7 +53,16 @@ export function proxy(req: NextRequest) {
   const comingSoon = req.nextUrl.clone();
   comingSoon.pathname = "/coming-soon";
   comingSoon.search = "";
-  return NextResponse.rewrite(comingSoon);
+  const res = NextResponse.rewrite(comingSoon);
+  // Without this, the rewritten response inherits /coming-soon's own
+  // (long-lived, publicly cacheable) headers, and Netlify's edge caches
+  // that "not unlocked yet" response against the ORIGINAL url for up to a
+  // year. Since the cache doesn't vary on our custom cookie, that then
+  // gets served to everyone hitting that url afterwards — including
+  // visitors who do have a valid unlock cookie. Every gate decision must
+  // be revalidated at the origin on every request.
+  res.headers.set("Cache-Control", "private, no-store, must-revalidate");
+  return res;
 }
 
 export const config = {
