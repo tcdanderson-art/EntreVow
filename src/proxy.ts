@@ -7,10 +7,12 @@ const COOKIE_MAX_AGE = 60 * 60 * 24 * 180; // ~6 months
 // (alexandpriya.entrevow.com etc). Never do this for the underlying
 // netlify.app host — that's a shared public suffix, and browsers reject (or
 // worse, could leak across unrelated sites on) a cookie scoped that broadly.
+// On the apex itself, stay host-only (no Domain attribute) rather than
+// setting Domain=.entrevow.com — iOS Safari has been unreliable honoring an
+// explicit cross-subdomain Domain attribute on a cookie set via a redirect
+// response, even when the request never leaves entrevow.com.
 function cookieDomainFor(hostname: string): string | undefined {
-  return hostname === "entrevow.com" || hostname.endsWith(".entrevow.com")
-    ? ".entrevow.com"
-    : undefined;
+  return hostname.endsWith(".entrevow.com") ? ".entrevow.com" : undefined;
 }
 
 // Pre-launch gate: the whole site rewrites to /coming-soon for everyone except
