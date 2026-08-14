@@ -8,7 +8,7 @@ export default function PrivacyPage() {
       <div className="max-w-2xl mx-auto bg-white border border-border-warm rounded-xl p-8 sm:p-10 flex flex-col gap-6">
         <div>
           <h1 className="font-display text-3xl mb-2">Privacy Policy</h1>
-          <p className="text-sm text-foreground/50">Last updated August 13, 2026</p>
+          <p className="text-sm text-foreground/50">Last updated August 14, 2026</p>
         </div>
 
         <p className="text-foreground/70 leading-relaxed">
@@ -35,8 +35,36 @@ export default function PrivacyPage() {
           </p>
           <p className="text-foreground/70 leading-relaxed">
             <strong>Guest RSVPs:</strong> if a guest responds via their link, we store their RSVP
-            status (attending / declined) and any optional note they add (e.g. dietary
+            status (attending / declined), a meal choice if the couple has set up meal options, an
+            optional song request, and any other optional note they add (e.g. dietary
             requirements).
+          </p>
+          <p className="text-foreground/70 leading-relaxed">
+            <strong>Photos and videos:</strong> couples and guests can upload photos to a shared
+            gallery, and couples can add a welcome video or a video attached to an announcement.
+            Guests can also record a short video guestbook message — these are held back from
+            other guests until the couple reviews and approves them. All of this is stored as
+            media files, not analysed or scanned by us beyond what&apos;s needed to store and
+            serve it.
+          </p>
+          <p className="text-foreground/70 leading-relaxed">
+            <strong>Location data:</strong> on the Full Day-Of plan, a driver sharing a shuttle
+            link can share live GPS location so guests can see the shuttle&apos;s progress — this
+            is only collected while that link is actively open and sharing. Separately, we send
+            the wedding venue&apos;s town or suburb (never a street address) to our weather
+            provider to generate contingency alerts.
+          </p>
+          <p className="text-foreground/70 leading-relaxed">
+            <strong>Push notification data:</strong> if a guest opts in on the Full Day-Of plan,
+            their browser generates a push subscription (an address used only to deliver
+            notifications, not personally identifying on its own) which we store against their
+            guest link so we can notify them of itinerary changes or new announcements.
+          </p>
+          <p className="text-foreground/70 leading-relaxed">
+            <strong>Payment data:</strong> if a couple pays to unlock guest access, payment is
+            handled entirely by Stripe — we never see or store your card details. We keep a record
+            of the payment (amount, plan tier, and Stripe&apos;s reference for it) for receipts and
+            support.
           </p>
           <p className="text-foreground/70 leading-relaxed">
             <strong>Technical data:</strong> a single essential session cookie used to keep
@@ -51,9 +79,11 @@ export default function PrivacyPage() {
           <h2 className="font-semibold text-lg text-brand">How we use this information</h2>
           <p className="text-foreground/70 leading-relaxed">
             We use the information above solely to operate the service: authenticating couples,
-            displaying the itinerary and guest list, letting guests submit RSVPs, and sending
-            transactional emails you or your guests trigger (such as a password reset link). We
-            do not sell personal information, and we do not use guest or wedding data for
+            displaying the itinerary and guest list, letting guests submit RSVPs and upload photos
+            or videos, processing payments, generating weather contingency alerts, powering live
+            shuttle tracking, sending push notifications for itinerary or announcement changes, and
+            sending transactional emails you or your guests trigger (such as a password reset
+            link). We do not sell personal information, and we do not use guest or wedding data for
             advertising.
           </p>
         </section>
@@ -66,7 +96,14 @@ export default function PrivacyPage() {
           </p>
           <ul className="list-disc pl-5 text-foreground/70 leading-relaxed flex flex-col gap-1">
             <li>Netlify — application hosting and serverless functions</li>
-            <li>Neon (via Netlify DB) — our Postgres database</li>
+            <li>Supabase — our Postgres database, and storage for uploaded photos and videos</li>
+            <li>
+              Stripe — payment processing for paid weddings; Stripe collects and processes your
+              payment details directly, we never see your full card number
+            </li>
+            <li>
+              Open-Meteo — weather forecast data, given only your venue&apos;s town or suburb
+            </li>
             <li>Resend — delivery of transactional emails (e.g. password resets)</li>
             <li>
               Google Analytics — usage analytics on our marketing pages and couple dashboard only,

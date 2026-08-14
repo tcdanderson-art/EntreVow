@@ -8,7 +8,7 @@ export default function TermsPage() {
       <div className="max-w-2xl mx-auto bg-white border border-border-warm rounded-xl p-8 sm:p-10 flex flex-col gap-6">
         <div>
           <h1 className="font-display text-3xl mb-2">Terms of Service</h1>
-          <p className="text-sm text-foreground/50">Last updated August 13, 2026</p>
+          <p className="text-sm text-foreground/50">Last updated August 14, 2026</p>
         </div>
 
         <p className="text-foreground/70 leading-relaxed">
@@ -21,18 +21,36 @@ export default function TermsPage() {
         <section className="flex flex-col gap-2">
           <h2 className="font-semibold text-lg text-brand">The Service</h2>
           <p className="text-foreground/70 leading-relaxed">
-            Entrevow lets couples build a wedding guest list and itinerary and share it with
-            guests via a private link, so guests can view their schedule and RSVP without
-            creating an account.
+            Entrevow lets couples build a wedding guest list, itinerary, and day-of tools (such as
+            live shuttle tracking, weather alerts, and QR check-in on higher tiers), and share them
+            with guests via a private link — so guests can view their schedule, RSVP, and share
+            photos and videos without creating an account.
+          </p>
+          <p className="text-foreground/70 leading-relaxed">
+            Entrevow is an information and communication tool. It doesn&apos;t manage vendors,
+            transport, venues, or the event itself, and isn&apos;t a substitute for a professional
+            wedding planner or day-of coordinator.
           </p>
         </section>
 
         <section className="flex flex-col gap-2">
           <h2 className="font-semibold text-lg text-brand">Accounts</h2>
           <p className="text-foreground/70 leading-relaxed">
-            You must provide accurate information when creating an account and are responsible
-            for keeping your login credentials confidential and for all activity under your
-            account. Tell us right away if you suspect unauthorized access.
+            You must be at least 18 years old to create an account. You must provide accurate
+            information when creating an account and are responsible for keeping your login
+            credentials confidential and for all activity under your account. Tell us right away
+            if you suspect unauthorized access.
+          </p>
+        </section>
+
+        <section className="flex flex-col gap-2">
+          <h2 className="font-semibold text-lg text-brand">Guest access</h2>
+          <p className="text-foreground/70 leading-relaxed">
+            Guests don&apos;t create an account — each guest reaches their schedule through a
+            private link tied to them. Treat that link like a personal invitation: don&apos;t post
+            it publicly or forward it to anyone it isn&apos;t meant for. We&apos;re not
+            responsible for the consequences of a guest link being shared or accessed by someone
+            it wasn&apos;t intended for.
           </p>
         </section>
 
@@ -40,8 +58,9 @@ export default function TermsPage() {
           <h2 className="font-semibold text-lg text-brand">Acceptable use</h2>
           <p className="text-foreground/70 leading-relaxed">
             You agree not to use the Service to: violate any law; harass, deceive, or harm
-            others; upload content you don&apos;t have the right to share; attempt to access
-            another couple&apos;s account or guest data; or interfere with or disrupt the
+            others; upload photos, videos, or other content you don&apos;t have the right to
+            share, that is illegal, or that infringes someone else&apos;s rights; attempt to
+            access another couple&apos;s account or guest data; or interfere with or disrupt the
             Service&apos;s operation (including scraping, overloading, or probing it for
             vulnerabilities without authorization).
           </p>
@@ -50,11 +69,24 @@ export default function TermsPage() {
         <section className="flex flex-col gap-2">
           <h2 className="font-semibold text-lg text-brand">Your content</h2>
           <p className="text-foreground/70 leading-relaxed">
-            You own the wedding and guest information you enter into Entrevow. By entering it,
-            you grant us a limited license to store, process, and display it back to you and to
-            the guests you invite, solely to provide the Service. You&apos;re responsible for
-            having the right to share any guest information (such as names and contact details)
-            that you enter.
+            You own the wedding and guest information, and the photos and videos, that you or
+            your guests upload to Entrevow. By uploading it, you grant us a limited license to
+            store, process, and display it back to you and to the guests you invite, solely to
+            provide the Service. You&apos;re responsible for having the right to share any guest
+            information (such as names and contact details) that you enter, and for anything a
+            guest of yours uploads through their link.
+          </p>
+          <p className="text-foreground/70 leading-relaxed">
+            Video guestbook submissions are held back from other guests until you (the couple)
+            approve them; you&apos;re responsible for what you approve. More generally, we may
+            remove or disable access to any content — photos and videos included — without
+            notice, that we reasonably believe breaches the Acceptable use section above, the law,
+            or someone else&apos;s rights. If you believe content on Entrevow infringes your
+            copyright or other rights, contact{" "}
+            <a href="mailto:hello@entrevow.com" className="text-brand font-medium">
+              hello@entrevow.com
+            </a>{" "}
+            with enough detail to identify it and we&apos;ll investigate.
           </p>
         </section>
 
@@ -106,9 +138,40 @@ export default function TermsPage() {
             The Service is provided &ldquo;as is&rdquo; without warranties of any kind, and we
             don&apos;t guarantee it will be uninterrupted or error-free. To the maximum extent
             permitted by law, Entrevow isn&apos;t liable for indirect, incidental, or
-            consequential loss arising from your use of the Service. Nothing in these terms
-            excludes, restricts, or modifies any right, warranty, or remedy under the Australian
-            Consumer Law or any other applicable law that cannot lawfully be excluded.
+            consequential loss arising from your use of the Service, and our total liability for
+            any claim relating to a wedding is capped at the amount you paid for that wedding.
+            Nothing in these terms excludes, restricts, or modifies any right, warranty, or remedy
+            under the Australian Consumer Law or any other applicable law that cannot lawfully be
+            excluded — including your entitlement to a remedy for a major failure regardless of
+            this cap.
+          </p>
+          <p className="text-foreground/70 leading-relaxed">
+            Features that depend on timing or a live connection — including push notifications,
+            live schedule updates, and shuttle tracking — depend on a guest&apos;s device, network
+            connection, and notification permissions, which we don&apos;t control. We can&apos;t
+            guarantee a guest receives or sees an update by any particular time. Weather alerts are
+            generated from third-party forecast data for general awareness only, aren&apos;t a
+            professional forecast, and shouldn&apos;t be relied on for safety decisions.
+          </p>
+        </section>
+
+        <section className="flex flex-col gap-2">
+          <h2 className="font-semibold text-lg text-brand">Events beyond our control</h2>
+          <p className="text-foreground/70 leading-relaxed">
+            We&apos;re not liable for any delay or failure of the Service caused by something
+            beyond our reasonable control — including outages or failures of the hosting,
+            database, payment, mapping, or weather providers we rely on, internet or power
+            outages, or natural disasters.
+          </p>
+        </section>
+
+        <section className="flex flex-col gap-2">
+          <h2 className="font-semibold text-lg text-brand">Indemnity</h2>
+          <p className="text-foreground/70 leading-relaxed">
+            You&apos;re responsible for the content you or your guests upload and for your use of
+            the Service. To the extent permitted by law, you agree to cover any claims, losses, or
+            costs we reasonably incur because of content you or a guest of yours uploaded, or your
+            breach of these terms — except where that arises from our own error or breach.
           </p>
         </section>
 
@@ -121,6 +184,17 @@ export default function TermsPage() {
             retroactively to a wedding you&apos;ve already paid for — it only affects new purchases
             and continued use going forward. Continuing to use the Service after a change takes
             effect means you accept it.
+          </p>
+        </section>
+
+        <section className="flex flex-col gap-2">
+          <h2 className="font-semibold text-lg text-brand">General</h2>
+          <p className="text-foreground/70 leading-relaxed">
+            These terms, together with our Privacy Policy, are the entire agreement between you
+            and us about the Service, and replace any earlier agreements about it. If any part of
+            these terms turns out to be unenforceable, the rest still applies. We may assign these
+            terms in connection with a sale or transfer of the business; you may not assign your
+            account without our consent.
           </p>
         </section>
 

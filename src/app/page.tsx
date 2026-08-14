@@ -13,7 +13,7 @@ const FEATURES = [
   {
     title: "The Entrevow Pass",
     description:
-      "One digital pass replaces the paper itinerary. Guests and bridal party get exactly what they need to know, when they need to know it.",
+      "One digital pass replaces the paper itinerary. A QR code, a calendar file, and their table assignment — all on one link guests can add to their home screen.",
   },
   {
     title: "Entrevow Sync",
@@ -28,7 +28,48 @@ const FEATURES = [
   {
     title: "Guest RSVPs",
     description:
-      "Guests confirm or decline right from their itinerary link, with a note for dietary needs or plus-ones. You'll always know your final headcount.",
+      "Guests confirm or decline, pick a meal, add a plus-one (if you allow it), and leave a song request — all from their itinerary link. You'll always know your final headcount.",
+  },
+];
+
+const DAY_OF_FEATURES = [
+  {
+    title: "Live Shuttle Tracking",
+    description:
+      "Guests see exactly where the shuttle is and when it'll arrive — no more standing outside a venue guessing.",
+  },
+  {
+    title: "Weather Alerts",
+    description:
+      "Automatic contingency alerts if rain or heat could affect an outdoor ceremony or reception, checked against your actual venue.",
+  },
+  {
+    title: "QR Usher Check-In",
+    description:
+      "Ushers scan each guest's pass on arrival with a phone camera — no clipboard, no app to install.",
+  },
+  {
+    title: "Push Notifications",
+    description:
+      "If the time or venue changes, guests who've added Entrevow to their home screen get notified instantly, even with the app closed.",
+  },
+];
+
+const MEMORY_FEATURES = [
+  {
+    title: "Video Guestbook",
+    description:
+      "Guests record a 30-second video message right from their phone — no app, no account. You approve each one before it goes live.",
+  },
+  {
+    title: "Welcome Video",
+    description:
+      "Greet your guests with a short video message the moment they open their itinerary.",
+  },
+  {
+    title: "Shared Photo Gallery",
+    description:
+      "Guests upload photos throughout the day into one shared gallery everyone can see.",
   },
 ];
 
@@ -46,6 +87,12 @@ export default function Home() {
           unoptimized
         />
         <nav className="flex items-center gap-2 sm:gap-4 shrink-0">
+          <Link
+            href="#pricing"
+            className="hidden sm:inline text-sm font-medium text-foreground/80 hover:text-foreground transition-colors whitespace-nowrap"
+          >
+            Pricing
+          </Link>
           <Link
             href="/login"
             className="text-sm font-medium text-foreground/80 hover:text-foreground transition-colors whitespace-nowrap"
@@ -89,6 +136,94 @@ export default function Home() {
               <p className="text-foreground/70 text-sm leading-relaxed">{feature.description}</p>
             </div>
           ))}
+        </section>
+
+        <section className="px-6 sm:px-10 py-14 max-w-6xl mx-auto">
+          <h2 className="font-display text-2xl sm:text-3xl text-center text-foreground mb-2">
+            Day-of, handled
+          </h2>
+          <p className="text-center text-foreground/60 mb-10 max-w-xl mx-auto">
+            Included with Full Day-Of, for the logistics that only matter on the day itself.
+          </p>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {DAY_OF_FEATURES.map((feature) => (
+              <div
+                key={feature.title}
+                className="bg-white border border-border-warm rounded-xl p-6 shadow-sm"
+              >
+                <h3 className="font-semibold text-lg mb-2 text-brand">{feature.title}</h3>
+                <p className="text-foreground/70 text-sm leading-relaxed">
+                  {feature.description}
+                </p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <section className="px-6 sm:px-10 py-14 max-w-6xl mx-auto">
+          <h2 className="font-display text-2xl sm:text-3xl text-center text-foreground mb-2">
+            Keep the memories, not just the logistics
+          </h2>
+          <p className="text-center text-foreground/60 mb-10 max-w-xl mx-auto">
+            Entrevow isn&apos;t just for getting guests where they need to be.
+          </p>
+          <div className="grid sm:grid-cols-3 gap-6">
+            {MEMORY_FEATURES.map((feature) => (
+              <div
+                key={feature.title}
+                className="bg-white border border-border-warm rounded-xl p-6 shadow-sm"
+              >
+                <h3 className="font-semibold text-lg mb-2 text-brand">{feature.title}</h3>
+                <p className="text-foreground/70 text-sm leading-relaxed">
+                  {feature.description}
+                </p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <section id="pricing" className="px-6 sm:px-10 py-14 max-w-4xl mx-auto scroll-mt-8">
+          <h2 className="font-display text-2xl sm:text-3xl text-center text-foreground mb-2">
+            Simple, one-time pricing
+          </h2>
+          <p className="text-center text-foreground/60 mb-10 max-w-xl mx-auto">
+            Build your wedding for free. Pay once, per wedding, when you&apos;re ready to invite
+            guests — no subscription.
+          </p>
+          <div className="grid sm:grid-cols-2 gap-6">
+            <div className="bg-white border border-border-warm rounded-xl p-6 flex flex-col gap-3">
+              <div className="font-semibold text-lg">Essentials</div>
+              <div className="text-3xl font-display text-foreground">
+                $69 <span className="text-sm font-sans text-foreground/50">AUD, one-time</span>
+              </div>
+              <p className="text-foreground/70 text-sm leading-relaxed flex-1">
+                Itinerary, RSVPs with meal choice and plus-ones, guest groups, the digital pass,
+                video guestbook, welcome video, and photo gallery — for up to 150 guests.
+              </p>
+              <Link
+                href="/signup"
+                className="text-sm font-medium bg-cream-card border border-border-warm rounded-md py-2 text-center hover:bg-white transition-colors"
+              >
+                Get Started
+              </Link>
+            </div>
+            <div className="bg-white border border-brand rounded-xl p-6 flex flex-col gap-3">
+              <div className="font-semibold text-lg text-brand">Full Day-Of</div>
+              <div className="text-3xl font-display text-foreground">
+                $249 <span className="text-sm font-sans text-foreground/50">AUD, one-time</span>
+              </div>
+              <p className="text-foreground/70 text-sm leading-relaxed flex-1">
+                Everything in Essentials, plus live shuttle tracking, weather alerts, QR usher
+                check-in, push notifications, and unlimited guests.
+              </p>
+              <Link
+                href="/signup"
+                className="text-sm font-medium bg-brand text-white rounded-md py-2 text-center hover:bg-brand-hover transition-colors"
+              >
+                Get Started
+              </Link>
+            </div>
+          </div>
         </section>
       </main>
 

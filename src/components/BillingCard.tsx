@@ -65,7 +65,8 @@ export default function BillingCard({
           <div>
             <div className="font-semibold text-brand">Upgrade to Full Day-Of — $180</div>
             <p className="text-xs text-foreground/60">
-              Adds live shuttle tracking, weather alerts, QR usher check-in, and unlimited guests.
+              Adds live shuttle tracking, weather alerts, QR usher check-in, push notifications,
+              and unlimited guests.
             </p>
           </div>
           <button
@@ -117,7 +118,7 @@ export default function BillingCard({
           <div className="font-semibold text-brand">Full Day-Of — $249</div>
           <p className="text-xs text-foreground/60 flex-1">
             Everything in Essentials, plus live shuttle tracking, weather alerts, QR usher
-            check-in, and unlimited guests.
+            check-in, push notifications, and unlimited guests.
           </p>
           <button
             onClick={() => startCheckout("full")}
