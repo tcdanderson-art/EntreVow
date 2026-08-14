@@ -36,7 +36,7 @@ const DAY_OF_FEATURES = [
   {
     title: "Live Shuttle Tracking",
     description:
-      "Guests see exactly where the shuttle is and when it'll arrive — no more standing outside a venue guessing.",
+      "Guests see exactly where the shuttle is and when it'll arrive, with a personal pickup recommendation matched to their flight.",
   },
   {
     title: "Weather Alerts",
@@ -52,6 +52,16 @@ const DAY_OF_FEATURES = [
     title: "Push Notifications",
     description:
       "If the time or venue changes, guests who've added Entrevow to their home screen get notified instantly, even with the app closed.",
+  },
+  {
+    title: "Vendor Check-In & Crew Broadcasts",
+    description:
+      "Vendors get their own no-login check-in link, and you can message staff, drivers, and vendors directly — a dedicated crew channel.",
+  },
+  {
+    title: "Day-Of Command Card",
+    description:
+      "Every guest sees one glance: what's next on the itinerary, their shuttle's ETA, and today's forecast — refreshed automatically.",
   },
 ];
 
@@ -145,7 +155,7 @@ export default function Home() {
           <p className="text-center text-foreground/80 mb-10 max-w-xl mx-auto">
             Included with Full Day-Of, for the logistics that only matter on the day itself.
           </p>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {DAY_OF_FEATURES.map((feature) => (
               <div
                 key={feature.title}
@@ -214,7 +224,8 @@ export default function Home() {
               </div>
               <p className="text-foreground/70 text-sm leading-relaxed flex-1">
                 Everything in Essentials, plus live shuttle tracking, weather alerts, QR usher
-                check-in, push notifications, and unlimited guests.
+                check-in, push notifications, vendor check-in &amp; crew broadcasts, the day-of
+                command card, and unlimited guests.
               </p>
               <Link
                 href="/signup"
@@ -225,8 +236,8 @@ export default function Home() {
             </div>
           </div>
           <p className="text-center text-foreground/70 text-sm mt-8">
-            Built in Australia, for Australian weddings — real AUD pricing, no international
-            card fees, and nothing to remember to cancel.
+            Proudly Australian-made — real AUD pricing, no international card fees, and nothing
+            to remember to cancel.
           </p>
         </section>
       </main>
