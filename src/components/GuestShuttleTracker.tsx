@@ -4,6 +4,8 @@ import { useEffect, useRef, useState } from "react";
 import type { Map as LeafletMap, Marker } from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { Shuttle } from "@/types/shuttle";
+import { formatWallClockTime } from "@/lib/wall-clock";
+import { suggestShuttle } from "@/lib/shuttle-match";
 
 const POLL_INTERVAL_MS = 20000;
 const LIVE_THRESHOLD_MS = 3 * 60 * 1000;
@@ -25,11 +27,14 @@ function timeAgo(iso: string) {
 export default function GuestShuttleTracker({
   code,
   initialShuttles,
+  initialArrivalTime,
 }: {
   code: string;
   initialShuttles: Shuttle[];
+  initialArrivalTime: string | null;
 }) {
   const [shuttles, setShuttles] = useState(initialShuttles);
+  const [arrivalTime, setArrivalTime] = useState(initialArrivalTime);
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<LeafletMap | null>(null);
   const markersRef = useRef<Map<number, Marker>>(new Map());
@@ -42,6 +47,7 @@ export default function GuestShuttleTracker({
         if (!res.ok) return;
         const data = await res.json();
         setShuttles(data.shuttles ?? []);
+        setArrivalTime(data.guest?.arrival_time ?? null);
       } catch {
         // silently skip — will retry next interval
       }
@@ -49,6 +55,8 @@ export default function GuestShuttleTracker({
 
     return () => clearInterval(interval);
   }, [code]);
+
+  const suggestedShuttle = arrivalTime ? suggestShuttle(arrivalTime, shuttles) : null;
 
   const located = shuttles.filter((s) => s.lat != null && s.lng != null);
 
@@ -132,6 +140,14 @@ export default function GuestShuttleTracker({
       <div className="text-xs font-semibold uppercase tracking-wide text-foreground/75 mb-3">
         Shuttle tracking
       </div>
+
+      {suggestedShuttle && (
+        <div className="bg-brand/10 border border-brand/30 rounded-lg px-3 py-2 text-sm mb-3">
+          Based on your flight arrival, take the{" "}
+          <span className="font-semibold">{suggestedShuttle.label}</span> — departs{" "}
+          {formatWallClockTime(suggestedShuttle.pickup_time as string, { dateStyle: "medium", timeStyle: "short" })}.
+        </div>
+      )}
 
       {located.length > 0 && (
         <div ref={mapContainerRef} className="w-full h-48 rounded-lg overflow-hidden bg-cream mb-2" />

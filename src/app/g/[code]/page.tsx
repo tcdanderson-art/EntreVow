@@ -153,7 +153,9 @@ export default async function GuestItineraryPage({
 
         <GuestVideoGuestbook code={code} initialVideos={videos} />
 
-        {isFullTier(wedding) && <GuestShuttleTracker code={code} initialShuttles={shuttles} />}
+        {isFullTier(wedding) && (
+          <GuestShuttleTracker code={code} initialShuttles={shuttles} initialArrivalTime={guest.arrival_time} />
+        )}
 
         {wedding?.emergency_phone && (
           <div className="text-center text-xs text-foreground/75 py-3 border-t border-border-warm bg-cream-card">

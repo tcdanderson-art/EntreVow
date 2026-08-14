@@ -37,15 +37,15 @@ export const POST = withErrorHandling(async (
     return NextResponse.json({ error: "Not found" }, { status: 404 });
   }
 
-  const { label } = await req.json();
+  const { label, pickupTime } = await req.json();
   if (!label || typeof label !== "string" || !label.trim()) {
     return NextResponse.json({ error: "Label is required" }, { status: 400 });
   }
 
   const driverCode = generateAccessCode();
   const [shuttle] = (await db().sql`
-    INSERT INTO shuttles (wedding_id, label, driver_code)
-    VALUES (${weddingId}, ${label.trim()}, ${driverCode})
+    INSERT INTO shuttles (wedding_id, label, driver_code, pickup_time)
+    VALUES (${weddingId}, ${label.trim()}, ${driverCode}, ${typeof pickupTime === "string" && pickupTime ? pickupTime : null})
     RETURNING *
   `) as Shuttle[];
 

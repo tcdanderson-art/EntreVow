@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Shuttle } from "@/types/shuttle";
+import { formatWallClockTime } from "@/lib/wall-clock";
 
 function driverLinkFor(code: string) {
   return `${window.location.origin}/driver/${code}`;
@@ -16,6 +17,7 @@ export default function ShuttleManager({
 }) {
   const [shuttles, setShuttles] = useState(initialShuttles);
   const [label, setLabel] = useState("");
+  const [pickupTime, setPickupTime] = useState("");
   const [creating, setCreating] = useState(false);
   const [copiedId, setCopiedId] = useState<number | null>(null);
 
@@ -27,12 +29,13 @@ export default function ShuttleManager({
       const res = await fetch(`/api/weddings/${weddingId}/shuttles`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ label: label.trim() }),
+        body: JSON.stringify({ label: label.trim(), pickupTime: pickupTime || null }),
       });
       const data = await res.json();
       if (res.ok) {
         setShuttles((prev) => [...prev, data.shuttle]);
         setLabel("");
+        setPickupTime("");
       }
     } finally {
       setCreating(false);
@@ -56,7 +59,8 @@ export default function ShuttleManager({
       <p className="text-sm text-foreground/80">
         Add a shuttle and send the driver link to whoever&rsquo;s driving. It opens a page on their
         phone that shares their live location — no app or account needed. Guests see the shuttle
-        move on a map from their itinerary page.
+        move on a map from their itinerary page. Set a pickup time and guests who&rsquo;ve shared
+        their flight arrival will see which shuttle fits their landing time.
       </p>
 
       {shuttles.length > 0 && (
@@ -69,6 +73,10 @@ export default function ShuttleManager({
               <div className="min-w-[120px]">
                 <div className="font-medium text-sm">{s.label}</div>
                 <div className="text-xs text-foreground/75">
+                  {s.pickup_time
+                    ? `Departs ${formatWallClockTime(s.pickup_time, { dateStyle: "medium", timeStyle: "short" })}`
+                    : "No pickup time set"}
+                  {" · "}
                   {s.location_updated_at ? "Has shared location" : "Not sharing yet"}
                 </div>
               </div>
@@ -98,6 +106,14 @@ export default function ShuttleManager({
           value={label}
           onChange={(e) => setLabel(e.target.value)}
           className="flex-1 min-w-[200px] border border-border-warm rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand/50"
+        />
+        <label htmlFor="shuttle-pickup-time" className="sr-only">Pickup time (optional)</label>
+        <input
+          id="shuttle-pickup-time"
+          type="datetime-local"
+          value={pickupTime}
+          onChange={(e) => setPickupTime(e.target.value)}
+          className="flex-1 min-w-[180px] border border-border-warm rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand/50"
         />
         <button
           type="submit"
