@@ -10,6 +10,7 @@ export default function GuestPushOptIn({ code, vapidPublicKey }: { code: string;
 
   useEffect(() => {
     if (!("serviceWorker" in navigator) || !("PushManager" in window) || !("Notification" in window)) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setStatus("unsupported");
       return;
     }
