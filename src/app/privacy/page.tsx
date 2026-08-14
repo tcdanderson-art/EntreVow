@@ -42,7 +42,7 @@ export default function PrivacyPage() {
           <p className="text-foreground/70 leading-relaxed">
             <strong>Photos and videos:</strong> couples and guests can upload photos to a shared
             gallery, and couples can add a welcome video or a video attached to an announcement.
-            Guests can also record a short video guestbook message — these are held back from
+            Guests can also record a short video or voice guestbook message — these are held back from
             other guests until the couple reviews and approves them. All of this is stored as
             media files, not analysed or scanned by us beyond what&apos;s needed to store and
             serve it.

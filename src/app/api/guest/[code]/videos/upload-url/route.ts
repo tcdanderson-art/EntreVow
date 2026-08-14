@@ -29,8 +29,9 @@ export const POST = withErrorHandling(async (
     return NextResponse.json({ error: "Guest access isn't active yet" }, { status: 402 });
   }
 
-  const { contentType, size } = await req.json();
-  const validationError = validateVideoUpload(contentType, size, MAX_BYTES);
+  const { contentType, size, kind } = await req.json();
+  const uploadKind = kind === "audio" ? "audio" : "video";
+  const validationError = validateVideoUpload(contentType, size, MAX_BYTES, uploadKind);
   if (validationError) return NextResponse.json({ error: validationError }, { status: 400 });
 
   const { data, error } = await mintVideoUploadUrl(guest.wedding_id, contentType);

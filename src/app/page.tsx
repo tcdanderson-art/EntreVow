@@ -57,9 +57,9 @@ const DAY_OF_FEATURES = [
 
 const MEMORY_FEATURES = [
   {
-    title: "Video Guestbook",
+    title: "Video & Voice Guestbook",
     description:
-      "Guests record a 30-second video message right from their phone — no app, no account. You approve each one before it goes live.",
+      "Guests record a 30-second video or voice message right from their phone — no app, no account. You approve each one before it goes live.",
   },
   {
     title: "Welcome Video",
@@ -198,7 +198,7 @@ export default function Home() {
               </div>
               <p className="text-foreground/70 text-sm leading-relaxed flex-1">
                 Itinerary, RSVPs with meal choice and plus-ones, guest groups, the digital pass,
-                video guestbook, welcome video, and photo gallery — for up to 150 guests.
+                video &amp; voice guestbook, welcome video, and photo gallery — for up to 150 guests.
               </p>
               <Link
                 href="/signup"

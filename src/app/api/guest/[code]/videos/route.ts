@@ -29,17 +29,18 @@ export const POST = withErrorHandling(async (
     return NextResponse.json({ error: "Guest access isn't active yet" }, { status: 402 });
   }
 
-  const { storage_key, duration_seconds, caption } = await req.json();
+  const { storage_key, duration_seconds, caption, kind } = await req.json();
   if (typeof storage_key !== "string" || !storage_key) {
     return NextResponse.json({ error: "storage_key is required" }, { status: 400 });
   }
   if (typeof duration_seconds !== "number" || duration_seconds > 31) {
-    return NextResponse.json({ error: "Video must be 30 seconds or less" }, { status: 400 });
+    return NextResponse.json({ error: "Recording must be 30 seconds or less" }, { status: 400 });
   }
+  const recordingKind = kind === "audio" ? "audio" : "video";
 
   const [video] = (await database.sql`
-    INSERT INTO videos (wedding_id, guest_id, storage_key, duration_seconds, caption, status)
-    VALUES (${guest.wedding_id}, ${guest.id}, ${storage_key}, ${duration_seconds}, ${typeof caption === "string" && caption.trim() ? caption.trim() : null}, 'pending')
+    INSERT INTO videos (wedding_id, guest_id, storage_key, duration_seconds, caption, status, kind)
+    VALUES (${guest.wedding_id}, ${guest.id}, ${storage_key}, ${duration_seconds}, ${typeof caption === "string" && caption.trim() ? caption.trim() : null}, 'pending', ${recordingKind})
     RETURNING *
   `) as Video[];
 

@@ -28,8 +28,8 @@ const GUEST_FAQS = [
     a: "If the couple's wedding includes notifications, you'll see a \"turn on notifications\" prompt on your itinerary page. On iPhone, add the page to your home screen first (Share → Add to Home Screen), then enable notifications from there — iOS requires that step before it'll allow push alerts.",
   },
   {
-    q: "Can I upload photos or a video message?",
-    a: "If the couple's enabled it, you'll see a photo gallery and a video guestbook on your itinerary page. Video messages are reviewed by the couple (or someone they've delegated) before other guests can see them — photos appear right away.",
+    q: "Can I upload photos or a video/voice message?",
+    a: "If the couple's enabled it, you'll see a photo gallery and a guestbook on your itinerary page where you can record a video or a voice-only message. Video and voice messages are reviewed by the couple (or someone they've delegated) before other guests can see them — photos appear right away.",
   },
   {
     q: "My page looks out of date after the couple made a change — what do I do?",
@@ -48,7 +48,7 @@ const COUPLE_FAQS = [
   },
   {
     q: "What's the difference between Essentials and Full Day-Of?",
-    a: "Essentials ($69 AUD, one-time, up to 150 guests) covers your itinerary, RSVPs, guest groups, the digital pass, video guestbook, welcome video, and photo gallery. Full Day-Of ($249 AUD, one-time, unlimited guests) adds live shuttle tracking, weather alerts, QR usher check-in, and push notifications.",
+    a: "Essentials ($69 AUD, one-time, up to 150 guests) covers your itinerary, RSVPs, guest groups, the digital pass, video & voice guestbook, welcome video, and photo gallery. Full Day-Of ($249 AUD, one-time, unlimited guests) adds live shuttle tracking, weather alerts, QR usher check-in, and push notifications.",
   },
   {
     q: "Can I upgrade from Essentials to Full Day-Of later?",

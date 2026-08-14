@@ -27,3 +27,25 @@ export const POST = withErrorHandling(async (
 
   return NextResponse.json({ wedding });
 });
+
+// Revokes the moderator link entirely — no new link is issued, delegation is off
+// until the couple generates a fresh one.
+export const DELETE = withErrorHandling(async (
+  _req: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) => {
+  const coupleId = await requireCoupleId();
+  if (!coupleId) return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
+
+  const weddingId = Number((await params).id);
+  if (!(await coupleOwnsWedding(coupleId, weddingId))) {
+    return NextResponse.json({ error: "Not found" }, { status: 404 });
+  }
+
+  const [wedding] = (await db().sql`
+    UPDATE weddings SET moderator_code = NULL WHERE id = ${weddingId}
+    RETURNING *
+  `) as Wedding[];
+
+  return NextResponse.json({ wedding });
+});

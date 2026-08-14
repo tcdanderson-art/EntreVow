@@ -112,14 +112,18 @@ export default function VideoManager({
   }
 
   async function handleModerate(videoId: number, status: "approved" | "rejected") {
+    // Update locally right away so the guest's name stays attached to the card —
+    // the API response doesn't carry it back (it's joined in, not a column).
+    setVideos((prev) => prev.map((v) => (v.id === videoId ? { ...v, status } : v)));
+
     const res = await fetch(`/api/weddings/${weddingId}/videos/${videoId}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ status }),
     });
-    if (res.ok) {
-      const data = await res.json();
-      setVideos((prev) => prev.map((v) => (v.id === videoId ? data.video : v)));
+    if (!res.ok) {
+      // Revert on failure
+      setVideos((prev) => prev.map((v) => (v.id === videoId ? { ...v, status: "pending" } : v)));
     }
   }
 
@@ -176,7 +180,7 @@ export default function VideoManager({
       </div>
 
       <div>
-        <h3 className="text-sm font-semibold mb-2">Guestbook videos</h3>
+        <h3 className="text-sm font-semibold mb-2">Guestbook</h3>
 
         {pending.length > 0 && (
           <div className="mb-4">
@@ -186,12 +190,18 @@ export default function VideoManager({
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
               {pending.map((v) => (
                 <div key={v.id} className="rounded-md overflow-hidden bg-cream border border-border-warm">
-                  <video
-                    src={publicStorageUrl("videos", v.storage_key)}
-                    controls
-                    playsInline
-                    className="w-full aspect-video bg-black"
-                  />
+                  {v.kind === "audio" ? (
+                    <div className="p-2">
+                      <audio src={publicStorageUrl("videos", v.storage_key)} controls className="w-full" />
+                    </div>
+                  ) : (
+                    <video
+                      src={publicStorageUrl("videos", v.storage_key)}
+                      controls
+                      playsInline
+                      className="w-full aspect-video bg-black"
+                    />
+                  )}
                   <div className="px-2 py-1.5">
                     <div className="text-[11px] text-foreground/80 truncate mb-1.5">{v.guest_name}</div>
                     <div className="flex items-center justify-between gap-2">
@@ -210,17 +220,23 @@ export default function VideoManager({
         )}
 
         {approved.length === 0 ? (
-          <p className="text-sm text-foreground/70">No approved guestbook videos yet.</p>
+          <p className="text-sm text-foreground/70">No approved guestbook messages yet.</p>
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             {approved.map((v) => (
               <div key={v.id} className="rounded-md overflow-hidden bg-cream border border-border-warm">
-                <video
-                  src={publicStorageUrl("videos", v.storage_key)}
-                  controls
-                  playsInline
-                  className="w-full aspect-video bg-black"
-                />
+                {v.kind === "audio" ? (
+                  <div className="p-2">
+                    <audio src={publicStorageUrl("videos", v.storage_key)} controls className="w-full" />
+                  </div>
+                ) : (
+                  <video
+                    src={publicStorageUrl("videos", v.storage_key)}
+                    controls
+                    playsInline
+                    className="w-full aspect-video bg-black"
+                  />
+                )}
                 <div className="px-2 py-1.5 flex items-center justify-between gap-2">
                   <span className="text-[11px] text-foreground/80 truncate">{v.guest_name}</span>
                   <button onClick={() => handleRemoveGuestVideo(v.id)} className="text-[11px] font-medium text-foreground/75 shrink-0">

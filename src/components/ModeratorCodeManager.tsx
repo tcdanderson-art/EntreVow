@@ -40,6 +40,15 @@ export default function ModeratorCodeManager({
     await generate();
   }
 
+  async function revoke() {
+    if (!confirm("Revoke the moderator link? It will stop working immediately, and no one will have delegated access until you generate a new one.")) return;
+    setLoading(true);
+    const res = await fetch(`/api/weddings/${wedding.id}/moderator-code`, { method: "DELETE" });
+    const data = await res.json();
+    setLoading(false);
+    if (res.ok) setModeratorCode(data.wedding.moderator_code);
+  }
+
   async function copyLink() {
     if (!moderatorCode) return;
     await navigator.clipboard.writeText(linkFor(moderatorCode));
@@ -51,7 +60,7 @@ export default function ModeratorCodeManager({
     <div className="flex flex-col gap-2 mb-6 pb-6 border-b border-border-warm">
       <p className="text-sm text-foreground/80">
         Not going to be checking your phone on the day? Share this link with someone you trust so
-        they can approve or reject guestbook videos and hide inappropriate photos on your behalf —
+        they can approve or reject guestbook messages and hide inappropriate photos on your behalf —
         no account needed.
       </p>
 
@@ -69,6 +78,13 @@ export default function ModeratorCodeManager({
             className="text-foreground/75 text-sm font-medium whitespace-nowrap disabled:opacity-60"
           >
             Regenerate
+          </button>
+          <button
+            onClick={revoke}
+            disabled={loading}
+            className="text-foreground/75 text-sm font-medium whitespace-nowrap disabled:opacity-60"
+          >
+            Revoke
           </button>
           {pendingCount > 0 && (
             <span className="text-xs text-foreground/70 ml-auto">{pendingCount} awaiting approval</span>

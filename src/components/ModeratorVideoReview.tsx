@@ -56,12 +56,18 @@ export default function ModeratorVideoReview({
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
               {pending.map((v) => (
                 <div key={v.id} className="rounded-lg overflow-hidden bg-white border border-border-warm shadow-sm">
-                  <video
-                    src={publicStorageUrl("videos", v.storage_key)}
-                    controls
-                    playsInline
-                    className="w-full aspect-video bg-black"
-                  />
+                  {v.kind === "audio" ? (
+                    <div className="p-3">
+                      <audio src={publicStorageUrl("videos", v.storage_key)} controls className="w-full" />
+                    </div>
+                  ) : (
+                    <video
+                      src={publicStorageUrl("videos", v.storage_key)}
+                      controls
+                      playsInline
+                      className="w-full aspect-video bg-black"
+                    />
+                  )}
                   <div className="px-3 py-2.5">
                     <div className="text-xs text-foreground/80 truncate mb-2">{v.guest_name}</div>
                     <div className="flex items-center gap-3">
@@ -93,12 +99,18 @@ export default function ModeratorVideoReview({
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
               {approved.map((v) => (
                 <div key={v.id} className="rounded-lg overflow-hidden bg-white border border-border-warm shadow-sm opacity-75">
-                  <video
-                    src={publicStorageUrl("videos", v.storage_key)}
-                    controls
-                    playsInline
-                    className="w-full aspect-video bg-black"
-                  />
+                  {v.kind === "audio" ? (
+                    <div className="p-3">
+                      <audio src={publicStorageUrl("videos", v.storage_key)} controls className="w-full" />
+                    </div>
+                  ) : (
+                    <video
+                      src={publicStorageUrl("videos", v.storage_key)}
+                      controls
+                      playsInline
+                      className="w-full aspect-video bg-black"
+                    />
+                  )}
                   <div className="px-3 py-2.5 text-xs text-foreground/80 truncate">{v.guest_name}</div>
                 </div>
               ))}

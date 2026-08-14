@@ -77,7 +77,7 @@ export default function TermsPage() {
             guest of yours uploads through their link.
           </p>
           <p className="text-foreground/70 leading-relaxed">
-            Video guestbook submissions are held back from other guests until you (the couple)
+            Video and voice guestbook submissions are held back from other guests until you (the couple)
             approve them; you&apos;re responsible for what you approve. More generally, we may
             remove or disable access to any content — photos and videos included — without
             notice, that we reasonably believe breaches the Acceptable use section above, the law,
