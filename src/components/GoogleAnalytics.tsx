@@ -5,11 +5,13 @@ import Script from "next/script";
 
 const MEASUREMENT_ID = "G-3GS4N954JH";
 
-// Guest/staff/driver links carry an access code in the URL path itself, and
-// GA logs the full path — so analytics deliberately never loads there to
-// avoid sending those codes to Google. Marketing pages, auth, and the
-// couple's dashboard are unaffected.
-const EXCLUDED_PREFIXES = ["/g/", "/staff/", "/driver/"];
+// Every no-login "delegated link" role carries an access code in the URL path
+// itself, and GA logs the full path — so analytics deliberately never loads on
+// any of them, to avoid sending those codes to Google. Marketing pages, auth,
+// and the couple's dashboard are unaffected. Keep this in sync with whatever
+// delegated-link roles exist — vendor/moderator/gallery were added after guest/
+// staff/driver and were originally missed here.
+const EXCLUDED_PREFIXES = ["/g/", "/staff/", "/driver/", "/vendor/", "/moderator/", "/gallery/"];
 
 export function GoogleAnalytics() {
   const pathname = usePathname();

@@ -21,7 +21,7 @@ export const GET = withErrorHandling(async (
   }
 
   const weddings = (await database.sql`
-    SELECT * FROM weddings WHERE id = ${shuttle.wedding_id}
+    SELECT id, title, plan_tier FROM weddings WHERE id = ${shuttle.wedding_id}
   `) as Wedding[];
   const wedding = weddings[0];
   if (!wedding || !isFullTier(wedding)) {

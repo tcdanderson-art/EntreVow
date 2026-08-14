@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { withErrorHandling } from "@/lib/route-handler";
 import { Wedding } from "@/types/wedding";
-import { Guest } from "@/types/guest";
+import { StaffGuest } from "@/types/guest";
 import { isFullTier } from "@/lib/plan";
 
 export const GET = withErrorHandling(async (
@@ -13,16 +13,18 @@ export const GET = withErrorHandling(async (
   const database = db();
 
   const weddings = (await database.sql`
-    SELECT * FROM weddings WHERE staff_code = ${code}
+    SELECT id, title, plan_tier FROM weddings WHERE staff_code = ${code}
   `) as Wedding[];
   const wedding = weddings[0];
   if (!wedding || !isFullTier(wedding)) {
     return NextResponse.json({ error: "Staff link not found" }, { status: 404 });
   }
 
+  // access_code deliberately excluded — see StaffGuest.
   const guests = (await database.sql`
-    SELECT * FROM guests WHERE wedding_id = ${wedding.id} ORDER BY name ASC
-  `) as Guest[];
+    SELECT id, wedding_id, name, guest_group, table_label, checked_in_at
+    FROM guests WHERE wedding_id = ${wedding.id} ORDER BY name ASC
+  `) as StaffGuest[];
 
   return NextResponse.json({ wedding, guests });
 });

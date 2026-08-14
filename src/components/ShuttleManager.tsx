@@ -1,12 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Shuttle } from "@/types/shuttle";
 import { formatWallClockTime } from "@/lib/wall-clock";
-
-function driverLinkFor(code: string) {
-  return `${window.location.origin}/driver/${code}`;
-}
 
 export default function ShuttleManager({
   weddingId,
@@ -21,6 +17,18 @@ export default function ShuttleManager({
   const [creating, setCreating] = useState(false);
   const [copiedId, setCopiedId] = useState<number | null>(null);
   const [showHelp, setShowHelp] = useState(false);
+  // Must start "" on both server and client so hydration matches, then fill in after
+  // mount — reading window.location.origin during render throws on the server (this
+  // exact class of bug was already fixed once elsewhere, see StaffCodeManager).
+  const [origin, setOrigin] = useState("");
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setOrigin(window.location.origin);
+  }, []);
+
+  function driverLinkFor(code: string) {
+    return `${origin}/driver/${code}`;
+  }
 
   async function addShuttle(e: React.FormEvent) {
     e.preventDefault();

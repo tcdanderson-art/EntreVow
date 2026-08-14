@@ -21,3 +21,11 @@ export interface Guest {
   flight_number: string | null;
   arrival_time: string | null;
 }
+
+// Safe subset for the door-staff check-in flow — deliberately omits access_code
+// (a guest's personal credential for /g/[code]) and every other field an usher
+// doesn't need, so it never reaches that browser.
+export type StaffGuest = Pick<
+  Guest,
+  "id" | "wedding_id" | "name" | "guest_group" | "table_label" | "checked_in_at"
+>;

@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState, useCallback } from "react";
 import jsQR from "jsqr";
-import { Guest } from "@/types/guest";
+import { StaffGuest } from "@/types/guest";
 import CrewBroadcastFeed from "@/components/CrewBroadcastFeed";
 
 type Feedback = {
@@ -19,14 +19,14 @@ export default function StaffScanner({
 }: {
   staffCode: string;
   weddingTitle: string;
-  initialGuests: Guest[];
+  initialGuests: StaffGuest[];
 }) {
   const [guests, setGuests] = useState(initialGuests);
   const [mode, setMode] = useState<"scan" | "search">("scan");
   const [cameraError, setCameraError] = useState<string | null>(null);
   const [feedback, setFeedback] = useState<Feedback | null>(null);
   const [query, setQuery] = useState("");
-  const [pendingCode, setPendingCode] = useState<string | null>(null);
+  const [pendingId, setPendingId] = useState<number | null>(null);
 
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -36,14 +36,13 @@ export default function StaffScanner({
 
   const checkedInCount = guests.filter((g) => g.checked_in_at).length;
 
-  const submitCheckin = useCallback(
-    async (guestCode: string) => {
-      setPendingCode(guestCode);
+  const postCheckin = useCallback(
+    async (body: { guestCode: string } | { guestId: number }) => {
       try {
         const res = await fetch(`/api/staff/${staffCode}/checkin`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ guestCode }),
+          body: JSON.stringify(body),
         });
         const data = await res.json();
 
@@ -60,11 +59,32 @@ export default function StaffScanner({
         );
       } catch {
         setFeedback({ kind: "error", message: "Network error — try again" });
-      } finally {
-        setPendingCode(null);
       }
     },
     [staffCode]
+  );
+
+  // Scan mode: the guest's own QR pass encodes their access_code — that value comes
+  // from the guest's device, never from our own guest-list response.
+  const submitCheckin = useCallback(
+    async (guestCode: string) => {
+      await postCheckin({ guestCode });
+    },
+    [postCheckin]
+  );
+
+  // Search mode: the fallback guest list deliberately never carries access_code, so
+  // guests are identified by id instead.
+  const checkinById = useCallback(
+    async (guestId: number) => {
+      setPendingId(guestId);
+      try {
+        await postCheckin({ guestId });
+      } finally {
+        setPendingId(null);
+      }
+    },
+    [postCheckin]
   );
 
   useEffect(() => {
@@ -208,11 +228,11 @@ export default function StaffScanner({
                   <span className="text-xs font-semibold text-brand shrink-0">✓ Checked in</span>
                 ) : (
                   <button
-                    onClick={() => submitCheckin(g.access_code)}
-                    disabled={pendingCode === g.access_code}
+                    onClick={() => checkinById(g.id)}
+                    disabled={pendingId === g.id}
                     className="bg-brand text-white text-sm font-medium rounded-md px-4 py-2 shrink-0 touch-manipulation disabled:opacity-60"
                   >
-                    {pendingCode === g.access_code ? "…" : "Check in"}
+                    {pendingId === g.id ? "…" : "Check in"}
                   </button>
                 )}
               </li>

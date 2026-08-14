@@ -23,7 +23,9 @@ export const GET = withErrorHandling(async (
     return NextResponse.json({ error: "Guest link not found" }, { status: 404 });
   }
 
-  const weddings = (await database.sql`SELECT * FROM weddings WHERE id = ${guest.wedding_id}`) as Wedding[];
+  const weddings = (await database.sql`
+    SELECT id, title, plan_tier, paid_at, meal_options FROM weddings WHERE id = ${guest.wedding_id}
+  `) as Wedding[];
   const wedding = weddings[0];
 
   if (!wedding || !isPaid(wedding)) {
@@ -53,7 +55,8 @@ export const GET = withErrorHandling(async (
 
   const shuttles = isFullTier(wedding)
     ? ((await database.sql`
-        SELECT * FROM shuttles WHERE wedding_id = ${guest.wedding_id} ORDER BY created_at ASC
+        SELECT id, wedding_id, label, lat, lng, location_updated_at, pickup_time, created_at
+        FROM shuttles WHERE wedding_id = ${guest.wedding_id} ORDER BY created_at ASC
       `) as Shuttle[])
     : [];
 

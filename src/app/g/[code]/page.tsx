@@ -31,7 +31,21 @@ export async function generateMetadata({
   params: Promise<{ code: string }>;
 }): Promise<Metadata> {
   const { code } = await params;
-  return { manifest: `/api/guest/${code}/manifest` };
+
+  const guests = (await db().sql`SELECT wedding_id FROM guests WHERE access_code = ${code}`) as Guest[];
+  const weddingId = guests[0]?.wedding_id;
+  const weddings = weddingId
+    ? ((await db().sql`SELECT title FROM weddings WHERE id = ${weddingId}`) as Wedding[])
+    : [];
+  const weddingTitle = weddings[0]?.title;
+  const title = weddingTitle ? `${weddingTitle} — Entrevow` : "Your Wedding Guest Page — Entrevow";
+
+  return {
+    title,
+    openGraph: { title },
+    twitter: { title },
+    manifest: `/api/guest/${code}/manifest`,
+  };
 }
 
 // Matches the manifest's theme_color — iOS Safari reads this meta tag for the
@@ -50,7 +64,8 @@ export default async function GuestItineraryPage({
   if (!guest) notFound();
 
   const weddings = (await db().sql`
-    SELECT * FROM weddings WHERE id = ${guest.wedding_id}
+    SELECT id, title, plan_tier, paid_at, meal_options, welcome_video_key, emergency_phone
+    FROM weddings WHERE id = ${guest.wedding_id}
   `) as Wedding[];
   const wedding = weddings[0];
 
@@ -84,13 +99,16 @@ export default async function GuestItineraryPage({
   const photos = (await db().sql`
     SELECT photos.*, guests.name AS guest_name
     FROM photos JOIN guests ON guests.id = photos.guest_id
-    WHERE photos.wedding_id = ${guest.wedding_id}
+    WHERE photos.wedding_id = ${guest.wedding_id} AND photos.hidden = false
     ORDER BY photos.created_at DESC
   `) as Photo[];
 
-  const shuttles = (await db().sql`
-    SELECT * FROM shuttles WHERE wedding_id = ${guest.wedding_id} ORDER BY created_at ASC
-  `) as Shuttle[];
+  const shuttles = isFullTier(wedding)
+    ? ((await db().sql`
+        SELECT id, wedding_id, label, lat, lng, location_updated_at, pickup_time, created_at
+        FROM shuttles WHERE wedding_id = ${guest.wedding_id} ORDER BY created_at ASC
+      `) as Shuttle[])
+    : [];
 
   const videos = (await db().sql`
     SELECT videos.*, guests.name AS guest_name

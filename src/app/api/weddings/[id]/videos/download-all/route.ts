@@ -3,6 +3,7 @@ import { db } from "@/lib/db";
 import { requireCoupleId } from "@/lib/require-auth";
 import { coupleOwnsWedding } from "@/lib/wedding-ownership";
 import { withErrorHandling } from "@/lib/route-handler";
+import { rateLimit } from "@/lib/rate-limit";
 import { planZipParts, zipPartResponse, sanitizeSegment, ZipItem } from "@/lib/zip-download";
 import { Video } from "@/types/video";
 
@@ -16,6 +17,11 @@ export const GET = withErrorHandling(async (
 ) => {
   const coupleId = await requireCoupleId();
   if (!coupleId) return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
+
+  // This is the heaviest work in the app (Storage list + concurrent downloads +
+  // zip streaming) — cap it even though it's already couple-authenticated.
+  const limited = rateLimit(req, "videos-download-all", 10, 60_000, String(coupleId));
+  if (limited) return limited;
 
   const weddingId = Number((await params).id);
   if (!(await coupleOwnsWedding(coupleId, weddingId))) {
