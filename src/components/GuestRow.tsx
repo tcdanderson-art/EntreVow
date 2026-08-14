@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Guest, RsvpStatus } from "@/types/guest";
+import { formatWallClockTime } from "@/lib/wall-clock";
 
 const RSVP_LABEL: Record<RsvpStatus, string> = {
   pending: "Pending",
@@ -232,6 +233,14 @@ export default function GuestRow({
         )}
         {guest.song_request && (
           <span className="text-foreground/75"> · 🎵 {guest.song_request}</span>
+        )}
+        {guest.flight_number && (
+          <span className="text-foreground/75">
+            {" "}
+            · ✈ {guest.flight_number}
+            {guest.arrival_time &&
+              ` (${formatWallClockTime(guest.arrival_time, { dateStyle: "medium", timeStyle: "short" })})`}
+          </span>
         )}
         {guest.rsvp_note && (
           <span className="block text-xs text-foreground/75 mt-0.5">“{guest.rsvp_note}”</span>

@@ -18,4 +18,6 @@ export interface Guest {
   plus_one_name: string | null;
   meal_choice: string | null;
   song_request: string | null;
+  flight_number: string | null;
+  arrival_time: string | null;
 }

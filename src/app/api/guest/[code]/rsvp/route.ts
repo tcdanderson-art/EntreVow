@@ -18,7 +18,7 @@ export const PATCH = withErrorHandling(async (
   const limited = rateLimit(req, "guest-rsvp", 20, 10 * 60_000, code);
   if (limited) return limited;
 
-  const { status, note, plusOneName, mealChoice, songRequest } = await req.json();
+  const { status, note, plusOneName, mealChoice, songRequest, flightNumber, arrivalTime } = await req.json();
 
   if (!VALID_STATUSES.includes(status)) {
     return NextResponse.json({ error: "Invalid RSVP status" }, { status: 400 });
@@ -46,7 +46,9 @@ export const PATCH = withErrorHandling(async (
           ELSE NULL
         END,
         meal_choice = CASE WHEN ${status} = 'attending' THEN ${validMealChoice} ELSE NULL END,
-        song_request = CASE WHEN ${status} = 'attending' THEN ${songRequest || null} ELSE NULL END
+        song_request = CASE WHEN ${status} = 'attending' THEN ${songRequest || null} ELSE NULL END,
+        flight_number = CASE WHEN ${status} = 'attending' THEN ${flightNumber || null} ELSE NULL END,
+        arrival_time = CASE WHEN ${status} = 'attending' THEN ${arrivalTime || null} ELSE NULL END
     WHERE access_code = ${code}
     RETURNING *
   `) as Guest[];

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Guest, RsvpStatus } from "@/types/guest";
+import { formatWallClockTime, toDatetimeLocalValue } from "@/lib/wall-clock";
 
 export default function GuestRsvp({
   code,
@@ -18,6 +19,10 @@ export default function GuestRsvp({
   const [plusOneName, setPlusOneName] = useState(guest.plus_one_name ?? "");
   const [mealChoice, setMealChoice] = useState(guest.meal_choice ?? "");
   const [songRequest, setSongRequest] = useState(guest.song_request ?? "");
+  const [flightNumber, setFlightNumber] = useState(guest.flight_number ?? "");
+  const [arrivalTime, setArrivalTime] = useState(
+    guest.arrival_time ? toDatetimeLocalValue(guest.arrival_time) : ""
+  );
   const [saving, setSaving] = useState<RsvpStatus | null>(null);
 
   async function respond(status: RsvpStatus) {
@@ -25,7 +30,7 @@ export default function GuestRsvp({
     const res = await fetch(`/api/guest/${code}/rsvp`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ status, note, plusOneName, mealChoice, songRequest }),
+      body: JSON.stringify({ status, note, plusOneName, mealChoice, songRequest, flightNumber, arrivalTime }),
     });
     const data = await res.json();
     setSaving(null);
@@ -48,6 +53,13 @@ export default function GuestRsvp({
           )}
           {guest.meal_choice && (
             <div className="text-xs text-foreground/80 mt-0.5">Meal: {guest.meal_choice}</div>
+          )}
+          {guest.flight_number && (
+            <div className="text-xs text-foreground/80 mt-0.5">
+              Flight: {guest.flight_number}
+              {guest.arrival_time &&
+                ` — arriving ${formatWallClockTime(guest.arrival_time, { dateStyle: "medium", timeStyle: "short" })}`}
+            </div>
           )}
         </div>
         <button onClick={() => setEditing(true)} className="text-brand text-sm font-medium whitespace-nowrap">
@@ -114,6 +126,27 @@ export default function GuestRsvp({
         onChange={(e) => setSongRequest(e.target.value)}
         className="border border-border-warm rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand/30"
       />
+      <label htmlFor="flight-number" className="sr-only">Flight number</label>
+      <input
+        id="flight-number"
+        type="text"
+        placeholder="Flight number (optional, e.g. QF405)"
+        value={flightNumber}
+        onChange={(e) => setFlightNumber(e.target.value)}
+        className="border border-border-warm rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand/30"
+      />
+      <div className="flex flex-col gap-1">
+        <label htmlFor="arrival-time" className="text-xs text-foreground/75">
+          Arrival date &amp; time (optional)
+        </label>
+        <input
+          id="arrival-time"
+          type="datetime-local"
+          value={arrivalTime}
+          onChange={(e) => setArrivalTime(e.target.value)}
+          className="border border-border-warm rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand/30"
+        />
+      </div>
       <label htmlFor="rsvp-note" className="sr-only">Note for the couple</label>
       <input
         id="rsvp-note"
