@@ -10,20 +10,54 @@ export default function ItineraryItemRow({
   knownGroups,
   onUpdate,
   onDelete,
+  onCascade,
 }: {
   weddingId: number;
   item: ItineraryItem;
   knownGroups: string[];
   onUpdate: (item: ItineraryItem) => void;
   onDelete: (id: number) => void;
+  onCascade: (items: ItineraryItem[]) => void;
 }) {
   const [editing, setEditing] = useState(false);
+  const [delaying, setDelaying] = useState(false);
+  const [delayMinutes, setDelayMinutes] = useState("");
+  const [applyingDelay, setApplyingDelay] = useState(false);
+  const [delayError, setDelayError] = useState<string | null>(null);
   const [title, setTitle] = useState(item.title);
   const [location, setLocation] = useState(item.location ?? "");
   const [startTime, setStartTime] = useState(toDatetimeLocalValue(item.start_time));
   const [transportInfo, setTransportInfo] = useState(item.transport_info ?? "");
   const [selectedGroups, setSelectedGroups] = useState<string[]>(item.visible_to_groups);
   const [saving, setSaving] = useState(false);
+
+  async function handleApplyDelay(e: React.FormEvent) {
+    e.preventDefault();
+    const minutes = Number(delayMinutes);
+    if (!Number.isFinite(minutes) || minutes <= 0) {
+      setDelayError("Enter a number of minutes");
+      return;
+    }
+    setApplyingDelay(true);
+    setDelayError(null);
+    try {
+      const res = await fetch(`/api/weddings/${weddingId}/itinerary/${item.id}/delay`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ minutes }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        onCascade(data.items);
+        setDelaying(false);
+        setDelayMinutes("");
+      } else {
+        setDelayError(data.error ?? "Couldn't apply the delay");
+      }
+    } finally {
+      setApplyingDelay(false);
+    }
+  }
 
   function toggleGroup(group: string) {
     setSelectedGroups((prev) =>
@@ -62,6 +96,51 @@ export default function ItineraryItemRow({
       method: "DELETE",
     });
     if (res.ok) onDelete(item.id);
+  }
+
+  if (delaying) {
+    return (
+      <li className="border border-border-warm rounded-md px-3 py-2 text-sm">
+        <form onSubmit={handleApplyDelay} className="flex flex-col gap-2">
+          <p className="text-foreground/80">
+            Push back <span className="font-medium">{item.title}</span> and everything scheduled
+            after it by the same amount.
+          </p>
+          <div className="flex items-center gap-2 flex-wrap">
+            <label htmlFor={`item-delay-${item.id}`} className="sr-only">Delay in minutes</label>
+            <input
+              id={`item-delay-${item.id}`}
+              type="number"
+              min={1}
+              max={480}
+              placeholder="Minutes late"
+              value={delayMinutes}
+              onChange={(e) => setDelayMinutes(e.target.value)}
+              required
+              className="w-32 border border-border-warm rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand/30"
+            />
+            <button
+              type="submit"
+              disabled={applyingDelay}
+              className="bg-brand text-white rounded-md px-4 py-2 text-sm font-medium hover:bg-brand-hover transition-colors disabled:opacity-60"
+            >
+              {applyingDelay ? "Applying…" : "Apply delay"}
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setDelaying(false);
+                setDelayError(null);
+              }}
+              className="text-foreground/80 text-sm font-medium"
+            >
+              Cancel
+            </button>
+          </div>
+          {delayError && <p className="text-red-600 text-xs">{delayError}</p>}
+        </form>
+      </li>
+    );
   }
 
   if (editing) {
@@ -159,6 +238,9 @@ export default function ItineraryItemRow({
           visible to: {item.visible_to_groups.join(", ")}
         </span>
         <span className="flex items-center gap-3">
+          <button onClick={() => setDelaying(true)} className="text-brand font-medium text-xs">
+            Running late?
+          </button>
           <button onClick={() => setEditing(true)} className="text-brand font-medium text-xs">
             Edit
           </button>

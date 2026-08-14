@@ -67,6 +67,15 @@ export default function ItineraryManager({
     );
   }
 
+  function handleCascade(updatedItems: ItineraryItem[]) {
+    const updatedIds = new Set(updatedItems.map((i) => i.id));
+    setItems((prev) =>
+      [...prev.filter((i) => !updatedIds.has(i.id)), ...updatedItems].sort((a, b) =>
+        a.start_time.localeCompare(b.start_time)
+      )
+    );
+  }
+
   return (
     <div className="flex flex-col gap-4">
       <RunsheetGenerator
@@ -92,6 +101,7 @@ export default function ItineraryManager({
                 )
               }
               onDelete={(id) => setItems((prev) => prev.filter((i) => i.id !== id))}
+              onCascade={handleCascade}
             />
           ))}
         </ul>
