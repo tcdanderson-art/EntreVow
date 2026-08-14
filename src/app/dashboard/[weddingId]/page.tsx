@@ -162,6 +162,7 @@ export default async function WeddingDashboardPage({
             weddingId={wedding.id}
             initialItems={items}
             knownGroups={guestGroups.length > 0 ? guestGroups : ["general"]}
+            defaultVenue={wedding.venue_address}
           />
         </section>
       </div>

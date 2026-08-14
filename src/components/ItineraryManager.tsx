@@ -3,15 +3,18 @@
 import { useState } from "react";
 import { ItineraryItem } from "@/types/itinerary";
 import ItineraryItemRow from "@/components/ItineraryItemRow";
+import RunsheetGenerator from "@/components/RunsheetGenerator";
 
 export default function ItineraryManager({
   weddingId,
   initialItems,
   knownGroups,
+  defaultVenue,
 }: {
   weddingId: number;
   initialItems: ItineraryItem[];
   knownGroups: string[];
+  defaultVenue: string | null;
 }) {
   const [items, setItems] = useState(initialItems);
   const [title, setTitle] = useState("");
@@ -58,8 +61,21 @@ export default function ItineraryManager({
     }
   }
 
+  function handleRunsheetItemsAdded(newItems: ItineraryItem[]) {
+    setItems((prev) =>
+      [...prev, ...newItems].sort((a, b) => a.start_time.localeCompare(b.start_time))
+    );
+  }
+
   return (
     <div className="flex flex-col gap-4">
+      <RunsheetGenerator
+        weddingId={weddingId}
+        knownGroups={knownGroups}
+        defaultVenue={defaultVenue}
+        onItemsAdded={handleRunsheetItemsAdded}
+      />
+
       {items.length > 0 && (
         <ul className="flex flex-col gap-2">
           {items.map((item) => (

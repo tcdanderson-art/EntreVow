@@ -32,6 +32,16 @@ export function toDatetimeLocalValue(value: string) {
   return value.slice(0, 16);
 }
 
+// Shifts a wall-clock value by a number of minutes (may be negative), staying
+// entirely in local component math — never touches UTC/ISO, so the result is
+// still the same kind of naive "place time" string the rest of the app expects.
+export function addMinutesToWallClock(value: string, minutes: number): string {
+  const date = toLocalDate(value);
+  date.setMinutes(date.getMinutes() + minutes);
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
+}
+
 // Same UTC-parsing pitfall applies to date-only "YYYY-MM-DD" values (e.g. wedding_date)
 // when formatted client-side: `new Date("YYYY-MM-DD")` is UTC midnight per spec, which
 // a browser behind UTC renders as the previous day. Build from components instead.
