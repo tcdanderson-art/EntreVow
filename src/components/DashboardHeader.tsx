@@ -27,6 +27,12 @@ export default function DashboardHeader() {
       </Link>
       <span className="flex items-center gap-4">
         <Link
+          href="/faq"
+          className="text-sm font-medium text-foreground/60 hover:text-foreground transition-colors"
+        >
+          Help
+        </Link>
+        <Link
           href="/account"
           className="text-sm font-medium text-foreground/60 hover:text-foreground transition-colors"
         >

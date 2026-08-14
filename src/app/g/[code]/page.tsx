@@ -19,6 +19,7 @@ import GuestShuttleTracker from "@/components/GuestShuttleTracker";
 import GuestPushOptIn from "@/components/GuestPushOptIn";
 import OfflineSupport from "@/components/OfflineSupport";
 import GuestRefreshLink from "@/components/GuestRefreshLink";
+import Link from "next/link";
 import { isPaid, isFullTier } from "@/lib/plan";
 import { mealOptionsFor } from "@/lib/meal-options";
 import { getVapidPublicKey } from "@/lib/push";
@@ -161,6 +162,12 @@ export default async function GuestItineraryPage({
         )}
 
         <GuestRefreshLink />
+
+        <div className="text-center pb-4">
+          <Link href="/faq" className="text-xs text-foreground/40 hover:text-foreground/60 transition-colors">
+            Have a question? See the FAQ
+          </Link>
+        </div>
       </div>
     </div>
   );
