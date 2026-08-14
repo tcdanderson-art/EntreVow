@@ -20,6 +20,7 @@ export default function ShuttleManager({
   const [pickupTime, setPickupTime] = useState("");
   const [creating, setCreating] = useState(false);
   const [copiedId, setCopiedId] = useState<number | null>(null);
+  const [showHelp, setShowHelp] = useState(false);
 
   async function addShuttle(e: React.FormEvent) {
     e.preventDefault();
@@ -56,12 +57,31 @@ export default function ShuttleManager({
 
   return (
     <div className="flex flex-col gap-4">
-      <p className="text-sm text-foreground/80">
-        Add a shuttle and send the driver link to whoever&rsquo;s driving. It opens a page on their
-        phone that shares their live location — no app or account needed. Guests see the shuttle
-        move on a map from their itinerary page. Set a pickup time and guests who&rsquo;ve shared
-        their flight arrival will see which shuttle fits their landing time.
-      </p>
+      <div className="flex items-start gap-1.5">
+        <p className="text-sm text-foreground/80">
+          Add a shuttle and send the driver link to whoever&rsquo;s driving. It opens a page on their
+          phone that shares their live location — no app or account needed. Guests see the shuttle
+          move on a map from their itinerary page. Set a pickup time and guests who&rsquo;ve shared
+          their flight arrival will see which shuttle fits their landing time.
+        </p>
+        <button
+          onClick={() => setShowHelp((v) => !v)}
+          aria-label="How to use this"
+          aria-expanded={showHelp}
+          className="shrink-0 mt-0.5 w-4 h-4 rounded-full bg-cream border border-border-warm text-[10px] font-bold text-foreground/70 leading-none flex items-center justify-center hover:bg-white"
+        >
+          ?
+        </button>
+      </div>
+
+      {showHelp && (
+        <ol className="text-sm text-foreground/80 bg-cream border border-border-warm rounded-md px-4 py-3 list-decimal list-inside flex flex-col gap-1">
+          <li>Add the shuttle below, then tap &ldquo;Copy link&rdquo; next to it.</li>
+          <li>Send that link to the driver — text or email works.</li>
+          <li>They open it on their phone and allow location sharing when asked.</li>
+          <li>Guests then see the shuttle move live on their itinerary page — nothing else for the driver to do.</li>
+        </ol>
+      )}
 
       {shuttles.length > 0 && (
         <ul className="flex flex-col gap-2">
