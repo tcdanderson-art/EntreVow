@@ -35,9 +35,69 @@ export default function VideoManager({
   const [videos, setVideos] = useState(initialVideos);
   const [uploadingWelcome, setUploadingWelcome] = useState(false);
   const [welcomeError, setWelcomeError] = useState<string | null>(null);
+  const [zipParts, setZipParts] = useState<number[] | null>(null);
+  const [zipBusy, setZipBusy] = useState<"preparing" | number | null>(null);
+  const [zipError, setZipError] = useState<string | null>(null);
 
   const pending = videos.filter((v) => v.status === "pending");
   const approved = videos.filter((v) => v.status === "approved");
+
+  function downloadName(v: Video): string {
+    const ext = v.storage_key.split(".").pop() || (v.kind === "audio" ? "m4a" : "mp4");
+    return `${v.guest_name ?? "guest"}-${v.id}.${ext}`;
+  }
+
+  async function downloadBlob(url: string, filename: string) {
+    const res = await fetch(url);
+    if (!res.ok) {
+      const data = await res.json().catch(() => null);
+      throw new Error(data?.error ?? "Could not download");
+    }
+    const blob = await res.blob();
+    const objectUrl = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = objectUrl;
+    a.download = filename;
+    a.click();
+    URL.revokeObjectURL(objectUrl);
+  }
+
+  async function handleDownloadAll() {
+    setZipError(null);
+    setZipBusy("preparing");
+    try {
+      const res = await fetch(`/api/weddings/${weddingId}/videos/download-all`);
+      const data = await res.json();
+      if (!res.ok) throw new Error(data?.error ?? "Could not prepare download");
+
+      if (data.parts <= 1) {
+        setZipBusy(1);
+        await downloadBlob(`/api/weddings/${weddingId}/videos/download-all?part=1`, `wedding-${weddingId}-guestbook.zip`);
+        setZipBusy(null);
+      } else {
+        setZipParts(Array.from({ length: data.parts }, (_, i) => i + 1));
+        setZipBusy(null);
+      }
+    } catch (err) {
+      setZipError(err instanceof Error ? err.message : "Could not prepare download");
+      setZipBusy(null);
+    }
+  }
+
+  async function handleDownloadPart(part: number) {
+    setZipError(null);
+    setZipBusy(part);
+    try {
+      const filename = zipParts && zipParts.length > 1
+        ? `wedding-${weddingId}-guestbook-part-${part}-of-${zipParts.length}.zip`
+        : `wedding-${weddingId}-guestbook.zip`;
+      await downloadBlob(`/api/weddings/${weddingId}/videos/download-all?part=${part}`, filename);
+    } catch (err) {
+      setZipError(err instanceof Error ? err.message : "Could not download this part");
+    } finally {
+      setZipBusy(null);
+    }
+  }
 
   async function handleWelcomeFileSelected(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
@@ -208,6 +268,12 @@ export default function VideoManager({
                       <button onClick={() => handleModerate(v.id, "approved")} className="text-[11px] font-semibold text-brand">
                         Approve
                       </button>
+                      <a
+                        href={publicStorageUrl("videos", v.storage_key, { download: downloadName(v) })}
+                        className="text-[11px] font-medium text-foreground/75"
+                      >
+                        Download
+                      </a>
                       <button onClick={() => handleModerate(v.id, "rejected")} className="text-[11px] font-medium text-foreground/75">
                         Reject
                       </button>
@@ -222,30 +288,70 @@ export default function VideoManager({
         {approved.length === 0 ? (
           <p className="text-sm text-foreground/70">No approved guestbook messages yet.</p>
         ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-            {approved.map((v) => (
-              <div key={v.id} className="rounded-md overflow-hidden bg-cream border border-border-warm">
-                {v.kind === "audio" ? (
-                  <div className="p-2">
-                    <audio src={publicStorageUrl("videos", v.storage_key)} controls className="w-full" />
-                  </div>
-                ) : (
-                  <video
-                    src={publicStorageUrl("videos", v.storage_key)}
-                    controls
-                    playsInline
-                    className="w-full aspect-video bg-black"
-                  />
-                )}
-                <div className="px-2 py-1.5 flex items-center justify-between gap-2">
-                  <span className="text-[11px] text-foreground/80 truncate">{v.guest_name}</span>
-                  <button onClick={() => handleRemoveGuestVideo(v.id)} className="text-[11px] font-medium text-foreground/75 shrink-0">
-                    Remove
+          <>
+            <div className="flex items-center gap-3 flex-wrap mb-3">
+              <button
+                onClick={handleDownloadAll}
+                disabled={zipBusy !== null}
+                className="text-sm font-medium text-brand disabled:opacity-60"
+              >
+                {zipBusy === "preparing" ? "Preparing…" : "Download all guestbook messages"}
+              </button>
+              {zipParts && zipParts.length > 1 && (
+                <span className="text-xs text-foreground/70">
+                  {zipParts.length} zip files — download each part below
+                </span>
+              )}
+            </div>
+            {zipParts && zipParts.length > 1 && (
+              <div className="flex items-center gap-3 flex-wrap mb-3">
+                {zipParts.map((part) => (
+                  <button
+                    key={part}
+                    onClick={() => handleDownloadPart(part)}
+                    disabled={zipBusy !== null}
+                    className="text-sm font-medium text-brand disabled:opacity-60"
+                  >
+                    {zipBusy === part ? `Downloading part ${part}…` : `Part ${part} of ${zipParts.length}`}
                   </button>
-                </div>
+                ))}
               </div>
-            ))}
-          </div>
+            )}
+            {zipError && <p className="text-sm text-red-600 mb-3">{zipError}</p>}
+
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              {approved.map((v) => (
+                <div key={v.id} className="rounded-md overflow-hidden bg-cream border border-border-warm">
+                  {v.kind === "audio" ? (
+                    <div className="p-2">
+                      <audio src={publicStorageUrl("videos", v.storage_key)} controls className="w-full" />
+                    </div>
+                  ) : (
+                    <video
+                      src={publicStorageUrl("videos", v.storage_key)}
+                      controls
+                      playsInline
+                      className="w-full aspect-video bg-black"
+                    />
+                  )}
+                  <div className="px-2 py-1.5 flex items-center justify-between gap-2">
+                    <span className="text-[11px] text-foreground/80 truncate">{v.guest_name}</span>
+                    <div className="flex items-center gap-2 shrink-0">
+                      <a
+                        href={publicStorageUrl("videos", v.storage_key, { download: downloadName(v) })}
+                        className="text-[11px] font-medium text-foreground/75"
+                      >
+                        Download
+                      </a>
+                      <button onClick={() => handleRemoveGuestVideo(v.id)} className="text-[11px] font-medium text-foreground/75">
+                        Remove
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </>
         )}
       </div>
     </div>
