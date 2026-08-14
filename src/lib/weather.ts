@@ -1,3 +1,6 @@
+import { isFullTier } from "@/lib/plan";
+import { Wedding } from "@/types/wedding";
+
 const WEATHER_DESCRIPTIONS: Record<number, string> = {
   0: "Clear sky",
   1: "Mainly clear",
@@ -83,4 +86,52 @@ export function contingencySuggestion(forecast: WeatherForecast): string | null 
     return `Forecast low of ${Math.round(forecast.minTempC)}°C — consider letting guests know to dress warmly for any outdoor portions.`;
   }
   return null;
+}
+
+export type WeddingWeatherResult =
+  | { available: true; forecast: WeatherForecast; suggestion: string | null }
+  | { available: false; reason: "no_location" | "no_date" | "past" | "fetch_failed" | "requires_full_tier" }
+  | { available: false; reason: "too_far"; daysUntil: number };
+
+function toDateOnly(value: string | Date): string {
+  if (value instanceof Date) {
+    const pad = (n: number) => String(n).padStart(2, "0");
+    return `${value.getUTCFullYear()}-${pad(value.getUTCMonth() + 1)}-${pad(value.getUTCDate())}`;
+  }
+  return value.slice(0, 10);
+}
+
+// Shared availability + fetch logic for "what's the forecast for this wedding
+// day" — used by both the couple's dashboard widget and the guest-facing
+// command card, so the tier/location/date/horizon rules can't drift between them.
+export async function getWeddingDayForecast(wedding: Wedding): Promise<WeddingWeatherResult> {
+  if (!isFullTier(wedding)) {
+    return { available: false, reason: "requires_full_tier" };
+  }
+  if (wedding.venue_lat == null || wedding.venue_lng == null) {
+    return { available: false, reason: "no_location" };
+  }
+  if (!wedding.wedding_date) {
+    return { available: false, reason: "no_date" };
+  }
+
+  const dateStr = toDateOnly(wedding.wedding_date);
+  const todayStr = toDateOnly(new Date());
+  const daysUntil = Math.round(
+    (new Date(`${dateStr}T00:00:00Z`).getTime() - new Date(`${todayStr}T00:00:00Z`).getTime()) / 86400000
+  );
+
+  if (daysUntil < 0) {
+    return { available: false, reason: "past" };
+  }
+  if (daysUntil > FORECAST_HORIZON_DAYS) {
+    return { available: false, reason: "too_far", daysUntil };
+  }
+
+  const forecast = await getForecastForDate(wedding.venue_lat, wedding.venue_lng, dateStr);
+  if (!forecast) {
+    return { available: false, reason: "fetch_failed" };
+  }
+
+  return { available: true, forecast, suggestion: contingencySuggestion(forecast) };
 }

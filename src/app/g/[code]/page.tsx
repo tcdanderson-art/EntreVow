@@ -16,6 +16,7 @@ import WelcomeVideo from "@/components/WelcomeVideo";
 import GuestPhotos from "@/components/GuestPhotos";
 import GuestVideoGuestbook from "@/components/GuestVideoGuestbook";
 import GuestShuttleTracker from "@/components/GuestShuttleTracker";
+import GuestCommandCard from "@/components/GuestCommandCard";
 import GuestPushOptIn from "@/components/GuestPushOptIn";
 import OfflineSupport from "@/components/OfflineSupport";
 import GuestRefreshLink from "@/components/GuestRefreshLink";
@@ -128,6 +129,14 @@ export default async function GuestItineraryPage({
             </div>
           )}
         </div>
+
+        <GuestCommandCard
+          code={code}
+          initialItems={items}
+          initialShuttles={shuttles}
+          initialArrivalTime={guest.arrival_time}
+          showShuttleAndWeather={isFullTier(wedding)}
+        />
 
         {wedding.welcome_video_key && <WelcomeVideo storageKey={wedding.welcome_video_key} />}
 

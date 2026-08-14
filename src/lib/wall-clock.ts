@@ -32,6 +32,15 @@ export function toDatetimeLocalValue(value: string) {
   return value.slice(0, 16);
 }
 
+// "Now" expressed in the same naive wall-clock format, built from local
+// component math — lets client code compare it lexically against stored
+// itinerary/shuttle times the same way those values compare to each other.
+export function getCurrentWallClockString(): string {
+  const now = new Date();
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}T${pad(now.getHours())}:${pad(now.getMinutes())}`;
+}
+
 // Shifts a wall-clock value by a number of minutes (may be negative), staying
 // entirely in local component math — never touches UTC/ISO, so the result is
 // still the same kind of naive "place time" string the rest of the app expects.

@@ -2,12 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { WeatherForecast, FORECAST_HORIZON_DAYS } from "@/lib/weather";
-
-type WeatherResponse =
-  | { available: true; forecast: WeatherForecast; suggestion: string | null }
-  | { available: false; reason: "no_location" | "no_date" | "past" | "fetch_failed" | "requires_full_tier" }
-  | { available: false; reason: "too_far"; daysUntil: number };
+import { FORECAST_HORIZON_DAYS, WeddingWeatherResult } from "@/lib/weather";
 
 export default function WeatherWidget({
   weddingId,
@@ -17,7 +12,7 @@ export default function WeatherWidget({
   knownGroups: string[];
 }) {
   const router = useRouter();
-  const [data, setData] = useState<WeatherResponse | null>(null);
+  const [data, setData] = useState<WeddingWeatherResult | null>(null);
   const [posting, setPosting] = useState(false);
   const [posted, setPosted] = useState(false);
 
