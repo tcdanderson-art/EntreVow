@@ -50,7 +50,7 @@ export default function GuestItineraryList({
 
   if (items.length === 0) {
     return (
-      <p className="text-sm text-foreground/50">No itinerary items yet — check back soon.</p>
+      <p className="text-sm text-foreground/75">No itinerary items yet — check back soon.</p>
     );
   }
 
@@ -65,7 +65,7 @@ export default function GuestItineraryList({
       <ol className="border-l-2 border-border-warm pl-4 flex flex-col gap-4">
       {items.map((item) => (
         <li key={item.id}>
-          <time className="text-xs font-semibold text-foreground/50">
+          <time className="text-xs font-semibold text-foreground/75">
             {formatWallClockTime(item.start_time, {
               weekday: "short",
               hour: "numeric",
@@ -74,7 +74,7 @@ export default function GuestItineraryList({
           </time>
           <h5 className="font-semibold text-sm">{item.title}</h5>
           {item.location && (
-            <p className="text-sm text-foreground/60">
+            <p className="text-sm text-foreground/80">
               {item.location}{" "}
               <a
                 href={directionsUrl(item.location)}

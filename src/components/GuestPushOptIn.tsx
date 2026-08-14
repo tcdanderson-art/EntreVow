@@ -76,7 +76,7 @@ export default function GuestPushOptIn({ code, vapidPublicKey }: { code: string;
 
   if (status === "ios-hint") {
     return (
-      <div className="mx-5 mt-4 p-3 bg-cream border border-border-warm rounded-lg text-xs text-foreground/60">
+      <div className="mx-5 mt-4 p-3 bg-cream border border-border-warm rounded-lg text-xs text-foreground/80">
         Add Entrevow to your Home Screen (Share → Add to Home Screen) to get notified about updates.
       </div>
     );
@@ -85,7 +85,7 @@ export default function GuestPushOptIn({ code, vapidPublicKey }: { code: string;
   if (status === "subscribed") {
     return (
       <div className="mx-5 mt-4 p-3 bg-cream border border-border-warm rounded-lg flex items-center justify-between gap-3">
-        <span className="text-xs text-foreground/60">Notifications are on</span>
+        <span className="text-xs text-foreground/80">Notifications are on</span>
         <button onClick={disable} className="text-brand text-sm font-medium whitespace-nowrap">
           Turn off
         </button>
@@ -95,7 +95,7 @@ export default function GuestPushOptIn({ code, vapidPublicKey }: { code: string;
 
   return (
     <div className="mx-5 mt-4 p-3 bg-cream border border-border-warm rounded-lg flex items-center justify-between gap-3">
-      <span className="text-xs text-foreground/60">Get notified about updates</span>
+      <span className="text-xs text-foreground/80">Get notified about updates</span>
       <button
         onClick={enable}
         disabled={status === "requesting"}

@@ -13,7 +13,15 @@ export default function ModeratorCodeManager({
   const [moderatorCode, setModeratorCode] = useState(wedding.moderator_code);
   const [loading, setLoading] = useState(false);
   const [copied, setCopied] = useState(false);
-  const [origin] = useState(() => (typeof window !== "undefined" ? window.location.origin : ""));
+  // Must start "" on both server and client so hydration matches, then fill in after
+  // mount — a lazy useState initializer reads `window` differently on each side and
+  // causes a hydration mismatch, even though it silences the set-state-in-effect lint rule.
+  const [origin, setOrigin] = useState("");
+  useEffect(() => {
+    // Deriving from a browser-only global unavailable at SSR time, not synchronizing external state.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setOrigin(window.location.origin);
+  }, []);
 
   function linkFor(code: string) {
     return `${origin}/moderator/${code}`;
@@ -41,7 +49,7 @@ export default function ModeratorCodeManager({
 
   return (
     <div className="flex flex-col gap-2 mb-6 pb-6 border-b border-border-warm">
-      <p className="text-sm text-foreground/60">
+      <p className="text-sm text-foreground/80">
         Not going to be checking your phone on the day? Share this link with someone you trust so
         they can approve or reject guestbook videos and hide inappropriate photos on your behalf —
         no account needed.
@@ -58,12 +66,12 @@ export default function ModeratorCodeManager({
           <button
             onClick={regenerate}
             disabled={loading}
-            className="text-foreground/50 text-sm font-medium whitespace-nowrap disabled:opacity-60"
+            className="text-foreground/75 text-sm font-medium whitespace-nowrap disabled:opacity-60"
           >
             Regenerate
           </button>
           {pendingCount > 0 && (
-            <span className="text-xs text-foreground/40 ml-auto">{pendingCount} awaiting approval</span>
+            <span className="text-xs text-foreground/70 ml-auto">{pendingCount} awaiting approval</span>
           )}
         </div>
       ) : (

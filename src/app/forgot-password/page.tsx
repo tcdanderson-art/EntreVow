@@ -26,7 +26,7 @@ export default function ForgotPasswordPage() {
     <div className="flex-1 flex items-center justify-center bg-cream px-6 py-12">
       <div className="w-full max-w-sm bg-white border border-border-warm rounded-xl p-8 shadow-sm">
         <h1 className="font-display text-2xl mb-1 text-center">Reset your password</h1>
-        <p className="text-sm text-foreground/60 text-center mb-6">
+        <p className="text-sm text-foreground/80 text-center mb-6">
           Enter your email and we&apos;ll send you a reset link.
         </p>
 
@@ -36,7 +36,9 @@ export default function ForgotPasswordPage() {
           </p>
         ) : (
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+            <label htmlFor="email" className="sr-only">Email</label>
             <input
+              id="email"
               type="email"
               placeholder="Email"
               value={email}
@@ -54,7 +56,7 @@ export default function ForgotPasswordPage() {
           </form>
         )}
 
-        <p className="text-sm text-foreground/60 text-center mt-6">
+        <p className="text-sm text-foreground/80 text-center mt-6">
           <Link href="/login" className="text-brand font-medium">
             Back to login
           </Link>

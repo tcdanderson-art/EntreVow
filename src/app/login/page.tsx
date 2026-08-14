@@ -35,10 +35,12 @@ export default function LoginPage() {
     <div className="flex-1 flex items-center justify-center bg-cream px-6 py-12">
       <div className="w-full max-w-sm bg-white border border-border-warm rounded-xl p-8 shadow-sm">
         <h1 className="font-display text-2xl mb-1 text-center">Welcome back</h1>
-        <p className="text-sm text-foreground/60 text-center mb-6">Log in to your Entrevow</p>
+        <p className="text-sm text-foreground/80 text-center mb-6">Log in to your Entrevow</p>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+          <label htmlFor="email" className="sr-only">Email</label>
           <input
+            id="email"
             type="email"
             placeholder="Email"
             value={email}
@@ -46,7 +48,9 @@ export default function LoginPage() {
             required
             className="border border-border-warm rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand/30"
           />
+          <label htmlFor="password" className="sr-only">Password</label>
           <input
+            id="password"
             type="password"
             placeholder="Password"
             value={password}
@@ -69,7 +73,7 @@ export default function LoginPage() {
           </button>
         </form>
 
-        <p className="text-sm text-foreground/60 text-center mt-6">
+        <p className="text-sm text-foreground/80 text-center mt-6">
           Don&apos;t have an account?{" "}
           <Link href="/signup" className="text-brand font-medium">
             Sign up

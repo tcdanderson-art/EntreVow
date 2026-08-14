@@ -136,7 +136,7 @@ export default function GuestManager({
     <div className="flex flex-col gap-4">
       {guests.length > 0 && (
         <>
-          <div className="text-xs text-foreground/50">
+          <div className="text-xs text-foreground/75">
             <span className="text-brand font-medium">{attending} attending</span>
             {" · "}
             <span className="text-red-600 font-medium">{declined} declined</span>
@@ -152,16 +152,20 @@ export default function GuestManager({
             )}
           </div>
           {guests.length > 5 && (
-            <input
-              type="text"
-              placeholder="Search by name or group…"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="border border-border-warm rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand/30"
-            />
+            <>
+              <label htmlFor="guest-search" className="sr-only">Search guests</label>
+              <input
+                id="guest-search"
+                type="text"
+                placeholder="Search by name or group…"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="border border-border-warm rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand/30"
+              />
+            </>
           )}
           {filteredGuests.length === 0 ? (
-            <p className="text-sm text-foreground/50">No guests match &ldquo;{search}&rdquo;.</p>
+            <p className="text-sm text-foreground/75">No guests match &ldquo;{search}&rdquo;.</p>
           ) : (
             <ul className="flex flex-col gap-2">
               {filteredGuests.map((guest) => (
@@ -183,7 +187,9 @@ export default function GuestManager({
       )}
 
       <form onSubmit={handleAdd} className="flex gap-2 flex-wrap">
+        <label htmlFor="new-guest-name" className="sr-only">Guest name</label>
         <input
+          id="new-guest-name"
           type="text"
           placeholder="Guest name"
           value={name}
@@ -191,14 +197,18 @@ export default function GuestManager({
           required
           className="flex-1 min-w-[140px] border border-border-warm rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand/30"
         />
+        <label htmlFor="new-guest-group" className="sr-only">Guest group</label>
         <input
+          id="new-guest-group"
           type="text"
           placeholder="Group (e.g. vip, bridal_party, general)"
           value={guestGroup}
           onChange={(e) => setGuestGroup(e.target.value)}
           className="flex-1 min-w-[180px] border border-border-warm rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand/30"
         />
+        <label htmlFor="new-guest-email" className="sr-only">Guest email</label>
         <input
+          id="new-guest-email"
           type="email"
           placeholder="Email (optional)"
           value={email}
@@ -235,7 +245,7 @@ export default function GuestManager({
             className="hidden"
           />
         </label>
-        <span className="text-xs text-foreground/40">columns: name, group, email</span>
+        <span className="text-xs text-foreground/70">columns: name, group, email</span>
       </div>
       {importError && <p className="text-sm text-red-600">{importError}</p>}
 
@@ -258,7 +268,7 @@ export default function GuestManager({
           </button>
         )}
       </div>
-      {inviteAllResult && <p className="text-sm text-foreground/60">{inviteAllResult}</p>}
+      {inviteAllResult && <p className="text-sm text-foreground/80">{inviteAllResult}</p>}
     </div>
   );
 }

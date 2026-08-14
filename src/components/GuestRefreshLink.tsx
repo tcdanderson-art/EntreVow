@@ -29,7 +29,7 @@ export default function GuestRefreshLink() {
       <button
         onClick={handleRefresh}
         disabled={refreshing}
-        className="text-xs text-foreground/40 hover:text-foreground/60 transition-colors disabled:opacity-60"
+        className="text-xs text-foreground/70 hover:text-foreground/80 transition-colors disabled:opacity-60"
       >
         {refreshing ? "Refreshing…" : "Not seeing the latest updates? Refresh"}
       </button>

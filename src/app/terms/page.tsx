@@ -8,7 +8,7 @@ export default function TermsPage() {
       <div className="max-w-2xl mx-auto bg-white border border-border-warm rounded-xl p-8 sm:p-10 flex flex-col gap-6">
         <div>
           <h1 className="font-display text-3xl mb-2">Terms of Service</h1>
-          <p className="text-sm text-foreground/50">Last updated August 14, 2026</p>
+          <p className="text-sm text-foreground/75">Last updated August 14, 2026</p>
         </div>
 
         <p className="text-foreground/70 leading-relaxed">

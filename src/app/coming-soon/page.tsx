@@ -20,7 +20,7 @@ export default function ComingSoonPage() {
           unoptimized
         />
         <h1 className="font-display text-xl">Launching soon</h1>
-        <p className="text-sm text-foreground/60 leading-relaxed">
+        <p className="text-sm text-foreground/80 leading-relaxed">
           We&rsquo;re putting the finishing touches on Entrevow. Check back shortly.
         </p>
       </div>

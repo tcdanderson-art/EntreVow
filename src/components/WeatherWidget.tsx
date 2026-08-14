@@ -43,7 +43,7 @@ export default function WeatherWidget({
   }
 
   if (!data) {
-    return <p className="text-sm text-foreground/50">Checking the forecast…</p>;
+    return <p className="text-sm text-foreground/75">Checking the forecast…</p>;
   }
 
   if (!data.available) {
@@ -58,7 +58,7 @@ export default function WeatherWidget({
             requires_full_tier: "Weather contingency alerts are part of the Full Day-Of plan.",
           }[data.reason];
 
-    return <p className="text-sm text-foreground/50">{message}</p>;
+    return <p className="text-sm text-foreground/75">{message}</p>;
   }
 
   const { forecast, suggestion } = data;
@@ -68,7 +68,7 @@ export default function WeatherWidget({
       <div className="flex items-center gap-4">
         <div>
           <p className="font-medium">{forecast.description}</p>
-          <p className="text-sm text-foreground/60">
+          <p className="text-sm text-foreground/80">
             {Math.round(forecast.minTempC)}° – {Math.round(forecast.maxTempC)}°C ·{" "}
             {forecast.precipitationProbability}% chance of rain
           </p>

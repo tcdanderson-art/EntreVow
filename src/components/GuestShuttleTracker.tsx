@@ -129,7 +129,7 @@ export default function GuestShuttleTracker({
 
   return (
     <div className="px-5 py-3 border-t border-border-warm">
-      <div className="text-xs font-semibold uppercase tracking-wide text-foreground/50 mb-3">
+      <div className="text-xs font-semibold uppercase tracking-wide text-foreground/75 mb-3">
         Shuttle tracking
       </div>
 
@@ -146,7 +146,7 @@ export default function GuestShuttleTracker({
                 className={`w-2 h-2 rounded-full shrink-0 ${live ? "bg-green-500" : "bg-foreground/20"}`}
               />
               <span className="font-medium">{s.label}</span>
-              <span className="text-foreground/50 text-xs">
+              <span className="text-foreground/75 text-xs">
                 {s.location_updated_at
                   ? live
                     ? "live"

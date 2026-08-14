@@ -40,18 +40,18 @@ export default function ModeratorVideoReview({
     <div className="flex flex-col min-h-full bg-cream">
       <header className="px-4 sm:px-10 py-6 max-w-3xl mx-auto w-full">
         <h1 className="font-display text-2xl text-foreground">{weddingTitle}</h1>
-        <p className="text-sm text-foreground/60 mt-1">
+        <p className="text-sm text-foreground/80 mt-1">
           Guestbook &amp; photo review — no account needed, just this link.
         </p>
       </header>
 
       <main className="flex-1 max-w-3xl mx-auto w-full px-4 sm:px-10 pb-16">
         <div>
-          <h2 className="text-sm font-semibold uppercase tracking-wide text-foreground/50 mb-3">
+          <h2 className="text-sm font-semibold uppercase tracking-wide text-foreground/75 mb-3">
             Awaiting approval ({pending.length})
           </h2>
           {pending.length === 0 ? (
-            <p className="text-sm text-foreground/40">Nothing waiting on you right now.</p>
+            <p className="text-sm text-foreground/70">Nothing waiting on you right now.</p>
           ) : (
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
               {pending.map((v) => (
@@ -63,7 +63,7 @@ export default function ModeratorVideoReview({
                     className="w-full aspect-video bg-black"
                   />
                   <div className="px-3 py-2.5">
-                    <div className="text-xs text-foreground/60 truncate mb-2">{v.guest_name}</div>
+                    <div className="text-xs text-foreground/80 truncate mb-2">{v.guest_name}</div>
                     <div className="flex items-center gap-3">
                       <button
                         onClick={() => handleModerate(v.id, "approved")}
@@ -73,7 +73,7 @@ export default function ModeratorVideoReview({
                       </button>
                       <button
                         onClick={() => handleModerate(v.id, "rejected")}
-                        className="text-xs font-medium text-foreground/50"
+                        className="text-xs font-medium text-foreground/75"
                       >
                         Reject
                       </button>
@@ -87,7 +87,7 @@ export default function ModeratorVideoReview({
 
         {approved.length > 0 && (
           <div className="mt-10">
-            <h2 className="text-sm font-semibold uppercase tracking-wide text-foreground/50 mb-3">
+            <h2 className="text-sm font-semibold uppercase tracking-wide text-foreground/75 mb-3">
               Already approved ({approved.length})
             </h2>
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
@@ -99,7 +99,7 @@ export default function ModeratorVideoReview({
                     playsInline
                     className="w-full aspect-video bg-black"
                   />
-                  <div className="px-3 py-2.5 text-xs text-foreground/60 truncate">{v.guest_name}</div>
+                  <div className="px-3 py-2.5 text-xs text-foreground/80 truncate">{v.guest_name}</div>
                 </div>
               ))}
             </div>

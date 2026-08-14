@@ -22,7 +22,7 @@ export default function GlobalError({
       <body className="min-h-full flex items-center justify-center bg-cream px-6 py-12">
         <div className="w-full max-w-sm text-center bg-white border border-border-warm rounded-xl p-8 shadow-sm">
           <h1 className="text-3xl mb-2 font-semibold">Something went wrong</h1>
-          <p className="text-sm text-foreground/60 mb-6">
+          <p className="text-sm text-foreground/80 mb-6">
             That&apos;s on us, not you — try again in a moment.
           </p>
           <button

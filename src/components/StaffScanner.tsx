@@ -153,13 +153,13 @@ export default function StaffScanner({
       <div className="flex border-b border-white/10">
         <button
           onClick={() => setMode("scan")}
-          className={`flex-1 py-3 text-sm font-medium touch-manipulation ${mode === "scan" ? "text-brand border-b-2 border-brand" : "text-white/50"}`}
+          className={`flex-1 py-3 text-sm font-medium touch-manipulation ${mode === "scan" ? "text-brand border-b-2 border-brand" : "text-white/75"}`}
         >
           Scan pass
         </button>
         <button
           onClick={() => setMode("search")}
-          className={`flex-1 py-3 text-sm font-medium touch-manipulation ${mode === "search" ? "text-brand border-b-2 border-brand" : "text-white/50"}`}
+          className={`flex-1 py-3 text-sm font-medium touch-manipulation ${mode === "search" ? "text-brand border-b-2 border-brand" : "text-white/75"}`}
         >
           Search list
         </button>
@@ -178,7 +178,9 @@ export default function StaffScanner({
         </div>
       ) : (
         <div className="flex-1 flex flex-col px-4 py-4 gap-3 overflow-y-auto">
+          <label htmlFor="staff-guest-search" className="sr-only">Search guest name</label>
           <input
+            id="staff-guest-search"
             type="text"
             placeholder="Search guest name…"
             value={query}
@@ -194,7 +196,7 @@ export default function StaffScanner({
               >
                 <div>
                   <div className="font-medium text-sm">{g.name}</div>
-                  <div className="text-xs text-white/50">
+                  <div className="text-xs text-white/75">
                     {g.guest_group}
                     {g.table_label ? ` · ${g.table_label}` : ""}
                   </div>
@@ -213,7 +215,7 @@ export default function StaffScanner({
               </li>
             ))}
             {filteredGuests.length === 0 && (
-              <li className="text-sm text-white/40 text-center py-6">No guests match.</li>
+              <li className="text-sm text-white/70 text-center py-6">No guests match.</li>
             )}
           </ul>
         </div>

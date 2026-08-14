@@ -106,7 +106,7 @@ export default function AnnouncementManager({
 
   return (
     <div className="flex flex-col gap-4">
-      <p className="text-sm text-foreground/60">
+      <p className="text-sm text-foreground/80">
         Push a short update straight to guests&apos; itinerary pages — e.g. a venue change or
         weather contingency. They see it within seconds, no group text required.
       </p>
@@ -128,7 +128,7 @@ export default function AnnouncementManager({
                     className="w-full max-w-[200px] aspect-video rounded-md bg-black mt-1.5"
                   />
                 )}
-                <p className="text-xs text-foreground/50 mt-0.5">
+                <p className="text-xs text-foreground/75 mt-0.5">
                   visible to: {a.visible_to_groups.join(", ")}
                 </p>
               </div>
@@ -144,7 +144,9 @@ export default function AnnouncementManager({
       )}
 
       <form onSubmit={handlePost} className="flex flex-col gap-2">
+        <label htmlFor="announcement-message" className="sr-only">Announcement message</label>
         <textarea
+          id="announcement-message"
           placeholder="e.g. Ceremony is moving indoors due to rain — follow signs to the Garden Room."
           value={message}
           onChange={(e) => setMessage(e.target.value)}
@@ -154,7 +156,7 @@ export default function AnnouncementManager({
         />
 
         <div className="flex items-center gap-3 flex-wrap text-sm">
-          <span className="text-foreground/60">Visible to:</span>
+          <span className="text-foreground/80">Visible to:</span>
           {knownGroups.map((group) => (
             <label key={group} className="flex items-center gap-1.5">
               <input

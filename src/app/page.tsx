@@ -142,7 +142,7 @@ export default function Home() {
           <h2 className="font-display text-2xl sm:text-3xl text-center text-foreground mb-2">
             Day-of, handled
           </h2>
-          <p className="text-center text-foreground/60 mb-10 max-w-xl mx-auto">
+          <p className="text-center text-foreground/80 mb-10 max-w-xl mx-auto">
             Included with Full Day-Of, for the logistics that only matter on the day itself.
           </p>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -164,7 +164,7 @@ export default function Home() {
           <h2 className="font-display text-2xl sm:text-3xl text-center text-foreground mb-2">
             Keep the memories, not just the logistics
           </h2>
-          <p className="text-center text-foreground/60 mb-10 max-w-xl mx-auto">
+          <p className="text-center text-foreground/80 mb-10 max-w-xl mx-auto">
             Entrevow isn&apos;t just for getting guests where they need to be.
           </p>
           <div className="grid sm:grid-cols-3 gap-6">
@@ -186,7 +186,7 @@ export default function Home() {
           <h2 className="font-display text-2xl sm:text-3xl text-center text-foreground mb-2">
             Simple, one-time pricing
           </h2>
-          <p className="text-center text-foreground/60 mb-10 max-w-xl mx-auto">
+          <p className="text-center text-foreground/80 mb-10 max-w-xl mx-auto">
             Build your wedding for free. Pay once, per wedding, when you&apos;re ready to invite
             guests — no subscription.
           </p>
@@ -194,7 +194,7 @@ export default function Home() {
             <div className="bg-white border border-border-warm rounded-xl p-6 flex flex-col gap-3">
               <div className="font-semibold text-lg">Essentials</div>
               <div className="text-3xl font-display text-foreground">
-                $69 <span className="text-sm font-sans text-foreground/50">AUD, one-time</span>
+                $69 <span className="text-sm font-sans text-foreground/75">AUD, one-time</span>
               </div>
               <p className="text-foreground/70 text-sm leading-relaxed flex-1">
                 Itinerary, RSVPs with meal choice and plus-ones, guest groups, the digital pass,
@@ -210,7 +210,7 @@ export default function Home() {
             <div className="bg-white border border-brand rounded-xl p-6 flex flex-col gap-3">
               <div className="font-semibold text-lg text-brand">Full Day-Of</div>
               <div className="text-3xl font-display text-foreground">
-                $249 <span className="text-sm font-sans text-foreground/50">AUD, one-time</span>
+                $249 <span className="text-sm font-sans text-foreground/75">AUD, one-time</span>
               </div>
               <p className="text-foreground/70 text-sm leading-relaxed flex-1">
                 Everything in Essentials, plus live shuttle tracking, weather alerts, QR usher
@@ -227,7 +227,7 @@ export default function Home() {
         </section>
       </main>
 
-      <footer className="text-center text-sm text-foreground/50 py-8 border-t border-border-warm flex flex-col items-center gap-2">
+      <footer className="text-center text-sm text-foreground/75 py-8 border-t border-border-warm flex flex-col items-center gap-2">
         <p>Entrevow — from &ldquo;I do&rdquo; to the last dance.</p>
         <p className="flex items-center gap-3">
           <Link href="/faq" className="hover:text-foreground transition-colors">

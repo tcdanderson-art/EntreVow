@@ -127,19 +127,38 @@ export default function SeatingChart({
       <li
         draggable
         onDragStart={(e) => e.dataTransfer.setData("text/plain", String(guest.id))}
-        className="bg-cream-card border border-border-warm rounded-md px-2 py-1 text-xs cursor-grab active:cursor-grabbing whitespace-nowrap"
+        className="flex items-center gap-1 bg-cream-card border border-border-warm rounded-md px-2 py-1 text-xs cursor-grab active:cursor-grabbing whitespace-nowrap"
       >
-        {guest.name}
-        {guest.plus_one_name && <span className="text-foreground/50"> +1</span>}
-        {guest.rsvp_status === "pending" && <span className="text-foreground/40"> (pending)</span>}
+        <span>
+          {guest.name}
+          {guest.plus_one_name && <span className="text-foreground/75"> +1</span>}
+          {guest.rsvp_status === "pending" && <span className="text-foreground/70"> (pending)</span>}
+        </span>
+        <label htmlFor={`assign-table-${guest.id}`} className="sr-only">
+          Move {guest.name} to table
+        </label>
+        <select
+          id={`assign-table-${guest.id}`}
+          value={guest.table_label && tableNames.has(guest.table_label) ? guest.table_label : ""}
+          onChange={(e) => assignGuest(guest, e.target.value || null)}
+          className="border-none bg-transparent text-foreground/70 text-[11px] focus:outline-none focus:ring-2 focus:ring-brand/30 rounded"
+        >
+          <option value="">Unassigned</option>
+          {tables.map((t) => (
+            <option key={t.id} value={t.name}>
+              {t.name}
+            </option>
+          ))}
+        </select>
       </li>
     );
   }
 
   return (
     <div className="flex flex-col gap-4">
-      <p className="text-xs text-foreground/50">
-        Drag guests onto a table. Declined guests are left out automatically.
+      <p className="text-xs text-foreground/75">
+        Drag guests onto a table, or use the dropdown on each guest. Declined guests are left out
+        automatically.
       </p>
 
       <div
@@ -153,11 +172,11 @@ export default function SeatingChart({
           dragOverTarget === "unassigned" ? "border-brand bg-cream" : "border-border-warm"
         }`}
       >
-        <div className="text-xs font-semibold uppercase tracking-wide text-foreground/50 mb-2">
+        <div className="text-xs font-semibold uppercase tracking-wide text-foreground/75 mb-2">
           Unassigned ({unassigned.length})
         </div>
         {unassigned.length === 0 ? (
-          <p className="text-xs text-foreground/40">Everyone's seated.</p>
+          <p className="text-xs text-foreground/70">Everyone&apos;s seated.</p>
         ) : (
           <ul className="flex flex-wrap gap-1.5">
             {unassigned.map((guest) => (
@@ -177,26 +196,30 @@ export default function SeatingChart({
             return (
               <div key={table.id} className="border border-border-warm rounded-lg p-3">
                 <div className="flex gap-2">
+                  <label htmlFor={`table-name-${table.id}`} className="sr-only">Table name</label>
                   <input
+                    id={`table-name-${table.id}`}
                     type="text"
                     value={editName}
                     onChange={(e) => setEditName(e.target.value)}
                     className="flex-1 min-w-0 border border-border-warm rounded-md px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-brand/30"
                   />
+                  <label htmlFor={`table-capacity-${table.id}`} className="sr-only">Table capacity</label>
                   <input
+                    id={`table-capacity-${table.id}`}
                     type="number"
                     min={1}
                     placeholder="Cap."
                     value={editCapacity}
                     onChange={(e) => setEditCapacity(e.target.value)}
-                    className="w-16 border border-border-warm rounded-md px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-brand/30"
+                    className="w-16 shrink-0 border border-border-warm rounded-md px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-brand/30 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                   />
                 </div>
                 <div className="flex gap-3 mt-2 text-xs font-medium">
                   <button onClick={() => handleSaveTable(table)} className="text-brand">
                     Save
                   </button>
-                  <button onClick={() => setEditingTableId(null)} className="text-foreground/60">
+                  <button onClick={() => setEditingTableId(null)} className="text-foreground/80">
                     Cancel
                   </button>
                   <button onClick={() => handleDeleteTable(table)} className="text-red-600 ml-auto">
@@ -223,7 +246,7 @@ export default function SeatingChart({
               <div className="flex items-center justify-between gap-2 mb-2">
                 <span className="text-sm font-semibold">{table.name}</span>
                 <span className="flex items-center gap-2">
-                  <span className={`text-xs font-medium ${overCapacity ? "text-red-600" : "text-foreground/50"}`}>
+                  <span className={`text-xs font-medium ${overCapacity ? "text-red-600" : "text-foreground/75"}`}>
                     {seats}
                     {table.capacity != null ? ` / ${table.capacity}` : ""}
                   </span>
@@ -236,7 +259,7 @@ export default function SeatingChart({
                 </span>
               </div>
               {members.length === 0 ? (
-                <p className="text-xs text-foreground/40">Drop guests here</p>
+                <p className="text-xs text-foreground/70">Drop guests here</p>
               ) : (
                 <ul className="flex flex-wrap gap-1.5">
                   {members.map((guest) => (
@@ -250,7 +273,9 @@ export default function SeatingChart({
       </div>
 
       <form onSubmit={handleAddTable} className="flex gap-2 flex-wrap border-t border-border-warm pt-3">
+        <label htmlFor="new-table-name" className="sr-only">Table name</label>
         <input
+          id="new-table-name"
           type="text"
           placeholder="Table name (e.g. Table 5)"
           value={newTableName}
@@ -258,7 +283,9 @@ export default function SeatingChart({
           required
           className="flex-1 min-w-[140px] border border-border-warm rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand/30"
         />
+        <label htmlFor="new-table-capacity" className="sr-only">Table capacity</label>
         <input
+          id="new-table-capacity"
           type="number"
           min={1}
           placeholder="Capacity (optional)"

@@ -25,7 +25,7 @@ export default function WeddingListItem({ wedding }: { wedding: Wedding }) {
       >
         <span className="font-medium">{wedding.title}</span>
         {wedding.wedding_date && (
-          <span className="text-sm text-foreground/60 ml-2">
+          <span className="text-sm text-foreground/80 ml-2">
             {formatWallClockDate(wedding.wedding_date)}
           </span>
         )}

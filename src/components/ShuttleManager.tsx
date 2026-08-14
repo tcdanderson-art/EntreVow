@@ -53,7 +53,7 @@ export default function ShuttleManager({
 
   return (
     <div className="flex flex-col gap-4">
-      <p className="text-sm text-foreground/60">
+      <p className="text-sm text-foreground/80">
         Add a shuttle and send the driver link to whoever&rsquo;s driving. It opens a page on their
         phone that shares their live location — no app or account needed. Guests see the shuttle
         move on a map from their itinerary page.
@@ -68,7 +68,7 @@ export default function ShuttleManager({
             >
               <div className="min-w-[120px]">
                 <div className="font-medium text-sm">{s.label}</div>
-                <div className="text-xs text-foreground/50">
+                <div className="text-xs text-foreground/75">
                   {s.location_updated_at ? "Has shared location" : "Not sharing yet"}
                 </div>
               </div>
@@ -90,7 +90,9 @@ export default function ShuttleManager({
       )}
 
       <form onSubmit={addShuttle} className="flex items-center gap-2 flex-wrap">
+        <label htmlFor="shuttle-label" className="sr-only">Shuttle name</label>
         <input
+          id="shuttle-label"
           type="text"
           placeholder="Shuttle name, e.g. Hotel A pickup"
           value={label}

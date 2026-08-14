@@ -29,7 +29,7 @@ export default function GuestPass({ guestName }: { guestName: string }) {
         <div className="mt-2 bg-white border border-border-warm rounded-lg p-4 flex flex-col items-center gap-2">
           <canvas ref={canvasRef} />
           <p className="font-semibold text-sm">{guestName}</p>
-          <p className="text-xs text-foreground/50">Show this at the venue if asked</p>
+          <p className="text-xs text-foreground/75">Show this at the venue if asked</p>
         </div>
       )}
     </div>

@@ -10,7 +10,7 @@ const RSVP_LABEL: Record<RsvpStatus, string> = {
 };
 
 const RSVP_COLOR: Record<RsvpStatus, string> = {
-  pending: "text-foreground/40",
+  pending: "text-foreground/70",
   attending: "text-brand",
   declined: "text-red-600",
 };
@@ -110,20 +110,26 @@ export default function GuestRow({
     return (
       <li className="border border-border-warm rounded-md px-3 py-2 text-sm">
         <form onSubmit={handleSave} className="flex gap-2 flex-wrap">
+          <label htmlFor={`guest-name-${guest.id}`} className="sr-only">Guest name</label>
           <input
+            id={`guest-name-${guest.id}`}
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
             required
             className="flex-1 min-w-[120px] border border-border-warm rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand/30"
           />
+          <label htmlFor={`guest-group-${guest.id}`} className="sr-only">Guest group</label>
           <input
+            id={`guest-group-${guest.id}`}
             type="text"
             value={guestGroup}
             onChange={(e) => setGuestGroup(e.target.value)}
             className="flex-1 min-w-[140px] border border-border-warm rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand/30"
           />
+          <label htmlFor={`guest-rsvp-${guest.id}`} className="sr-only">RSVP status</label>
           <select
+            id={`guest-rsvp-${guest.id}`}
             value={rsvpStatus}
             onChange={(e) => setRsvpStatus(e.target.value as RsvpStatus)}
             className="border border-border-warm rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand/30"
@@ -132,14 +138,18 @@ export default function GuestRow({
             <option value="attending">Attending</option>
             <option value="declined">Declined</option>
           </select>
+          <label htmlFor={`guest-table-${guest.id}`} className="sr-only">Table</label>
           <input
+            id={`guest-table-${guest.id}`}
             type="text"
             placeholder="Table (e.g. Table 5)"
             value={tableLabel}
             onChange={(e) => setTableLabel(e.target.value)}
             className="flex-1 min-w-[120px] border border-border-warm rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand/30"
           />
+          <label htmlFor={`guest-email-${guest.id}`} className="sr-only">Guest email</label>
           <input
+            id={`guest-email-${guest.id}`}
             type="email"
             placeholder="Email (optional, for invites)"
             value={email}
@@ -154,7 +164,9 @@ export default function GuestRow({
             />
             Allow a plus-one
           </label>
+          <label htmlFor={`guest-meal-${guest.id}`} className="sr-only">Meal choice</label>
           <select
+            id={`guest-meal-${guest.id}`}
             value={mealChoice}
             onChange={(e) => setMealChoice(e.target.value)}
             className="border border-border-warm rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand/30"
@@ -166,7 +178,9 @@ export default function GuestRow({
               </option>
             ))}
           </select>
+          <label htmlFor={`guest-song-${guest.id}`} className="sr-only">Song request</label>
           <input
+            id={`guest-song-${guest.id}`}
             type="text"
             placeholder="Song request"
             value={songRequest}
@@ -183,7 +197,7 @@ export default function GuestRow({
           <button
             type="button"
             onClick={() => setEditing(false)}
-            className="text-foreground/60 text-sm font-medium"
+            className="text-foreground/80 text-sm font-medium"
           >
             Cancel
           </button>
@@ -195,32 +209,32 @@ export default function GuestRow({
   return (
     <li className="flex items-center justify-between gap-3 border border-border-warm rounded-md px-3 py-2 text-sm flex-wrap">
       <span>
-        {guest.name} <span className="text-foreground/50">({guest.guest_group})</span>{" "}
+        {guest.name} <span className="text-foreground/75">({guest.guest_group})</span>{" "}
         <span className={`font-medium ${RSVP_COLOR[guest.rsvp_status]}`}>
           · {RSVP_LABEL[guest.rsvp_status]}
         </span>
         {guest.table_label && (
-          <span className="text-foreground/50"> · {guest.table_label}</span>
+          <span className="text-foreground/75"> · {guest.table_label}</span>
         )}
         {guest.checked_in_at && (
           <span className="text-brand font-medium"> · ✓ Checked in</span>
         )}
         {guest.invite_sent_at && (
-          <span className="text-foreground/40"> · invited</span>
+          <span className="text-foreground/70"> · invited</span>
         )}
         {guest.plus_one_name ? (
-          <span className="text-foreground/50"> · +{guest.plus_one_name}</span>
+          <span className="text-foreground/75"> · +{guest.plus_one_name}</span>
         ) : (
-          guest.plus_one_allowed && <span className="text-foreground/40"> · plus-one allowed</span>
+          guest.plus_one_allowed && <span className="text-foreground/70"> · plus-one allowed</span>
         )}
         {guest.meal_choice && (
-          <span className="text-foreground/50"> · {guest.meal_choice}</span>
+          <span className="text-foreground/75"> · {guest.meal_choice}</span>
         )}
         {guest.song_request && (
-          <span className="text-foreground/50"> · 🎵 {guest.song_request}</span>
+          <span className="text-foreground/75"> · 🎵 {guest.song_request}</span>
         )}
         {guest.rsvp_note && (
-          <span className="block text-xs text-foreground/50 mt-0.5">“{guest.rsvp_note}”</span>
+          <span className="block text-xs text-foreground/75 mt-0.5">“{guest.rsvp_note}”</span>
         )}
         {inviteError && <span className="block text-xs text-red-600 mt-0.5">{inviteError}</span>}
       </span>

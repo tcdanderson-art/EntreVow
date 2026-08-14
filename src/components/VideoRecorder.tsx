@@ -114,7 +114,7 @@ export default function VideoRecorder({
   if (phase === "error") {
     return (
       <div className="rounded-md bg-cream border border-border-warm p-4 text-center">
-        <p className="text-sm text-foreground/60 mb-2">
+        <p className="text-sm text-foreground/80 mb-2">
           Camera and microphone access is needed to record a message.
         </p>
         <button onClick={onCancel} className="text-sm font-medium text-brand">
@@ -129,7 +129,7 @@ export default function VideoRecorder({
       <div className="rounded-md overflow-hidden bg-black">
         <video src={previewUrl} controls playsInline className="w-full aspect-video" />
         <div className="flex items-center justify-between gap-2 p-2 bg-cream">
-          <button onClick={onRetake} disabled={submitting} className="text-sm font-medium text-foreground/60">
+          <button onClick={onRetake} disabled={submitting} className="text-sm font-medium text-foreground/80">
             Retake
           </button>
           <button
@@ -154,7 +154,7 @@ export default function VideoRecorder({
         </div>
       )}
       <div className="flex items-center justify-between gap-2 p-2 bg-cream">
-        <button onClick={onCancel} className="text-sm font-medium text-foreground/60">
+        <button onClick={onCancel} className="text-sm font-medium text-foreground/80">
           Cancel
         </button>
         {phase === "recording" && (

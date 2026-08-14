@@ -82,7 +82,9 @@ export default function ItineraryManager({
       )}
 
       <form onSubmit={handleAdd} className="flex flex-col gap-2">
+        <label htmlFor="new-item-title" className="sr-only">Event title</label>
         <input
+          id="new-item-title"
           type="text"
           placeholder="Event title (e.g. Ceremony)"
           value={title}
@@ -91,14 +93,18 @@ export default function ItineraryManager({
           className="border border-border-warm rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand/30"
         />
         <div className="flex gap-2 flex-wrap">
+          <label htmlFor="new-item-start-time" className="sr-only">Start time</label>
           <input
+            id="new-item-start-time"
             type="datetime-local"
             value={startTime}
             onChange={(e) => setStartTime(e.target.value)}
             required
             className="flex-1 min-w-[180px] border border-border-warm rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand/30"
           />
+          <label htmlFor="new-item-location" className="sr-only">Location</label>
           <input
+            id="new-item-location"
             type="text"
             placeholder="Location"
             value={location}
@@ -106,7 +112,9 @@ export default function ItineraryManager({
             className="flex-1 min-w-[140px] border border-border-warm rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand/30"
           />
         </div>
+        <label htmlFor="new-item-transport" className="sr-only">Transport info</label>
         <input
+          id="new-item-transport"
           type="text"
           placeholder="Transport info (optional)"
           value={transportInfo}
@@ -115,7 +123,7 @@ export default function ItineraryManager({
         />
 
         <div className="flex items-center gap-3 flex-wrap text-sm">
-          <span className="text-foreground/60">Visible to:</span>
+          <span className="text-foreground/80">Visible to:</span>
           {knownGroups.map((group) => (
             <label key={group} className="flex items-center gap-1.5">
               <input

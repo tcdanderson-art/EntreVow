@@ -68,7 +68,9 @@ export default function ItineraryItemRow({
     return (
       <li className="border border-border-warm rounded-md px-3 py-2 text-sm">
         <form onSubmit={handleSave} className="flex flex-col gap-2">
+          <label htmlFor={`item-title-${item.id}`} className="sr-only">Event title</label>
           <input
+            id={`item-title-${item.id}`}
             type="text"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
@@ -76,14 +78,18 @@ export default function ItineraryItemRow({
             className="border border-border-warm rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand/30"
           />
           <div className="flex gap-2 flex-wrap">
+            <label htmlFor={`item-start-time-${item.id}`} className="sr-only">Start time</label>
             <input
+              id={`item-start-time-${item.id}`}
               type="datetime-local"
               value={startTime}
               onChange={(e) => setStartTime(e.target.value)}
               required
               className="flex-1 min-w-[180px] border border-border-warm rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand/30"
             />
+            <label htmlFor={`item-location-${item.id}`} className="sr-only">Location</label>
             <input
+              id={`item-location-${item.id}`}
               type="text"
               placeholder="Location"
               value={location}
@@ -91,7 +97,9 @@ export default function ItineraryItemRow({
               className="flex-1 min-w-[140px] border border-border-warm rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand/30"
             />
           </div>
+          <label htmlFor={`item-transport-${item.id}`} className="sr-only">Transport info</label>
           <input
+            id={`item-transport-${item.id}`}
             type="text"
             placeholder="Transport info (optional)"
             value={transportInfo}
@@ -99,7 +107,7 @@ export default function ItineraryItemRow({
             className="border border-border-warm rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand/30"
           />
           <div className="flex items-center gap-3 flex-wrap text-sm">
-            <span className="text-foreground/60">Visible to:</span>
+            <span className="text-foreground/80">Visible to:</span>
             {knownGroups.map((group) => (
               <label key={group} className="flex items-center gap-1.5">
                 <input
@@ -122,7 +130,7 @@ export default function ItineraryItemRow({
             <button
               type="button"
               onClick={() => setEditing(false)}
-              className="text-foreground/60 text-sm font-medium"
+              className="text-foreground/80 text-sm font-medium"
             >
               Cancel
             </button>
@@ -136,7 +144,7 @@ export default function ItineraryItemRow({
     <li className="border border-border-warm rounded-md px-3 py-2 text-sm">
       <div className="flex justify-between gap-3">
         <span className="font-medium">{item.title}</span>
-        <span className="text-foreground/50 whitespace-nowrap">
+        <span className="text-foreground/75 whitespace-nowrap">
           {formatWallClockTime(item.start_time, {
             month: "short",
             day: "numeric",
@@ -145,9 +153,9 @@ export default function ItineraryItemRow({
           })}
         </span>
       </div>
-      {item.location && <div className="text-foreground/60">{item.location}</div>}
+      {item.location && <div className="text-foreground/80">{item.location}</div>}
       <div className="flex items-center justify-between mt-1">
-        <span className="text-foreground/40 text-xs">
+        <span className="text-foreground/70 text-xs">
           visible to: {item.visible_to_groups.join(", ")}
         </span>
         <span className="flex items-center gap-3">

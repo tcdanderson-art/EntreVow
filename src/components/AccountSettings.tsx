@@ -104,7 +104,9 @@ export default function AccountSettings({ couple }: { couple: Couple }) {
       <section className="bg-white border border-border-warm rounded-xl p-6">
         <h2 className="font-semibold mb-4">Change password</h2>
         <form onSubmit={handlePasswordSubmit} className="flex flex-col gap-3 max-w-sm">
+          <label htmlFor="current-password" className="sr-only">Current password</label>
           <input
+            id="current-password"
             type="password"
             placeholder="Current password"
             value={currentPassword}
@@ -112,7 +114,9 @@ export default function AccountSettings({ couple }: { couple: Couple }) {
             required
             className="border border-border-warm rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand/30"
           />
+          <label htmlFor="new-password" className="sr-only">New password</label>
           <input
+            id="new-password"
             type="password"
             placeholder="New password"
             value={newPassword}
@@ -121,7 +125,9 @@ export default function AccountSettings({ couple }: { couple: Couple }) {
             minLength={8}
             className="border border-border-warm rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand/30"
           />
+          <label htmlFor="confirm-new-password" className="sr-only">Confirm new password</label>
           <input
+            id="confirm-new-password"
             type="password"
             placeholder="Confirm new password"
             value={confirmPassword}

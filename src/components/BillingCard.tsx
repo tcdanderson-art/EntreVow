@@ -64,7 +64,7 @@ export default function BillingCard({
         <div className="border border-brand rounded-lg p-4 flex items-center justify-between gap-4">
           <div>
             <div className="font-semibold text-brand">Upgrade to Full Day-Of — $180</div>
-            <p className="text-xs text-foreground/60">
+            <p className="text-xs text-foreground/80">
               Adds live shuttle tracking, weather alerts, QR usher check-in, push notifications,
               and unlimited guests.
             </p>
@@ -84,7 +84,7 @@ export default function BillingCard({
   return (
     <section className="bg-white border border-border-warm rounded-xl p-6">
       <h2 className="font-semibold mb-1">Unlock guest access</h2>
-      <p className="text-sm text-foreground/60 mb-4">
+      <p className="text-sm text-foreground/80 mb-4">
         Build your wedding for free. Pay once to turn on guest links, RSVPs, and day-of tools —
         no subscription.
       </p>
@@ -102,7 +102,7 @@ export default function BillingCard({
       <div className="grid sm:grid-cols-2 gap-4">
         <div className="border border-border-warm rounded-lg p-4 flex flex-col gap-2">
           <div className="font-semibold">Essentials — $69</div>
-          <p className="text-xs text-foreground/60 flex-1">
+          <p className="text-xs text-foreground/80 flex-1">
             Itinerary, RSVP + plus-ones, guest groups, digital pass, up to 150 guests.
           </p>
           <button
@@ -116,7 +116,7 @@ export default function BillingCard({
 
         <div className="border border-brand rounded-lg p-4 flex flex-col gap-2">
           <div className="font-semibold text-brand">Full Day-Of — $249</div>
-          <p className="text-xs text-foreground/60 flex-1">
+          <p className="text-xs text-foreground/80 flex-1">
             Everything in Essentials, plus live shuttle tracking, weather alerts, QR usher
             check-in, push notifications, and unlimited guests.
           </p>

@@ -99,7 +99,7 @@ export default function GuestVideoGuestbook({
   return (
     <div className="px-5 py-3 border-t border-border-warm">
       <div className="flex items-center justify-between mb-3">
-        <div className="text-xs font-semibold uppercase tracking-wide text-foreground/50">
+        <div className="text-xs font-semibold uppercase tracking-wide text-foreground/75">
           Video Guestbook
         </div>
         {!recording && (
@@ -112,7 +112,7 @@ export default function GuestVideoGuestbook({
       {error && <p className="text-sm text-red-600 mb-2">{error}</p>}
 
       {submitted && (
-        <p className="text-sm text-foreground/60 mb-2">
+        <p className="text-sm text-foreground/80 mb-2">
           Thanks! Your video is awaiting the couple&apos;s approval.
         </p>
       )}
@@ -130,7 +130,7 @@ export default function GuestVideoGuestbook({
       )}
 
       {videos.length === 0 ? (
-        <p className="text-sm text-foreground/40">No video messages yet — be the first to leave one.</p>
+        <p className="text-sm text-foreground/70">No video messages yet — be the first to leave one.</p>
       ) : (
         <div className="grid grid-cols-2 gap-2">
           {videos.map((v) => (
@@ -141,7 +141,7 @@ export default function GuestVideoGuestbook({
                 playsInline
                 className="w-full aspect-video object-cover bg-black"
               />
-              <div className="px-1.5 py-1 text-[11px] text-foreground/60 truncate">{v.guest_name}</div>
+              <div className="px-1.5 py-1 text-[11px] text-foreground/80 truncate">{v.guest_name}</div>
             </div>
           ))}
         </div>

@@ -34,7 +34,9 @@ export default function CreateWeddingForm() {
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-3">
+      <label htmlFor="new-wedding-title" className="sr-only">Wedding title</label>
       <input
+        id="new-wedding-title"
         type="text"
         placeholder="Wedding title (e.g. Alex & Priya's Wedding Weekend)"
         value={title}
@@ -42,13 +44,17 @@ export default function CreateWeddingForm() {
         required
         className="border border-border-warm rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand/30"
       />
+      <label htmlFor="new-wedding-date" className="sr-only">Wedding date</label>
       <input
+        id="new-wedding-date"
         type="date"
         value={weddingDate}
         onChange={(e) => setWeddingDate(e.target.value)}
         className="border border-border-warm rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand/30"
       />
+      <label htmlFor="new-emergency-phone" className="sr-only">Emergency / day-of phone number</label>
       <input
+        id="new-emergency-phone"
         type="tel"
         placeholder="Emergency / day-of phone number"
         value={emergencyPhone}

@@ -86,7 +86,7 @@ export default function GuestPhotos({
   return (
     <div className="px-5 py-3 border-t border-border-warm">
       <div className="flex items-center justify-between mb-3">
-        <div className="text-xs font-semibold uppercase tracking-wide text-foreground/50">
+        <div className="text-xs font-semibold uppercase tracking-wide text-foreground/75">
           Photos
         </div>
         <label className="text-sm font-medium text-brand touch-manipulation cursor-pointer">
@@ -105,7 +105,7 @@ export default function GuestPhotos({
       {error && <p className="text-sm text-red-600 mb-2">{error}</p>}
 
       {photos.length === 0 ? (
-        <p className="text-sm text-foreground/40">
+        <p className="text-sm text-foreground/70">
           No photos yet — be the first to share one.
         </p>
       ) : (

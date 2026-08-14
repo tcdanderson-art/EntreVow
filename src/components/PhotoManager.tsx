@@ -34,7 +34,7 @@ export default function PhotoManager({
   }
 
   if (photos.length === 0) {
-    return <p className="text-sm text-foreground/40">No photos shared yet.</p>;
+    return <p className="text-sm text-foreground/70">No photos shared yet.</p>;
   }
 
   return (

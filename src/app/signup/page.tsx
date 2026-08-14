@@ -36,12 +36,14 @@ export default function SignupPage() {
     <div className="flex-1 flex items-center justify-center bg-cream px-6 py-12">
       <div className="w-full max-w-sm bg-white border border-border-warm rounded-xl p-8 shadow-sm">
         <h1 className="font-display text-2xl mb-1 text-center">Create your Entrevow</h1>
-        <p className="text-sm text-foreground/60 text-center mb-6">
+        <p className="text-sm text-foreground/80 text-center mb-6">
           Set up your wedding weekend hub
         </p>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+          <label htmlFor="displayName" className="sr-only">Your names</label>
           <input
+            id="displayName"
             type="text"
             placeholder="Your names (e.g. Alex & Priya)"
             value={displayName}
@@ -49,7 +51,9 @@ export default function SignupPage() {
             required
             className="border border-border-warm rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand/30"
           />
+          <label htmlFor="email" className="sr-only">Email</label>
           <input
+            id="email"
             type="email"
             placeholder="Email"
             value={email}
@@ -57,7 +61,9 @@ export default function SignupPage() {
             required
             className="border border-border-warm rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand/30"
           />
+          <label htmlFor="password" className="sr-only">Password</label>
           <input
+            id="password"
             type="password"
             placeholder="Password (min. 8 characters)"
             value={password}
@@ -78,7 +84,7 @@ export default function SignupPage() {
           </button>
         </form>
 
-        <p className="text-xs text-foreground/50 text-center mt-4">
+        <p className="text-xs text-foreground/75 text-center mt-4">
           By creating an account you agree to our{" "}
           <Link href="/terms" className="text-brand font-medium">
             Terms
@@ -90,7 +96,7 @@ export default function SignupPage() {
           .
         </p>
 
-        <p className="text-sm text-foreground/60 text-center mt-4">
+        <p className="text-sm text-foreground/80 text-center mt-4">
           Already have an account?{" "}
           <Link href="/login" className="text-brand font-medium">
             Log in

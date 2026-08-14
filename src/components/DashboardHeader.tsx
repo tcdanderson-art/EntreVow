@@ -14,33 +14,33 @@ export default function DashboardHeader() {
   }
 
   return (
-    <header className="flex items-center justify-between max-w-3xl mx-auto px-6 pt-6">
+    <header className="flex items-center justify-between flex-wrap gap-x-3 gap-y-1 max-w-3xl mx-auto px-4 sm:px-6 pt-6">
       <Link href="/dashboard">
         <Image
           src="/brand/wordmark.png"
           alt="Entrevow"
           width={663}
           height={82}
-          className="h-5 w-auto"
+          className="h-4 sm:h-5 w-auto"
           unoptimized
         />
       </Link>
-      <span className="flex items-center gap-4">
+      <span className="flex items-center gap-3 sm:gap-4">
         <Link
           href="/faq"
-          className="text-sm font-medium text-foreground/60 hover:text-foreground transition-colors"
+          className="text-sm font-medium text-foreground/80 hover:text-foreground transition-colors"
         >
           Help
         </Link>
         <Link
           href="/account"
-          className="text-sm font-medium text-foreground/60 hover:text-foreground transition-colors"
+          className="text-sm font-medium text-foreground/80 hover:text-foreground transition-colors"
         >
           Account
         </Link>
         <button
           onClick={handleLogout}
-          className="text-sm font-medium text-foreground/60 hover:text-foreground transition-colors"
+          className="text-sm font-medium text-foreground/80 hover:text-foreground transition-colors"
         >
           Log out
         </button>

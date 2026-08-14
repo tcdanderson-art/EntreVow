@@ -103,7 +103,7 @@ function FaqSection({
           <details key={item.q} className="group py-3">
             <summary className="flex items-center justify-between gap-4 cursor-pointer list-none font-medium text-foreground">
               {item.q}
-              <span className="shrink-0 text-foreground/40 transition-transform group-open:rotate-45">
+              <span className="shrink-0 text-foreground/70 transition-transform group-open:rotate-45">
                 +
               </span>
             </summary>
@@ -121,7 +121,7 @@ export default function FaqPage() {
       <div className="max-w-2xl mx-auto bg-white border border-border-warm rounded-xl p-8 sm:p-10 flex flex-col gap-8">
         <div>
           <h1 className="font-display text-3xl mb-2">Frequently Asked Questions</h1>
-          <p className="text-foreground/60 text-sm">
+          <p className="text-foreground/80 text-sm">
             Answers for guests using their itinerary link, and for couples setting up a wedding.
             Can&apos;t find what you need?{" "}
             <a href="mailto:hello@entrevow.com" className="text-brand hover:underline">

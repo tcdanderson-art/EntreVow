@@ -152,7 +152,7 @@ export default function VideoManager({
                   className="hidden"
                 />
               </label>
-              <button onClick={handleRemoveWelcome} className="text-sm font-medium text-foreground/60">
+              <button onClick={handleRemoveWelcome} className="text-sm font-medium text-foreground/80">
                 Remove
               </button>
             </div>
@@ -170,7 +170,7 @@ export default function VideoManager({
           </label>
         )}
         {welcomeError && <p className="text-sm text-red-600 mt-2">{welcomeError}</p>}
-        <p className="text-xs text-foreground/40 mt-1">
+        <p className="text-xs text-foreground/70 mt-1">
           Shown at the top of every guest&apos;s itinerary page. Keep it to 30 seconds or less.
         </p>
       </div>
@@ -180,7 +180,7 @@ export default function VideoManager({
 
         {pending.length > 0 && (
           <div className="mb-4">
-            <div className="text-xs font-semibold uppercase tracking-wide text-foreground/50 mb-2">
+            <div className="text-xs font-semibold uppercase tracking-wide text-foreground/75 mb-2">
               Awaiting approval ({pending.length})
             </div>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
@@ -193,12 +193,12 @@ export default function VideoManager({
                     className="w-full aspect-video bg-black"
                   />
                   <div className="px-2 py-1.5">
-                    <div className="text-[11px] text-foreground/60 truncate mb-1.5">{v.guest_name}</div>
+                    <div className="text-[11px] text-foreground/80 truncate mb-1.5">{v.guest_name}</div>
                     <div className="flex items-center justify-between gap-2">
                       <button onClick={() => handleModerate(v.id, "approved")} className="text-[11px] font-semibold text-brand">
                         Approve
                       </button>
-                      <button onClick={() => handleModerate(v.id, "rejected")} className="text-[11px] font-medium text-foreground/50">
+                      <button onClick={() => handleModerate(v.id, "rejected")} className="text-[11px] font-medium text-foreground/75">
                         Reject
                       </button>
                     </div>
@@ -210,7 +210,7 @@ export default function VideoManager({
         )}
 
         {approved.length === 0 ? (
-          <p className="text-sm text-foreground/40">No approved guestbook videos yet.</p>
+          <p className="text-sm text-foreground/70">No approved guestbook videos yet.</p>
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             {approved.map((v) => (
@@ -222,8 +222,8 @@ export default function VideoManager({
                   className="w-full aspect-video bg-black"
                 />
                 <div className="px-2 py-1.5 flex items-center justify-between gap-2">
-                  <span className="text-[11px] text-foreground/60 truncate">{v.guest_name}</span>
-                  <button onClick={() => handleRemoveGuestVideo(v.id)} className="text-[11px] font-medium text-foreground/50 shrink-0">
+                  <span className="text-[11px] text-foreground/80 truncate">{v.guest_name}</span>
+                  <button onClick={() => handleRemoveGuestVideo(v.id)} className="text-[11px] font-medium text-foreground/75 shrink-0">
                     Remove
                   </button>
                 </div>

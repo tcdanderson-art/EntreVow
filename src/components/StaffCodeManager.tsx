@@ -13,9 +13,15 @@ export default function StaffCodeManager({
   const [staffCode, setStaffCode] = useState(wedding.staff_code);
   const [loading, setLoading] = useState(false);
   const [copied, setCopied] = useState(false);
-  // "use client" components still render once on the server to produce the initial
-  // HTML, where `window` doesn't exist — origin is only known once mounted in the browser.
-  const [origin] = useState(() => (typeof window !== "undefined" ? window.location.origin : ""));
+  // Must start "" on both server and client so hydration matches, then fill in after
+  // mount — a lazy useState initializer reads `window` differently on each side and
+  // causes a hydration mismatch, even though it silences the set-state-in-effect lint rule.
+  const [origin, setOrigin] = useState("");
+  useEffect(() => {
+    // Deriving from a browser-only global unavailable at SSR time, not synchronizing external state.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setOrigin(window.location.origin);
+  }, []);
 
   function linkFor(code: string) {
     return `${origin}/staff/${code}`;
@@ -43,7 +49,7 @@ export default function StaffCodeManager({
 
   return (
     <div className="flex flex-col gap-2">
-      <p className="text-sm text-foreground/60">
+      <p className="text-sm text-foreground/80">
         Give this link to ushers at the door. It opens a camera scanner on their phone that checks
         guests in against digital passes — no app or account needed.
       </p>
@@ -59,11 +65,11 @@ export default function StaffCodeManager({
           <button
             onClick={regenerate}
             disabled={loading}
-            className="text-foreground/50 text-sm font-medium whitespace-nowrap disabled:opacity-60"
+            className="text-foreground/75 text-sm font-medium whitespace-nowrap disabled:opacity-60"
           >
             Regenerate
           </button>
-          <span className="text-xs text-foreground/40 ml-auto">{guestCount} guests on the list</span>
+          <span className="text-xs text-foreground/70 ml-auto">{guestCount} guests on the list</span>
         </div>
       ) : (
         <button

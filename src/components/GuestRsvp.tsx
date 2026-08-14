@@ -39,15 +39,15 @@ export default function GuestRsvp({
     return (
       <div className="mx-5 mt-4 mb-2 p-3 bg-cream border border-border-warm rounded-lg flex items-center justify-between gap-3">
         <div>
-          <div className="text-xs font-semibold uppercase tracking-wide text-foreground/50">RSVP</div>
+          <div className="text-xs font-semibold uppercase tracking-wide text-foreground/75">RSVP</div>
           <div className={`text-sm font-semibold ${guest.rsvp_status === "attending" ? "text-brand" : "text-foreground/70"}`}>
             {guest.rsvp_status === "attending" ? "You're attending 🎉" : "You can't make it"}
           </div>
           {guest.plus_one_name && (
-            <div className="text-xs text-foreground/60 mt-0.5">+ {guest.plus_one_name}</div>
+            <div className="text-xs text-foreground/80 mt-0.5">+ {guest.plus_one_name}</div>
           )}
           {guest.meal_choice && (
-            <div className="text-xs text-foreground/60 mt-0.5">Meal: {guest.meal_choice}</div>
+            <div className="text-xs text-foreground/80 mt-0.5">Meal: {guest.meal_choice}</div>
           )}
         </div>
         <button onClick={() => setEditing(true)} className="text-brand text-sm font-medium whitespace-nowrap">
@@ -59,7 +59,7 @@ export default function GuestRsvp({
 
   return (
     <div className="mx-5 mt-4 mb-2 p-3 bg-cream border border-border-warm rounded-lg flex flex-col gap-3">
-      <div className="text-xs font-semibold uppercase tracking-wide text-foreground/50">
+      <div className="text-xs font-semibold uppercase tracking-wide text-foreground/75">
         Will you be there?
       </div>
       <div className="flex gap-2">
@@ -79,15 +79,21 @@ export default function GuestRsvp({
         </button>
       </div>
       {guest.plus_one_allowed && (
-        <input
-          type="text"
-          placeholder="Bringing a plus-one? Their name (optional)"
-          value={plusOneName}
-          onChange={(e) => setPlusOneName(e.target.value)}
-          className="border border-border-warm rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand/30"
-        />
+        <>
+          <label htmlFor="plus-one-name" className="sr-only">Plus-one&apos;s name</label>
+          <input
+            id="plus-one-name"
+            type="text"
+            placeholder="Bringing a plus-one? Their name (optional)"
+            value={plusOneName}
+            onChange={(e) => setPlusOneName(e.target.value)}
+            className="border border-border-warm rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand/30"
+          />
+        </>
       )}
+      <label htmlFor="meal-choice" className="sr-only">Meal choice</label>
       <select
+        id="meal-choice"
         value={mealChoice}
         onChange={(e) => setMealChoice(e.target.value)}
         className="border border-border-warm rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand/30"
@@ -99,14 +105,18 @@ export default function GuestRsvp({
           </option>
         ))}
       </select>
+      <label htmlFor="song-request" className="sr-only">Song request</label>
       <input
+        id="song-request"
         type="text"
         placeholder="Song request (optional)"
         value={songRequest}
         onChange={(e) => setSongRequest(e.target.value)}
         className="border border-border-warm rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand/30"
       />
+      <label htmlFor="rsvp-note" className="sr-only">Note for the couple</label>
       <input
+        id="rsvp-note"
         type="text"
         placeholder="Note for the couple (optional, e.g. dietary needs)"
         value={note}

@@ -91,7 +91,7 @@ export default function DriverTracker({
 
       {error && <p className="text-sm text-red-400 mt-4 max-w-xs">{error}</p>}
 
-      <p className="text-xs text-white/40 mt-10 max-w-xs">
+      <p className="text-xs text-white/70 mt-10 max-w-xs">
         Keep this page open while driving. Closing the tab or locking the screen stops sharing.
       </p>
     </div>

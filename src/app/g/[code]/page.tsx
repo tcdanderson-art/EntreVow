@@ -58,7 +58,7 @@ export default async function GuestItineraryPage({
       <div className="flex-1 flex items-center justify-center bg-cream px-4 py-8">
         <div className="w-full max-w-sm bg-white rounded-3xl shadow-xl border border-border-warm p-8 text-center">
           <h1 className="font-display text-lg mb-2">{wedding?.title ?? "Wedding"}</h1>
-          <p className="text-sm text-foreground/60">
+          <p className="text-sm text-foreground/80">
             This guest link isn&apos;t active yet — check back closer to the wedding day.
           </p>
         </div>
@@ -119,11 +119,11 @@ export default async function GuestItineraryPage({
           </div>
           <div className="flex-1">
             <div className="font-semibold text-sm">{guest.name}</div>
-            <div className="text-xs text-foreground/60 capitalize">{guest.guest_group} guest</div>
+            <div className="text-xs text-foreground/80 capitalize">{guest.guest_group} guest</div>
           </div>
           {guest.table_label && (
             <div className="text-right shrink-0">
-              <div className="text-[10px] uppercase tracking-wide text-foreground/40">Seated at</div>
+              <div className="text-[10px] uppercase tracking-wide text-foreground/70">Seated at</div>
               <div className="text-sm font-semibold text-brand">{guest.table_label}</div>
             </div>
           )}
@@ -142,7 +142,7 @@ export default async function GuestItineraryPage({
         )}
 
         <div className="px-5 py-3 flex-1">
-          <div className="text-xs font-semibold uppercase tracking-wide text-foreground/50 mb-3">
+          <div className="text-xs font-semibold uppercase tracking-wide text-foreground/75 mb-3">
             Itinerary
           </div>
 
@@ -156,7 +156,7 @@ export default async function GuestItineraryPage({
         {isFullTier(wedding) && <GuestShuttleTracker code={code} initialShuttles={shuttles} />}
 
         {wedding?.emergency_phone && (
-          <div className="text-center text-xs text-foreground/50 py-3 border-t border-border-warm bg-cream-card">
+          <div className="text-center text-xs text-foreground/75 py-3 border-t border-border-warm bg-cream-card">
             Wedding Day Emergency: {wedding.emergency_phone}
           </div>
         )}
@@ -164,7 +164,7 @@ export default async function GuestItineraryPage({
         <GuestRefreshLink />
 
         <div className="text-center pb-4">
-          <Link href="/faq" className="text-xs text-foreground/40 hover:text-foreground/60 transition-colors">
+          <Link href="/faq" className="text-xs text-foreground/70 hover:text-foreground/80 transition-colors">
             Have a question? See the FAQ
           </Link>
         </div>
