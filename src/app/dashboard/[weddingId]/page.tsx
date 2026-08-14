@@ -20,6 +20,7 @@ import WeddingHeader from "@/components/WeddingHeader";
 import StaffCodeManager from "@/components/StaffCodeManager";
 import ModeratorCodeManager from "@/components/ModeratorCodeManager";
 import PhotoManager from "@/components/PhotoManager";
+import GalleryCodeManager from "@/components/GalleryCodeManager";
 import VideoManager from "@/components/VideoManager";
 import WeatherWidget from "@/components/WeatherWidget";
 import ShuttleManager from "@/components/ShuttleManager";
@@ -138,6 +139,7 @@ export default async function WeddingDashboardPage({
 
         <section className="bg-white border border-border-warm rounded-xl p-6">
           <h2 className="font-semibold mb-4">Photos</h2>
+          <GalleryCodeManager wedding={wedding} />
           <PhotoManager weddingId={wedding.id} initialPhotos={photos} />
         </section>
 
