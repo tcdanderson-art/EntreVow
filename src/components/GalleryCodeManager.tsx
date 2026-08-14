@@ -7,6 +7,7 @@ export default function GalleryCodeManager({ wedding }: { wedding: Wedding }) {
   const [galleryCode, setGalleryCode] = useState(wedding.gallery_code);
   const [loading, setLoading] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [showHelp, setShowHelp] = useState(false);
   // Must start "" on both server and client so hydration matches, then fill in after
   // mount — a lazy useState initializer reads `window` differently on each side and
   // causes a hydration mismatch, even though it silences the set-state-in-effect lint rule.
@@ -43,10 +44,35 @@ export default function GalleryCodeManager({ wedding }: { wedding: Wedding }) {
 
   return (
     <div className="flex flex-col gap-2 mb-6 pb-6 border-b border-border-warm">
-      <p className="text-sm text-foreground/80">
-        Cast the live gallery to a TV or laptop at the venue — open this link on any screen
-        and it auto-plays through shared photos, no account needed.
-      </p>
+      <div className="flex items-start gap-1.5">
+        <p className="text-sm text-foreground/80">
+          Cast the live gallery to a TV or laptop at the venue — open this link on any screen
+          and it auto-plays through shared photos, no account needed.
+        </p>
+        <button
+          onClick={() => setShowHelp((v) => !v)}
+          aria-label="How to use this"
+          aria-expanded={showHelp}
+          className="shrink-0 mt-0.5 w-4 h-4 rounded-full bg-cream border border-border-warm text-[10px] font-bold text-foreground/70 leading-none flex items-center justify-center hover:bg-white"
+        >
+          ?
+        </button>
+      </div>
+
+      {showHelp && (
+        <ol className="text-sm text-foreground/80 bg-cream border border-border-warm rounded-md px-4 py-3 list-decimal list-inside flex flex-col gap-1">
+          <li>Tap &ldquo;Generate gallery link&rdquo; below, then &ldquo;Copy link&rdquo;.</li>
+          <li>
+            On the TV or laptop at your venue, open a web browser and paste in the link — same
+            as visiting any website.
+          </li>
+          <li>Leave that browser tab open. Nothing else to click or install.</li>
+          <li>
+            As guests share photos from their phones, they&apos;ll appear on the screen
+            automatically within moments.
+          </li>
+        </ol>
+      )}
 
       {galleryCode ? (
         <div className="flex items-center gap-3 flex-wrap">
