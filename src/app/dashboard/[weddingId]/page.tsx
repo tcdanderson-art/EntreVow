@@ -10,6 +10,8 @@ import { Photo } from "@/types/photo";
 import { Shuttle } from "@/types/shuttle";
 import { WeddingTable } from "@/types/table";
 import { Video } from "@/types/video";
+import { Vendor } from "@/types/vendor";
+import { CrewBroadcast } from "@/types/crew-broadcast";
 import { mealOptionsFor } from "@/lib/meal-options";
 import GuestManager from "@/components/GuestManager";
 import SeatingChart from "@/components/SeatingChart";
@@ -24,6 +26,8 @@ import GalleryCodeManager from "@/components/GalleryCodeManager";
 import VideoManager from "@/components/VideoManager";
 import WeatherWidget from "@/components/WeatherWidget";
 import ShuttleManager from "@/components/ShuttleManager";
+import VendorManager from "@/components/VendorManager";
+import CrewBroadcastManager from "@/components/CrewBroadcastManager";
 import DashboardSummary from "@/components/DashboardSummary";
 import ExportDataButton from "@/components/ExportDataButton";
 import BillingCard from "@/components/BillingCard";
@@ -77,6 +81,14 @@ export default async function WeddingDashboardPage({
     WHERE videos.wedding_id = ${weddingId}
     ORDER BY (videos.status = 'pending') DESC, videos.created_at DESC
   `) as Video[];
+
+  const vendors = (await db().sql`
+    SELECT * FROM vendors WHERE wedding_id = ${weddingId} ORDER BY created_at ASC
+  `) as Vendor[];
+
+  const crewBroadcasts = (await db().sql`
+    SELECT * FROM crew_broadcasts WHERE wedding_id = ${weddingId} ORDER BY created_at DESC
+  `) as CrewBroadcast[];
 
   const guestGroups = Array.from(new Set(guests.map((g) => g.guest_group)));
 
@@ -135,6 +147,16 @@ export default async function WeddingDashboardPage({
         <section className="bg-white border border-border-warm rounded-xl p-6">
           <h2 className="font-semibold mb-4">Shuttle tracking</h2>
           <ShuttleManager weddingId={wedding.id} initialShuttles={shuttles} />
+        </section>
+
+        <section className="bg-white border border-border-warm rounded-xl p-6">
+          <h2 className="font-semibold mb-4">Vendor check-in</h2>
+          <VendorManager weddingId={wedding.id} initialVendors={vendors} />
+        </section>
+
+        <section className="bg-white border border-border-warm rounded-xl p-6">
+          <h2 className="font-semibold mb-4">Crew updates</h2>
+          <CrewBroadcastManager weddingId={wedding.id} initialBroadcasts={crewBroadcasts} />
         </section>
 
         <section className="bg-white border border-border-warm rounded-xl p-6">

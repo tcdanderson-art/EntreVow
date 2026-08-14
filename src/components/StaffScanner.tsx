@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import jsQR from "jsqr";
 import { Guest } from "@/types/guest";
+import CrewBroadcastFeed from "@/components/CrewBroadcastFeed";
 
 type Feedback = {
   kind: "success" | "already" | "error";
@@ -149,6 +150,8 @@ export default function StaffScanner({
           {checkedInCount} / {guests.length} checked in
         </p>
       </div>
+
+      <CrewBroadcastFeed endpoint={`/api/staff/${staffCode}/broadcasts`} />
 
       <div className="flex border-b border-white/10">
         <button

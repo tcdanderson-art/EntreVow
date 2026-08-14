@@ -10,6 +10,8 @@ import { Announcement } from "@/types/announcement";
 import { Shuttle } from "@/types/shuttle";
 import { Photo } from "@/types/photo";
 import { WeddingTable } from "@/types/table";
+import { Vendor } from "@/types/vendor";
+import { CrewBroadcast } from "@/types/crew-broadcast";
 
 export const GET = withErrorHandling(async (
   _req: NextRequest,
@@ -49,6 +51,14 @@ export const GET = withErrorHandling(async (
     SELECT * FROM wedding_tables WHERE wedding_id = ${weddingId} ORDER BY sort_order ASC, id ASC
   `) as WeddingTable[];
 
+  const vendors = (await database.sql`
+    SELECT * FROM vendors WHERE wedding_id = ${weddingId} ORDER BY created_at ASC
+  `) as Vendor[];
+
+  const crewBroadcasts = (await database.sql`
+    SELECT * FROM crew_broadcasts WHERE wedding_id = ${weddingId} ORDER BY created_at DESC
+  `) as CrewBroadcast[];
+
   // Metadata only — the actual photo files stay in Blob storage, not embedded here.
   const photos = (await database.sql`
     SELECT photos.id, photos.guest_id, guests.name AS guest_name, photos.caption, photos.created_at
@@ -66,5 +76,7 @@ export const GET = withErrorHandling(async (
     shuttles,
     tables,
     photos,
+    vendors,
+    crew_broadcasts: crewBroadcasts,
   });
 });

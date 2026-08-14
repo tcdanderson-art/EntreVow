@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import CrewBroadcastFeed from "@/components/CrewBroadcastFeed";
 
 const MIN_UPDATE_INTERVAL_MS = 10000;
 
@@ -61,39 +62,43 @@ export default function DriverTracker({
   }, [sharing, sendLocation]);
 
   return (
-    <div className="flex-1 flex flex-col items-center justify-center bg-foreground text-white min-h-dvh px-6 pb-[env(safe-area-inset-bottom)] text-center">
-      <p className="text-sm text-white/60">{weddingTitle}</p>
-      <h1 className="font-display text-2xl mt-1 mb-8">{shuttleLabel}</h1>
+    <div className="flex-1 flex flex-col items-center bg-foreground text-white min-h-dvh pb-[env(safe-area-inset-bottom)] text-center">
+      <CrewBroadcastFeed endpoint={`/api/driver/${driverCode}/broadcasts`} />
 
-      <button
-        onClick={() => {
-          if (!sharing && !("geolocation" in navigator)) {
-            setError("This device doesn't support location sharing.");
-            return;
-          }
-          setError(null);
-          setSharing((s) => !s);
-        }}
-        className={`w-full max-w-xs rounded-full py-4 text-base font-semibold touch-manipulation transition-colors ${
-          sharing ? "bg-red-600 text-white" : "bg-brand text-white"
-        }`}
-      >
-        {sharing ? "Stop sharing location" : "Start sharing location"}
-      </button>
+      <div className="flex-1 flex flex-col items-center justify-center px-6">
+        <p className="text-sm text-white/60">{weddingTitle}</p>
+        <h1 className="font-display text-2xl mt-1 mb-8">{shuttleLabel}</h1>
 
-      <p className="text-sm text-white/60 mt-6 max-w-xs">
-        {sharing
-          ? lastSentAt
-            ? "Sharing your location live — guests can see this shuttle on their map."
-            : "Getting your location…"
-          : "Guests won't see this shuttle move until you start sharing."}
-      </p>
+        <button
+          onClick={() => {
+            if (!sharing && !("geolocation" in navigator)) {
+              setError("This device doesn't support location sharing.");
+              return;
+            }
+            setError(null);
+            setSharing((s) => !s);
+          }}
+          className={`w-full max-w-xs rounded-full py-4 text-base font-semibold touch-manipulation transition-colors ${
+            sharing ? "bg-red-600 text-white" : "bg-brand text-white"
+          }`}
+        >
+          {sharing ? "Stop sharing location" : "Start sharing location"}
+        </button>
 
-      {error && <p className="text-sm text-red-400 mt-4 max-w-xs">{error}</p>}
+        <p className="text-sm text-white/60 mt-6 max-w-xs">
+          {sharing
+            ? lastSentAt
+              ? "Sharing your location live — guests can see this shuttle on their map."
+              : "Getting your location…"
+            : "Guests won't see this shuttle move until you start sharing."}
+        </p>
 
-      <p className="text-xs text-white/70 mt-10 max-w-xs">
-        Keep this page open while driving. Closing the tab or locking the screen stops sharing.
-      </p>
+        {error && <p className="text-sm text-red-400 mt-4 max-w-xs">{error}</p>}
+
+        <p className="text-xs text-white/70 mt-10 max-w-xs">
+          Keep this page open while driving. Closing the tab or locking the screen stops sharing.
+        </p>
+      </div>
     </div>
   );
 }
