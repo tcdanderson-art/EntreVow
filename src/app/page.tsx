@@ -241,6 +241,10 @@ export default function Home() {
           <Link href="/terms" className="hover:text-foreground transition-colors">
             Terms of Service
           </Link>
+          <span aria-hidden="true">·</span>
+          <Link href="/accessibility" className="hover:text-foreground transition-colors">
+            Accessibility
+          </Link>
         </p>
       </footer>
     </div>
