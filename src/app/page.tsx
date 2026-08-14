@@ -188,7 +188,7 @@ export default function Home() {
           </h2>
           <p className="text-center text-foreground/80 mb-10 max-w-xl mx-auto">
             Build your wedding for free. Pay once, per wedding, when you&apos;re ready to invite
-            guests — no subscription.
+            guests — no subscription, priced in AUD with no currency conversion fees.
           </p>
           <div className="grid sm:grid-cols-2 gap-6">
             <div className="bg-white border border-border-warm rounded-xl p-6 flex flex-col gap-3">
@@ -224,6 +224,10 @@ export default function Home() {
               </Link>
             </div>
           </div>
+          <p className="text-center text-foreground/70 text-sm mt-8">
+            Built in Australia, for Australian weddings — real AUD pricing, no international
+            card fees, and nothing to remember to cancel.
+          </p>
         </section>
       </main>
 
