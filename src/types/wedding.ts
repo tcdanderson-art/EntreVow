@@ -5,6 +5,7 @@ export interface Wedding {
   wedding_date: string | null;
   emergency_phone: string | null;
   staff_code: string | null;
+  moderator_code: string | null;
   slug: string | null;
   venue_address: string | null;
   venue_lat: number | null;

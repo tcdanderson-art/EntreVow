@@ -18,6 +18,7 @@ import AnnouncementManager from "@/components/AnnouncementManager";
 import DashboardHeader from "@/components/DashboardHeader";
 import WeddingHeader from "@/components/WeddingHeader";
 import StaffCodeManager from "@/components/StaffCodeManager";
+import ModeratorCodeManager from "@/components/ModeratorCodeManager";
 import PhotoManager from "@/components/PhotoManager";
 import VideoManager from "@/components/VideoManager";
 import WeatherWidget from "@/components/WeatherWidget";
@@ -142,6 +143,10 @@ export default async function WeddingDashboardPage({
 
         <section className="bg-white border border-border-warm rounded-xl p-6">
           <h2 className="font-semibold mb-4">Videos</h2>
+          <ModeratorCodeManager
+            wedding={wedding}
+            pendingCount={videos.filter((v) => v.status === "pending").length}
+          />
           <VideoManager
             weddingId={wedding.id}
             initialWelcomeVideoKey={wedding.welcome_video_key}

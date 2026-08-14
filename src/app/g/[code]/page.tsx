@@ -18,6 +18,7 @@ import GuestVideoGuestbook from "@/components/GuestVideoGuestbook";
 import GuestShuttleTracker from "@/components/GuestShuttleTracker";
 import GuestPushOptIn from "@/components/GuestPushOptIn";
 import OfflineSupport from "@/components/OfflineSupport";
+import GuestRefreshLink from "@/components/GuestRefreshLink";
 import { isPaid, isFullTier } from "@/lib/plan";
 import { mealOptionsFor } from "@/lib/meal-options";
 import { getVapidPublicKey } from "@/lib/push";
@@ -158,6 +159,8 @@ export default async function GuestItineraryPage({
             Wedding Day Emergency: {wedding.emergency_phone}
           </div>
         )}
+
+        <GuestRefreshLink />
       </div>
     </div>
   );

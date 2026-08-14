@@ -3,55 +3,53 @@
 import { useEffect, useState } from "react";
 import { Wedding } from "@/types/wedding";
 
-export default function StaffCodeManager({
+export default function ModeratorCodeManager({
   wedding,
-  guestCount,
+  pendingCount,
 }: {
   wedding: Wedding;
-  guestCount: number;
+  pendingCount: number;
 }) {
-  const [staffCode, setStaffCode] = useState(wedding.staff_code);
+  const [moderatorCode, setModeratorCode] = useState(wedding.moderator_code);
   const [loading, setLoading] = useState(false);
   const [copied, setCopied] = useState(false);
-  // "use client" components still render once on the server to produce the initial
-  // HTML, where `window` doesn't exist — origin is only known once mounted in the browser.
   const [origin] = useState(() => (typeof window !== "undefined" ? window.location.origin : ""));
 
   function linkFor(code: string) {
-    return `${origin}/staff/${code}`;
+    return `${origin}/moderator/${code}`;
   }
 
   async function generate() {
     setLoading(true);
-    const res = await fetch(`/api/weddings/${wedding.id}/staff-code`, { method: "POST" });
+    const res = await fetch(`/api/weddings/${wedding.id}/moderator-code`, { method: "POST" });
     const data = await res.json();
     setLoading(false);
-    if (res.ok) setStaffCode(data.wedding.staff_code);
+    if (res.ok) setModeratorCode(data.wedding.moderator_code);
   }
 
   async function regenerate() {
-    if (!confirm("Generate a new check-in link? The current link will stop working immediately.")) return;
+    if (!confirm("Generate a new moderator link? The current link will stop working immediately.")) return;
     await generate();
   }
 
   async function copyLink() {
-    if (!staffCode) return;
-    await navigator.clipboard.writeText(linkFor(staffCode));
+    if (!moderatorCode) return;
+    await navigator.clipboard.writeText(linkFor(moderatorCode));
     setCopied(true);
     setTimeout(() => setCopied(false), 1500);
   }
 
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-2 mb-6 pb-6 border-b border-border-warm">
       <p className="text-sm text-foreground/60">
-        Give this link to ushers at the door. It opens a camera scanner on their phone that checks
-        guests in against digital passes — no app or account needed.
+        Not going to be checking your phone on the day? Share this link with someone you trust so
+        they can approve or reject guestbook videos on your behalf — no account needed.
       </p>
 
-      {staffCode ? (
+      {moderatorCode ? (
         <div className="flex items-center gap-3 flex-wrap">
           <code className="text-xs bg-cream border border-border-warm rounded-md px-3 py-2 flex-1 min-w-[200px] truncate">
-            {linkFor(staffCode)}
+            {linkFor(moderatorCode)}
           </code>
           <button onClick={copyLink} className="text-brand text-sm font-medium whitespace-nowrap">
             {copied ? "Copied!" : "Copy link"}
@@ -63,15 +61,17 @@ export default function StaffCodeManager({
           >
             Regenerate
           </button>
-          <span className="text-xs text-foreground/40 ml-auto">{guestCount} guests on the list</span>
+          {pendingCount > 0 && (
+            <span className="text-xs text-foreground/40 ml-auto">{pendingCount} awaiting approval</span>
+          )}
         </div>
       ) : (
         <button
           onClick={generate}
           disabled={loading}
-          className="self-start bg-brand text-white rounded-md px-4 py-2 text-sm font-medium hover:bg-brand-hover transition-colors disabled:opacity-60"
+          className="self-start bg-cream-card border border-border-warm rounded-md px-4 py-2 text-sm font-medium hover:bg-white transition-colors disabled:opacity-60"
         >
-          {loading ? "Generating…" : "Generate check-in link"}
+          {loading ? "Generating…" : "Generate moderator link"}
         </button>
       )}
     </div>
