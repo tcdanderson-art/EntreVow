@@ -1,0 +1,2 @@
+ALTER TABLE photos
+  ADD COLUMN hidden BOOLEAN NOT NULL DEFAULT false;

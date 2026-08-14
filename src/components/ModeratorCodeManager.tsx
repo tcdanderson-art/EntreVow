@@ -43,7 +43,8 @@ export default function ModeratorCodeManager({
     <div className="flex flex-col gap-2 mb-6 pb-6 border-b border-border-warm">
       <p className="text-sm text-foreground/60">
         Not going to be checking your phone on the day? Share this link with someone you trust so
-        they can approve or reject guestbook videos on your behalf — no account needed.
+        they can approve or reject guestbook videos and hide inappropriate photos on your behalf —
+        no account needed.
       </p>
 
       {moderatorCode ? (

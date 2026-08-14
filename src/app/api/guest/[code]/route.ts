@@ -47,7 +47,7 @@ export const GET = withErrorHandling(async (
   const photos = (await database.sql`
     SELECT photos.*, guests.name AS guest_name
     FROM photos JOIN guests ON guests.id = photos.guest_id
-    WHERE photos.wedding_id = ${guest.wedding_id}
+    WHERE photos.wedding_id = ${guest.wedding_id} AND photos.hidden = false
     ORDER BY photos.created_at DESC
   `) as Photo[];
 

@@ -6,6 +6,35 @@ import { withErrorHandling } from "@/lib/route-handler";
 import { supabaseAdmin } from "@/lib/supabase";
 import { Photo } from "@/types/photo";
 
+export const PATCH = withErrorHandling(async (
+  req: NextRequest,
+  { params }: { params: Promise<{ id: string; photoId: string }> }
+) => {
+  const coupleId = await requireCoupleId();
+  if (!coupleId) return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
+
+  const { id, photoId } = await params;
+  const weddingId = Number(id);
+  if (!(await coupleOwnsWedding(coupleId, weddingId))) {
+    return NextResponse.json({ error: "Not found" }, { status: 404 });
+  }
+
+  const { hidden } = await req.json();
+  if (typeof hidden !== "boolean") {
+    return NextResponse.json({ error: "hidden must be a boolean" }, { status: 400 });
+  }
+
+  const database = db();
+  const [photo] = (await database.sql`
+    UPDATE photos SET hidden = ${hidden} WHERE id = ${Number(photoId)} AND wedding_id = ${weddingId}
+    RETURNING *
+  `) as Photo[];
+
+  if (!photo) return NextResponse.json({ error: "Not found" }, { status: 404 });
+
+  return NextResponse.json({ photo });
+});
+
 export const DELETE = withErrorHandling(async (
   _req: NextRequest,
   { params }: { params: Promise<{ id: string; photoId: string }> }

@@ -2,8 +2,10 @@ import { notFound } from "next/navigation";
 import { db } from "@/lib/db";
 import { Wedding } from "@/types/wedding";
 import { Video } from "@/types/video";
+import { Photo } from "@/types/photo";
 import { isPaid } from "@/lib/plan";
 import ModeratorVideoReview from "@/components/ModeratorVideoReview";
+import ModeratorPhotoReview from "@/components/ModeratorPhotoReview";
 
 export default async function ModeratorPage({
   params,
@@ -25,11 +27,20 @@ export default async function ModeratorPage({
     ORDER BY (videos.status = 'pending') DESC, videos.created_at DESC
   `) as Video[];
 
+  const photos = (await db().sql`
+    SELECT photos.*, guests.name AS guest_name
+    FROM photos JOIN guests ON guests.id = photos.guest_id
+    WHERE photos.wedding_id = ${wedding.id}
+    ORDER BY photos.created_at DESC
+  `) as Photo[];
+
   return (
     <ModeratorVideoReview
       moderatorCode={code}
       weddingTitle={wedding.title}
       initialVideos={videos}
-    />
+    >
+      <ModeratorPhotoReview moderatorCode={code} initialPhotos={photos} />
+    </ModeratorVideoReview>
   );
 }

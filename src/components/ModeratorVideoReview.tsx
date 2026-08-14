@@ -8,10 +8,12 @@ export default function ModeratorVideoReview({
   moderatorCode,
   weddingTitle,
   initialVideos,
+  children,
 }: {
   moderatorCode: string;
   weddingTitle: string;
   initialVideos: Video[];
+  children?: React.ReactNode;
 }) {
   const [videos, setVideos] = useState(initialVideos);
 
@@ -39,7 +41,7 @@ export default function ModeratorVideoReview({
       <header className="px-4 sm:px-10 py-6 max-w-3xl mx-auto w-full">
         <h1 className="font-display text-2xl text-foreground">{weddingTitle}</h1>
         <p className="text-sm text-foreground/60 mt-1">
-          Guestbook video review — no account needed, just this link.
+          Guestbook &amp; photo review — no account needed, just this link.
         </p>
       </header>
 
@@ -103,6 +105,8 @@ export default function ModeratorVideoReview({
             </div>
           </div>
         )}
+
+        {children}
       </main>
     </div>
   );
