@@ -17,7 +17,7 @@ const GUEST_FAQS = [
   },
   {
     q: "Where do I find my table?",
-    a: "If the couple has finalized seating, your table shows right at the top of your itinerary, next to your name. If it's not there yet, seating just hasn't been assigned — check back closer to the day.",
+    a: "If the couple has finalised seating, your table shows right at the top of your itinerary, next to your name. If it's not there yet, seating just hasn't been assigned — check back closer to the day.",
   },
   {
     q: "How do I track the shuttle?",
@@ -48,7 +48,7 @@ const COUPLE_FAQS = [
   },
   {
     q: "What's the difference between Essentials and Full Day-Of?",
-    a: "Essentials ($69 AUD, one-time, up to 150 guests) covers your itinerary, RSVPs, guest groups, the digital pass, video & voice guestbook, welcome video, and photo gallery. Full Day-Of ($249 AUD, one-time, unlimited guests) adds live shuttle tracking, weather alerts, QR usher check-in, and push notifications.",
+    a: "Essentials ($69 AUD, one-time, up to 150 guests) covers your itinerary, RSVPs, guest groups, the digital pass, video & voice guestbook, welcome video, and a photo gallery you can cast to a TV or laptop as a live kiosk slideshow at the venue. Full Day-Of ($249 AUD, one-time, unlimited guests) adds live shuttle tracking, weather alerts, QR usher check-in, vendor check-in, crew broadcasts, the day-of command card, and push notifications.",
   },
   {
     q: "Can I upgrade from Essentials to Full Day-Of later?",
@@ -65,6 +65,10 @@ const COUPLE_FAQS = [
   {
     q: "Can someone else handle video guestbook approvals or door check-in for me?",
     a: "Yes. Generate a moderator link from your dashboard's Videos section to let someone else approve or reject guestbook submissions, and a staff link to let ushers scan guest passes at the door — neither requires them to log in or create an account.",
+  },
+  {
+    q: "Can I track when my caterer, photographer, or other vendors arrive?",
+    a: "Yes, on Full Day-Of. Add each vendor — caterer, photographer, florist, band, anyone you want to confirm arrived — with a name and category, and Entrevow gives you a link to send them. They open it and tap \"I've arrived\" when they're on site, no app or account needed, and you'll see it on your dashboard instantly.",
   },
   {
     q: "Is my data backed up, or can I get it out if I want to?",

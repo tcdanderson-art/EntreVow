@@ -70,7 +70,7 @@ export default function TermsPage() {
           <h2 className="font-semibold text-lg text-brand">Your content</h2>
           <p className="text-foreground/70 leading-relaxed">
             You own the wedding and guest information, and the photos and videos, that you or
-            your guests upload to Entrevow. By uploading it, you grant us a limited license to
+            your guests upload to Entrevow. By uploading it, you grant us a limited licence to
             store, process, and display it back to you and to the guests you invite, solely to
             provide the Service. You&apos;re responsible for having the right to share any guest
             information (such as names and contact details) that you enter, and for anything a
