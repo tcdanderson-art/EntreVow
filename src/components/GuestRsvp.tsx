@@ -23,6 +23,7 @@ export default function GuestRsvp({
   const [arrivalTime, setArrivalTime] = useState(
     guest.arrival_time ? toDatetimeLocalValue(guest.arrival_time) : ""
   );
+  const [kidsMealCount, setKidsMealCount] = useState(guest.kids_meal_count);
   const [saving, setSaving] = useState<RsvpStatus | null>(null);
 
   async function respond(status: RsvpStatus) {
@@ -30,7 +31,9 @@ export default function GuestRsvp({
     const res = await fetch(`/api/guest/${code}/rsvp`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ status, note, plusOneName, mealChoice, songRequest, flightNumber, arrivalTime }),
+      body: JSON.stringify({
+        status, note, plusOneName, mealChoice, songRequest, flightNumber, arrivalTime, kidsMealCount,
+      }),
     });
     const data = await res.json();
     setSaving(null);
@@ -53,6 +56,11 @@ export default function GuestRsvp({
           )}
           {guest.meal_choice && (
             <div className="text-xs text-foreground/80 mt-0.5">Meal: {guest.meal_choice}</div>
+          )}
+          {guest.kids_meal_count > 0 && (
+            <div className="text-xs text-foreground/80 mt-0.5">
+              {guest.kids_meal_count} kids&apos; meal{guest.kids_meal_count === 1 ? "" : "s"} needed
+            </div>
           )}
           {guest.flight_number && (
             <div className="text-xs text-foreground/80 mt-0.5">
@@ -117,6 +125,20 @@ export default function GuestRsvp({
           </option>
         ))}
       </select>
+      <div className="flex items-center gap-2">
+        <label htmlFor="kids-meal-count" className="text-sm text-foreground/80 flex-1">
+          Kids&apos; meals needed (optional)
+        </label>
+        <input
+          id="kids-meal-count"
+          type="number"
+          min={0}
+          max={20}
+          value={kidsMealCount}
+          onChange={(e) => setKidsMealCount(Math.max(0, Number(e.target.value)))}
+          className="w-20 border border-border-warm rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand/30"
+        />
+      </div>
       <label htmlFor="song-request" className="sr-only">Song request</label>
       <input
         id="song-request"

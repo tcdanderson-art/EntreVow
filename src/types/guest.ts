@@ -20,6 +20,7 @@ export interface Guest {
   song_request: string | null;
   flight_number: string | null;
   arrival_time: string | null;
+  kids_meal_count: number;
 }
 
 // Safe subset for the door-staff check-in flow — deliberately omits access_code

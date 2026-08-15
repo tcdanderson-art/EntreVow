@@ -231,6 +231,12 @@ export default function GuestRow({
         {guest.meal_choice && (
           <span className="text-foreground/75"> · {guest.meal_choice}</span>
         )}
+        {guest.kids_meal_count > 0 && (
+          <span className="text-foreground/75">
+            {" "}
+            · {guest.kids_meal_count} kids&apos; meal{guest.kids_meal_count === 1 ? "" : "s"}
+          </span>
+        )}
         {guest.song_request && (
           <span className="text-foreground/75"> · 🎵 {guest.song_request}</span>
         )}

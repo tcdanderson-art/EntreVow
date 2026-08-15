@@ -8,6 +8,7 @@ import { Guest, RsvpStatus } from "@/types/guest";
 import { Wedding } from "@/types/wedding";
 
 const VALID_STATUSES: RsvpStatus[] = ["attending", "declined"];
+const MAX_KIDS_MEALS = 20; // generous ceiling against a fat-fingered entry
 
 export const PATCH = withErrorHandling(async (
   req: NextRequest,
@@ -18,11 +19,17 @@ export const PATCH = withErrorHandling(async (
   const limited = rateLimit(req, "guest-rsvp", 20, 10 * 60_000, code);
   if (limited) return limited;
 
-  const { status, note, plusOneName, mealChoice, songRequest, flightNumber, arrivalTime } = await req.json();
+  const { status, note, plusOneName, mealChoice, songRequest, flightNumber, arrivalTime, kidsMealCount } =
+    await req.json();
 
   if (!VALID_STATUSES.includes(status)) {
     return NextResponse.json({ error: "Invalid RSVP status" }, { status: 400 });
   }
+
+  const validKidsMealCount =
+    Number.isInteger(kidsMealCount) && kidsMealCount >= 0 && kidsMealCount <= MAX_KIDS_MEALS
+      ? kidsMealCount
+      : 0;
 
   const database = db();
 
@@ -48,7 +55,8 @@ export const PATCH = withErrorHandling(async (
         meal_choice = CASE WHEN ${status} = 'attending' THEN ${validMealChoice} ELSE NULL END,
         song_request = CASE WHEN ${status} = 'attending' THEN ${songRequest || null} ELSE NULL END,
         flight_number = CASE WHEN ${status} = 'attending' THEN ${flightNumber || null} ELSE NULL END,
-        arrival_time = CASE WHEN ${status} = 'attending' THEN ${arrivalTime || null} ELSE NULL END
+        arrival_time = CASE WHEN ${status} = 'attending' THEN ${arrivalTime || null} ELSE NULL END,
+        kids_meal_count = CASE WHEN ${status} = 'attending' THEN ${validKidsMealCount} ELSE 0 END
     WHERE access_code = ${code}
     RETURNING *
   `) as Guest[];

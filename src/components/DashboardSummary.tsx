@@ -24,6 +24,7 @@ export default function DashboardSummary({
   const pending = total - attending - declined;
   const checkedIn = guests.filter((g) => g.checked_in_at).length;
   const plusOnes = guests.filter((g) => g.plus_one_name).length;
+  const kidsMeals = guests.reduce((sum, g) => sum + g.kids_meal_count, 0);
 
   const liveShuttles = shuttles.filter(isShuttleLive).length;
 
@@ -42,6 +43,11 @@ export default function DashboardSummary({
               <p className="text-xs text-foreground/75 mt-1">
                 +{plusOnes} plus-one{plusOnes === 1 ? "" : "s"} ·{" "}
                 <span className="font-medium text-brand">{attending + plusOnes} total heads</span>
+              </p>
+            )}
+            {kidsMeals > 0 && (
+              <p className="text-xs text-foreground/75 mt-1">
+                {kidsMeals} kids&apos; meal{kidsMeals === 1 ? "" : "s"} needed
               </p>
             )}
           </>
