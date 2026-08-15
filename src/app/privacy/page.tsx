@@ -31,7 +31,8 @@ export default function PrivacyPage() {
             <strong>Wedding and guest data:</strong> information you enter to run your event —
             wedding title, date, emergency contact number, guest names, guest group labels, and
             itinerary details (times, locations, transport notes). Guests do not create accounts;
-            each guest is identified only by the name you enter and a random access link.
+            each guest is identified only by the name you enter and a random access link, so a
+            guest can use the Service without providing us any information of their own.
           </p>
           <p className="text-foreground/70 leading-relaxed">
             <strong>Guest RSVPs:</strong> if a guest responds via their link, we store their RSVP
@@ -102,24 +103,30 @@ export default function PrivacyPage() {
             processor on our behalf:
           </p>
           <ul className="list-disc pl-5 text-foreground/70 leading-relaxed flex flex-col gap-1">
-            <li>Netlify — application hosting and serverless functions</li>
-            <li>Supabase — our Postgres database, and storage for uploaded photos and videos</li>
+            <li>Netlify — application hosting and serverless functions (a United States company)</li>
             <li>
-              Stripe — payment processing for paid weddings; Stripe collects and processes your
-              payment details directly, we never see your full card number
+              Supabase — our Postgres database, and storage for uploaded photos and videos
+              (hosted in Singapore)
+            </li>
+            <li>
+              Stripe — payment processing for paid weddings (a United States company); Stripe
+              collects and processes your payment details directly, we never see your full card
+              number
             </li>
             <li>
               Open-Meteo — weather forecast data, given only your venue&apos;s town or suburb
             </li>
-            <li>Resend — delivery of transactional emails (e.g. password resets)</li>
+            <li>Resend — delivery of transactional emails, e.g. password resets (a United States company)</li>
             <li>
-              Google Analytics — usage analytics on our marketing pages and couple dashboard only,
-              never on a guest, usher, or driver link
+              Google Analytics — usage analytics on our marketing pages and couple dashboard only
+              (Google is a United States company), never on a guest, usher, or driver link
             </li>
           </ul>
           <p className="text-foreground/70 leading-relaxed">
-            These providers may process data on infrastructure located outside Australia. We
-            don&apos;t share your information with anyone else except where required by law.
+            Where we&apos;ve identified a provider&apos;s country above, that&apos;s the specific
+            country your information may be processed in; any provider not identified with a
+            country may also process data outside Australia. We don&apos;t share your information
+            with anyone else except where required by law.
           </p>
         </section>
 
@@ -127,8 +134,10 @@ export default function PrivacyPage() {
           <h2 className="font-semibold text-lg text-brand">Data retention and deletion</h2>
           <p className="text-foreground/70 leading-relaxed">
             Guest and itinerary data is kept for as long as the couple keeps it in their account.
-            Removing a guest or deleting a wedding removes the associated data immediately. To
-            delete your couple account entirely, contact us using the details below.
+            Removing a guest or deleting a wedding deletes the data from our live systems
+            immediately; it may persist in our database provider&apos;s encrypted backups for up
+            to 7 days before being fully purged. To delete your couple account entirely, contact
+            us using the details below.
           </p>
         </section>
 
@@ -144,11 +153,16 @@ export default function PrivacyPage() {
         <section className="flex flex-col gap-2">
           <h2 className="font-semibold text-lg text-brand">Your rights</h2>
           <p className="text-foreground/70 leading-relaxed">
-            You can access or correct most of your data directly within your dashboard. For
-            anything else — including access, correction, or deletion requests, or a complaint
-            about how we&apos;ve handled your information — contact us below. If you&apos;re not
-            satisfied with our response, you can lodge a complaint with the Office of the
-            Australian Information Commissioner (OAIC) at oaic.gov.au.
+            You can access or correct most of your data directly within your dashboard, and
+            export your wedding&apos;s data — including photos and videos — at any time. For
+            anything else, including a portability, correction, or deletion request, or a
+            complaint about how we&apos;ve handled your information, contact us at{" "}
+            <a href="mailto:hello@entrevow.com" className="text-brand font-medium">
+              hello@entrevow.com
+            </a>{" "}
+            — we aim to respond within 30 days. If you&apos;re not satisfied with our response,
+            you can lodge a complaint with the Office of the Australian Information Commissioner
+            (OAIC) at oaic.gov.au.
           </p>
         </section>
 
