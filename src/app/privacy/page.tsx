@@ -8,7 +8,7 @@ export default function PrivacyPage() {
       <div className="max-w-2xl mx-auto bg-white border border-border-warm rounded-xl p-8 sm:p-10 flex flex-col gap-6">
         <div>
           <h1 className="font-display text-3xl mb-2">Privacy Policy</h1>
-          <p className="text-sm text-foreground/75">Last updated August 14, 2026</p>
+          <p className="text-sm text-foreground/75">Last updated August 15, 2026</p>
         </div>
 
         <p className="text-foreground/70 leading-relaxed">
@@ -37,7 +37,8 @@ export default function PrivacyPage() {
             <strong>Guest RSVPs:</strong> if a guest responds via their link, we store their RSVP
             status (attending / declined), a meal choice if the couple has set up meal options, an
             optional song request, and any other optional note they add (e.g. dietary
-            requirements).
+            requirements). On the Full Day-Of plan, a guest can also optionally share a flight
+            number and arrival time, used only to suggest a suitable shuttle.
           </p>
           <p className="text-foreground/70 leading-relaxed">
             <strong>Photos and videos:</strong> couples and guests can upload photos to a shared
@@ -53,6 +54,12 @@ export default function PrivacyPage() {
             is only collected while that link is actively open and sharing. Separately, we send
             the wedding venue&apos;s town or suburb (never a street address) to our weather
             provider to generate contingency alerts.
+          </p>
+          <p className="text-foreground/70 leading-relaxed">
+            <strong>Vendors and suppliers:</strong> on the Full Day-Of plan, a couple can add
+            their vendors or suppliers and share a check-in link with each one, so the couple can
+            see when they&apos;ve arrived on site. We store the vendor&apos;s name, category, and
+            arrival check-in time — no other personal information about the vendor.
           </p>
           <p className="text-foreground/70 leading-relaxed">
             <strong>Push notification data:</strong> if a guest opts in on the Full Day-Of plan,
