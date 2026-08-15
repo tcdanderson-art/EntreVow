@@ -3,7 +3,7 @@
 import { usePathname } from "next/navigation";
 import Script from "next/script";
 
-const MEASUREMENT_ID = "G-3GS4N954JH";
+const MEASUREMENT_ID = "G-7GSG1Q919S";
 
 // Every no-login "delegated link" role carries an access code in the URL path
 // itself, and GA logs the full path — so analytics deliberately never loads on
