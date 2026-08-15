@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Wedding } from "@/types/wedding";
+import { isFullTier } from "@/lib/plan";
 
 function toDateInputValue(value: string | Date | null) {
   if (!value) return "";
@@ -128,23 +129,38 @@ export default function WeddingHeader({ wedding }: { wedding: Wedding }) {
             Beef, Fish, Vegetarian, Vegan).
           </p>
         </div>
-        <div>
-          <label className="flex items-center border border-border-warm rounded-md overflow-hidden text-sm focus-within:ring-2 focus-within:ring-brand/30">
-            <span className="pl-3 text-foreground/70 whitespace-nowrap">https://</span>
-            <input
-              type="text"
-              aria-label="Custom subdomain"
-              placeholder="alexandpriya"
-              value={slug}
-              onChange={(e) => setSlug(e.target.value)}
-              className="flex-1 min-w-0 px-1 py-2 focus:outline-none"
-            />
-            <span className="pr-3 text-foreground/70 whitespace-nowrap">.entrevow.com</span>
-          </label>
-          <p className="text-xs text-foreground/70 mt-1">
-            A memorable link for your guests. Leave blank to skip.
-          </p>
-        </div>
+        {isFullTier(wedding) ? (
+          <div>
+            <label className="flex items-center border border-border-warm rounded-md overflow-hidden text-sm focus-within:ring-2 focus-within:ring-brand/30">
+              <span className="pl-3 text-foreground/70 whitespace-nowrap">https://</span>
+              <input
+                type="text"
+                aria-label="Custom subdomain"
+                placeholder="alexandpriya"
+                value={slug}
+                onChange={(e) => setSlug(e.target.value)}
+                className="flex-1 min-w-0 px-1 py-2 focus:outline-none"
+              />
+              <span className="pr-3 text-foreground/70 whitespace-nowrap">.entrevow.com</span>
+            </label>
+            <p className="text-xs text-foreground/70 mt-1">
+              A memorable link for your guests. Leave blank to skip.
+            </p>
+          </div>
+        ) : (
+          <div className="border border-dashed border-border-warm rounded-md px-3 py-2 bg-cream/60">
+            <p className="text-sm text-foreground">
+              Personalised wedding URL{" "}
+              <span className="text-foreground/70 font-normal">— e.g. yournames.entrevow.com</span>
+            </p>
+            <p className="text-xs text-foreground/70 mt-1">
+              Included with Full Day-Of.{" "}
+              <a href="#billing" className="text-brand font-medium hover:underline">
+                Upgrade to unlock
+              </a>
+            </p>
+          </div>
+        )}
         <div className="flex items-center gap-3">
           <button
             type="submit"
@@ -176,14 +192,21 @@ export default function WeddingHeader({ wedding }: { wedding: Wedding }) {
     <div className="flex items-center justify-between gap-3">
       <div>
         <h1 className="font-display text-3xl">{wedding.title}</h1>
-        {wedding.slug && (
+        {isFullTier(wedding) && wedding.slug ? (
           <button
             onClick={copyBrandedLink}
             className="text-sm text-brand font-medium mt-1"
           >
             {copied ? "Copied!" : `${wedding.slug}.entrevow.com`}
           </button>
-        )}
+        ) : !isFullTier(wedding) ? (
+          <a
+            href="#billing"
+            className="text-sm text-foreground/60 font-medium mt-1 inline-block hover:text-brand"
+          >
+            Get a personalised URL with Full Day-Of →
+          </a>
+        ) : null}
       </div>
       <button
         onClick={() => setEditing(true)}

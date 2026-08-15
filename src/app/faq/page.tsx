@@ -48,7 +48,7 @@ const COUPLE_FAQS = [
   },
   {
     q: "What's the difference between Essentials and Full Day-Of?",
-    a: "Essentials ($69 AUD, one-time, up to 150 guests) covers your itinerary, RSVPs, guest groups, the digital pass, video & voice guestbook, welcome video, and a photo gallery you can cast to a TV or laptop as a live kiosk slideshow at the venue. Full Day-Of ($249 AUD, one-time, unlimited guests) adds live shuttle tracking, weather alerts, QR usher check-in, vendor check-in, crew broadcasts, the day-of command card, and push notifications.",
+    a: "Essentials ($69 AUD, one-time, up to 150 guests) covers your itinerary, RSVPs, guest groups, the digital pass, video & voice guestbook, welcome video, and a photo gallery you can cast to a TV or laptop as a live kiosk slideshow at the venue. Full Day-Of ($249 AUD, one-time, unlimited guests) adds live shuttle tracking, weather alerts, QR usher check-in, vendor check-in, crew broadcasts, the day-of command card, a personalised wedding URL (yournames.entrevow.com instead of the default link), and push notifications.",
   },
   {
     q: "Can I upgrade from Essentials to Full Day-Of later?",

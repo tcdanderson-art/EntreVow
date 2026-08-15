@@ -4,6 +4,7 @@ import { requireCoupleId } from "@/lib/require-auth";
 import { coupleOwnsWedding } from "@/lib/wedding-ownership";
 import { withErrorHandling } from "@/lib/route-handler";
 import { sendGuestInviteEmail } from "@/lib/email";
+import { isFullTier } from "@/lib/plan";
 import { Guest } from "@/types/guest";
 import { Wedding } from "@/types/wedding";
 
@@ -33,7 +34,7 @@ export const POST = withErrorHandling(async (
     return NextResponse.json({ error: "This guest has no email address on file" }, { status: 400 });
   }
 
-  const origin = wedding.slug ? `https://${wedding.slug}.entrevow.com` : req.nextUrl.origin;
+  const origin = isFullTier(wedding) && wedding.slug ? `https://${wedding.slug}.entrevow.com` : req.nextUrl.origin;
   const guestUrl = `${origin}/g/${guest.access_code}`;
   await sendGuestInviteEmail(guest.email, guest.name, wedding.title, guestUrl);
 

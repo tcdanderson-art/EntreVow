@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { stripe } from "@/lib/stripe";
 import { withErrorHandling } from "@/lib/route-handler";
-import { sendPaymentReceiptEmail, sendRefundNoticeEmail } from "@/lib/email";
+import { sendPaymentReceiptEmail, sendRefundNoticeEmail, sendSubdomainAliasNeededNotification } from "@/lib/email";
 import { TIER_LABELS } from "@/lib/plan";
 import { Wedding } from "@/types/wedding";
 import { Couple } from "@/types/couple";
@@ -23,6 +23,13 @@ async function fulfillCheckout(session: Stripe.Checkout.Session, dashboardOrigin
   const tier = session.metadata?.tier;
   if (!weddingId || (tier !== "essentials" && tier !== "full")) return;
 
+  // Captured before the update so the subdomain-alias notification only fires on a
+  // wedding's first payment, not again on an essentials->full upgrade checkout.
+  const [before] = (await db().sql`
+    SELECT paid_at FROM weddings WHERE id = ${weddingId}
+  `) as Pick<Wedding, "paid_at">[];
+  const wasAlreadyPaid = before?.paid_at != null;
+
   const [wedding] = (await db().sql`
     UPDATE weddings
     SET plan_tier = ${tier}, paid_at = NOW(), stripe_checkout_session_id = ${session.id}
@@ -31,6 +38,12 @@ async function fulfillCheckout(session: Stripe.Checkout.Session, dashboardOrigin
   `) as Wedding[];
 
   if (!wedding || session.amount_total == null) return;
+
+  if (!wasAlreadyPaid && wedding.slug) {
+    await sendSubdomainAliasNeededNotification(wedding.title, wedding.slug).catch((err) =>
+      console.error("Failed to send subdomain alias notification", err)
+    );
+  }
 
   const amount = (session.amount_total / 100).toLocaleString("en-AU", {
     style: "currency",

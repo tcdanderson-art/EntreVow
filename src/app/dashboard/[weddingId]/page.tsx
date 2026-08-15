@@ -13,6 +13,7 @@ import { Video } from "@/types/video";
 import { Vendor } from "@/types/vendor";
 import { CrewBroadcast } from "@/types/crew-broadcast";
 import { mealOptionsFor } from "@/lib/meal-options";
+import { isFullTier } from "@/lib/plan";
 import GuestManager from "@/components/GuestManager";
 import SeatingChart from "@/components/SeatingChart";
 import ItineraryManager from "@/components/ItineraryManager";
@@ -104,7 +105,9 @@ export default async function WeddingDashboardPage({
 
         <DashboardSummary guests={guests} shuttles={shuttles} />
 
-        <BillingCard weddingId={wedding.id} planTier={wedding.plan_tier} />
+        <div id="billing">
+          <BillingCard weddingId={wedding.id} planTier={wedding.plan_tier} />
+        </div>
 
         <ExportDataButton weddingId={wedding.id} weddingTitle={wedding.title} />
 
@@ -131,7 +134,7 @@ export default async function WeddingDashboardPage({
           <h2 className="font-semibold mb-4">Guests</h2>
           <GuestManager
             weddingId={wedding.id}
-            weddingSlug={wedding.slug}
+            weddingSlug={isFullTier(wedding) ? wedding.slug : null}
             initialGuests={guests}
             mealOptions={mealOptionsFor(wedding)}
           />

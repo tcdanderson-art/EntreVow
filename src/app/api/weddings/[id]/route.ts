@@ -4,6 +4,8 @@ import { requireCoupleId } from "@/lib/require-auth";
 import { withErrorHandling } from "@/lib/route-handler";
 import { slugify } from "@/lib/slug";
 import { geocodeAddress } from "@/lib/geocode";
+import { sendSubdomainAliasNeededNotification } from "@/lib/email";
+import { isFullTier } from "@/lib/plan";
 import { Wedding } from "@/types/wedding";
 
 export const PATCH = withErrorHandling(async (
@@ -22,13 +24,19 @@ export const PATCH = withErrorHandling(async (
       ? mealOptions.map((o: string) => o.trim()).filter(Boolean)
       : null;
 
-  const cleanSlug = slug ? slugify(slug) : null;
-
   const existing = (await db().sql`
-    SELECT venue_address, venue_lat, venue_lng FROM weddings
+    SELECT venue_address, venue_lat, venue_lng, slug, paid_at, plan_tier FROM weddings
     WHERE id = ${weddingId} AND couple_id = ${coupleId}
-  `) as Pick<Wedding, "venue_address" | "venue_lat" | "venue_lng">[];
+  `) as Pick<Wedding, "venue_address" | "venue_lat" | "venue_lng" | "slug" | "paid_at" | "plan_tier">[];
   if (!existing[0]) return NextResponse.json({ error: "Not found" }, { status: 404 });
+
+  // The branded subdomain is a Full Day-Of upsell — leave a non-full-tier wedding's
+  // slug exactly as-is (whatever it auto-generated to at creation) regardless of what's
+  // submitted, so saving unrelated fields can't silently wipe it and a direct API call
+  // can't set one early. It starts working immediately on upgrade, no data loss either way.
+  const cleanSlug = isFullTier(existing[0])
+    ? (slug ? slugify(slug) : null)
+    : existing[0].slug;
 
   const cleanAddress = venueAddress?.trim() || null;
   let venueLat = existing[0].venue_lat;
@@ -58,6 +66,15 @@ export const PATCH = withErrorHandling(async (
   `) as Wedding[];
 
   if (!wedding) return NextResponse.json({ error: "Not found" }, { status: 404 });
+
+  // A slug change on a wedding that's already paid needs a new Netlify domain
+  // alias just like the first-payment case does — the wedding was already live
+  // under the old subdomain, so this isn't covered by the checkout-time notification.
+  if (existing[0].paid_at && wedding.slug && wedding.slug !== existing[0].slug) {
+    await sendSubdomainAliasNeededNotification(wedding.title, wedding.slug).catch((err) =>
+      console.error("Failed to send subdomain alias notification", err)
+    );
+  }
 
   return NextResponse.json({ wedding });
 });

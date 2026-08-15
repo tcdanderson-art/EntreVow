@@ -86,6 +86,19 @@ export async function sendBetaFeedbackNotification(
   });
 }
 
+export async function sendSubdomainAliasNeededNotification(weddingTitle: string, slug: string) {
+  const domain = `${slug}.entrevow.com`;
+  await client().emails.send({
+    from: fromAddress(),
+    to: "hello@entrevow.com",
+    subject: `Add Netlify domain alias — ${domain}`,
+    html: `
+      <p><strong>${weddingTitle}</strong> is now paid and uses the subdomain <strong>${domain}</strong>.</p>
+      <p>The current Netlify plan doesn't support wildcard subdomains, so this alias needs to be added by hand: Netlify → Domain management → Add a domain → ${domain}.</p>
+    `,
+  });
+}
+
 export async function sendGuestInviteEmail(
   to: string,
   guestName: string,

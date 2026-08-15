@@ -226,7 +226,7 @@ export default function Home() {
               <p className="text-foreground/70 text-sm leading-relaxed flex-1">
                 Everything in Essentials, plus live shuttle tracking, weather alerts, QR usher
                 check-in, push notifications, vendor check-in &amp; crew broadcasts, the day-of
-                command card, and unlimited guests.
+                command card, a personalised wedding URL, and unlimited guests.
               </p>
               <Link
                 href="/signup"
