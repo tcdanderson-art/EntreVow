@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Guest } from "@/types/guest";
 import { WeddingTable } from "@/types/table";
 
@@ -26,6 +26,15 @@ export default function SeatingChart({
   const [editName, setEditName] = useState("");
   const [editCapacity, setEditCapacity] = useState("");
   const [dragOverTarget, setDragOverTarget] = useState<string | null>(null);
+  // Native HTML5 drag-and-drop never fires on touch input in Safari/WebKit (a long-standing
+  // WebKit limitation, not something that gets fixed by browser updates) — on a real iPhone
+  // or iPad, "draggable" chips are just inert. Fall back to the dropdown-only affordance
+  // there instead of showing a drag hint that silently does nothing.
+  const [isTouchDevice, setIsTouchDevice] = useState(false);
+
+  useEffect(() => {
+    setIsTouchDevice(window.matchMedia("(pointer: coarse)").matches);
+  }, []);
 
   const seatedGuests = guests.filter((g) => g.rsvp_status !== "declined");
   const tableNames = new Set(tables.map((t) => t.name));
@@ -125,9 +134,13 @@ export default function SeatingChart({
   function GuestChip({ guest }: { guest: Guest }) {
     return (
       <li
-        draggable
-        onDragStart={(e) => e.dataTransfer.setData("text/plain", String(guest.id))}
-        className="flex items-center gap-1 bg-cream-card border border-border-warm rounded-md px-2 py-1 text-xs cursor-grab active:cursor-grabbing whitespace-nowrap"
+        draggable={!isTouchDevice}
+        onDragStart={
+          isTouchDevice ? undefined : (e) => e.dataTransfer.setData("text/plain", String(guest.id))
+        }
+        className={`flex items-center gap-1 bg-cream-card border border-border-warm rounded-md px-2 py-1 text-xs whitespace-nowrap [-webkit-touch-callout:none] select-none ${
+          isTouchDevice ? "" : "cursor-grab active:cursor-grabbing"
+        }`}
       >
         <span>
           {guest.name}
@@ -157,8 +170,9 @@ export default function SeatingChart({
   return (
     <div className="flex flex-col gap-4">
       <p className="text-xs text-foreground/75">
-        Drag guests onto a table, or use the dropdown on each guest. Declined guests are left out
-        automatically.
+        {isTouchDevice
+          ? "Use the dropdown on each guest to assign a table. Declined guests are left out automatically."
+          : "Drag guests onto a table, or use the dropdown on each guest. Declined guests are left out automatically."}
       </p>
 
       <div

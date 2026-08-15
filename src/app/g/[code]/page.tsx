@@ -50,8 +50,15 @@ export async function generateMetadata({
 }
 
 // Matches the manifest's theme_color — iOS Safari reads this meta tag for the
-// status bar / address bar color rather than the manifest.
-export const viewport: Viewport = { themeColor: "#b07d5c" };
+// status bar / address bar color rather than the manifest. Page-level viewport
+// exports replace the root's rather than merging with it, so viewportFit is
+// repeated here to keep safe-area-inset working on this route too.
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+  themeColor: "#b07d5c",
+};
 
 export default async function GuestItineraryPage({
   params,

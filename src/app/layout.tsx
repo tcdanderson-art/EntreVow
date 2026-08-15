@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono, Playfair_Display } from "next/font/google";
 import { GoogleAnalytics } from "@/components/GoogleAnalytics";
 import "./globals.css";
@@ -21,6 +21,15 @@ const playfair = Playfair_Display({
 const title = "Entrevow — The Guest List, Timeline, and Whole Day. All in One Tap.";
 const description =
   "Entrevow is the digital hub for your wedding weekend. Give your guests and bridal party a live itinerary, transport details, and maps — no more lost paper schedules.";
+
+// viewport-fit=cover is required for env(safe-area-inset-*) to resolve to anything
+// other than 0 on notched/home-indicator iPhones — several full-screen staff views
+// already assume it's set.
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+};
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://entrevow.com"),

@@ -40,3 +40,13 @@ body {
     font-size: 16px !important;
   }
 }
+
+/* Without touch-action: manipulation, iOS Safari can treat a fast double-tap on any of
+   these as a double-tap-to-zoom gesture instead of two clicks. Applied globally instead
+   of per-component so new buttons/links don't need to remember Tailwind's touch-manipulation
+   class individually. */
+button,
+a,
+[role="button"] {
+  touch-action: manipulation;
+}
