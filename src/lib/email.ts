@@ -60,6 +60,32 @@ export async function sendRefundNoticeEmail(
   });
 }
 
+export async function sendBetaFeedbackNotification(
+  weddingTitle: string,
+  role: "couple" | "guest",
+  troubleLabels: string[],
+  comments: string | null,
+  replyTo: string | null
+) {
+  const troubleHtml =
+    troubleLabels.length > 0
+      ? `<p>Flagged as having trouble: ${troubleLabels.join(", ")}</p>`
+      : `<p>Nothing flagged as having trouble.</p>`;
+
+  await client().emails.send({
+    from: fromAddress(),
+    to: "hello@entrevow.com",
+    ...(replyTo ? { replyTo } : {}),
+    subject: `Beta feedback (${role}) — ${weddingTitle}`,
+    html: `
+      <p>New beta feedback from a ${role} on <strong>${weddingTitle}</strong>.</p>
+      ${troubleHtml}
+      ${comments ? `<p>Comments: ${comments}</p>` : ""}
+      ${replyTo ? `<p>Contact: ${replyTo}</p>` : ""}
+    `,
+  });
+}
+
 export async function sendGuestInviteEmail(
   to: string,
   guestName: string,

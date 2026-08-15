@@ -20,6 +20,7 @@ import GuestCommandCard from "@/components/GuestCommandCard";
 import GuestPushOptIn from "@/components/GuestPushOptIn";
 import OfflineSupport from "@/components/OfflineSupport";
 import GuestRefreshLink from "@/components/GuestRefreshLink";
+import GuestBetaFeedback from "@/components/GuestBetaFeedback";
 import Link from "next/link";
 import { isPaid, isFullTier } from "@/lib/plan";
 import { mealOptionsFor } from "@/lib/meal-options";
@@ -191,6 +192,8 @@ export default async function GuestItineraryPage({
         )}
 
         <GuestRefreshLink />
+
+        <GuestBetaFeedback code={code} />
 
         <div className="text-center pb-4">
           <Link href="/faq" className="text-xs text-foreground/70 hover:text-foreground/80 transition-colors">

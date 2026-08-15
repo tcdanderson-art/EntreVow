@@ -31,6 +31,7 @@ import CrewBroadcastManager from "@/components/CrewBroadcastManager";
 import DashboardSummary from "@/components/DashboardSummary";
 import ExportDataButton from "@/components/ExportDataButton";
 import BillingCard from "@/components/BillingCard";
+import BetaFeedback from "@/components/BetaFeedback";
 
 export default async function WeddingDashboardPage({
   params,
@@ -106,6 +107,8 @@ export default async function WeddingDashboardPage({
         <BillingCard weddingId={wedding.id} planTier={wedding.plan_tier} />
 
         <ExportDataButton weddingId={wedding.id} weddingTitle={wedding.title} />
+
+        <BetaFeedback weddingId={wedding.id} />
 
         <section className="bg-white border border-border-warm rounded-xl p-6">
           <h2 className="font-semibold mb-4">Weather</h2>
