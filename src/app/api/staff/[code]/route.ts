@@ -1,14 +1,18 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { withErrorHandling } from "@/lib/route-handler";
+import { rateLimit } from "@/lib/rate-limit";
 import { Wedding } from "@/types/wedding";
 import { StaffGuest } from "@/types/guest";
 import { isFullTier } from "@/lib/plan";
 
 export const GET = withErrorHandling(async (
-  _req: NextRequest,
+  req: NextRequest,
   { params }: { params: Promise<{ code: string }> }
 ) => {
+  const limited = rateLimit(req, "staff-lookup", 60, 60_000);
+  if (limited) return limited;
+
   const { code } = await params;
   const database = db();
 

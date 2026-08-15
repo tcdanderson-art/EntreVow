@@ -41,19 +41,13 @@ export default function SeatingChart({
   const unassigned = seatedGuests.filter((g) => !g.table_label || !tableNames.has(g.table_label));
 
   async function assignGuest(guest: Guest, tableLabel: string | null) {
+    // Only table_label is sent — the PATCH endpoint applies a partial update,
+    // so this can't clobber a meal choice, email, etc. the guest changed
+    // elsewhere since this chart last fetched its guest list.
     const res = await fetch(`/api/weddings/${weddingId}/guests/${guest.id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        name: guest.name,
-        guestGroup: guest.guest_group,
-        rsvpStatus: guest.rsvp_status,
-        tableLabel,
-        email: guest.email,
-        plusOneAllowed: guest.plus_one_allowed,
-        mealChoice: guest.meal_choice,
-        songRequest: guest.song_request,
-      }),
+      body: JSON.stringify({ tableLabel }),
     });
     const data = await res.json();
     if (res.ok) {

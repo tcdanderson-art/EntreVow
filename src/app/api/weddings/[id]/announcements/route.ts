@@ -4,6 +4,7 @@ import { requireCoupleId } from "@/lib/require-auth";
 import { coupleOwnsWedding } from "@/lib/wedding-ownership";
 import { withErrorHandling } from "@/lib/route-handler";
 import { notifyGuests } from "@/lib/push";
+import { isOwnStorageKey } from "@/lib/storage-key";
 import { Announcement } from "@/types/announcement";
 
 export const GET = withErrorHandling(async (
@@ -44,9 +45,13 @@ export const POST = withErrorHandling(async (
     ? visibleToGroups
     : ["general"];
 
+  const validVideoKey = typeof videoKey === "string" && videoKey && isOwnStorageKey(videoKey, weddingId)
+    ? videoKey
+    : null;
+
   const [announcement] = (await db().sql`
     INSERT INTO announcements (wedding_id, message, visible_to_groups, video_key)
-    VALUES (${weddingId}, ${message}, ${groups}, ${typeof videoKey === "string" && videoKey ? videoKey : null})
+    VALUES (${weddingId}, ${message}, ${groups}, ${validVideoKey})
     RETURNING *
   `) as Announcement[];
 

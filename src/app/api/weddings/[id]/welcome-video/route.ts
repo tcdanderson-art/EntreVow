@@ -4,6 +4,7 @@ import { requireCoupleId } from "@/lib/require-auth";
 import { coupleOwnsWedding } from "@/lib/wedding-ownership";
 import { withErrorHandling } from "@/lib/route-handler";
 import { supabaseAdmin } from "@/lib/supabase";
+import { isOwnStorageKey } from "@/lib/storage-key";
 import { Wedding } from "@/types/wedding";
 
 // Confirms a welcome video already uploaded direct-to-storage, replacing any
@@ -22,8 +23,8 @@ export const POST = withErrorHandling(async (
   }
 
   const { storage_key } = await req.json();
-  if (typeof storage_key !== "string" || !storage_key) {
-    return NextResponse.json({ error: "storage_key is required" }, { status: 400 });
+  if (typeof storage_key !== "string" || !storage_key || !isOwnStorageKey(storage_key, weddingId)) {
+    return NextResponse.json({ error: "Invalid storage_key" }, { status: 400 });
   }
 
   const [existing] = (await db().sql`SELECT welcome_video_key FROM weddings WHERE id = ${weddingId}`) as Pick<Wedding, "welcome_video_key">[];

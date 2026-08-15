@@ -3,6 +3,7 @@ import { db } from "@/lib/db";
 import { withErrorHandling } from "@/lib/route-handler";
 import { rateLimit } from "@/lib/rate-limit";
 import { isPaid } from "@/lib/plan";
+import { isOwnStorageKey } from "@/lib/storage-key";
 import { Guest } from "@/types/guest";
 import { Photo } from "@/types/photo";
 import { Wedding } from "@/types/wedding";
@@ -30,8 +31,8 @@ export const POST = withErrorHandling(async (
   }
 
   const { storage_key, caption } = await req.json();
-  if (typeof storage_key !== "string" || !storage_key) {
-    return NextResponse.json({ error: "storage_key is required" }, { status: 400 });
+  if (typeof storage_key !== "string" || !storage_key || !isOwnStorageKey(storage_key, guest.wedding_id)) {
+    return NextResponse.json({ error: "Invalid storage_key" }, { status: 400 });
   }
 
   const [photo] = (await database.sql`

@@ -50,26 +50,35 @@ export const POST = withErrorHandling(async (
     isUpgrade: String(isUpgrade),
   };
 
-  const session = await stripe().checkout.sessions.create({
-    mode: "payment",
-    line_items: [{ price: priceId, quantity: 1 }],
-    metadata,
-    // Also stamp metadata onto the resulting Charge (not just the Checkout
-    // Session) — a charge.refunded event only carries the Charge's own
-    // metadata, and we need weddingId (and isUpgrade) there to revoke or
-    // downgrade access on refund.
-    payment_intent_data: {
+  // Bucketed per minute so a double-click or client retry within that window
+  // replays the same Checkout Session instead of creating a second one (and
+  // risking a double charge if both get completed), while a genuinely new
+  // checkout attempt a few minutes later still gets a fresh session.
+  const idempotencyKey = `checkout-${weddingId}-${tier}-${Math.floor(Date.now() / 60_000)}`;
+
+  const session = await stripe().checkout.sessions.create(
+    {
+      mode: "payment",
+      line_items: [{ price: priceId, quantity: 1 }],
       metadata,
-      // The line item name is fixed to the shared Stripe Product (required by
-      // this account's Managed Payments setup), so the wedding-specific
-      // identification has to come from the charge description instead —
-      // otherwise a couple with multiple weddings can't tell which purchase
-      // a receipt or Stripe Dashboard charge belongs to.
-      description: `Entrevow ${TIER_LABELS[tier]} — ${wedding.title}`,
+      // Also stamp metadata onto the resulting Charge (not just the Checkout
+      // Session) — a charge.refunded event only carries the Charge's own
+      // metadata, and we need weddingId (and isUpgrade) there to revoke or
+      // downgrade access on refund.
+      payment_intent_data: {
+        metadata,
+        // The line item name is fixed to the shared Stripe Product (required by
+        // this account's Managed Payments setup), so the wedding-specific
+        // identification has to come from the charge description instead —
+        // otherwise a couple with multiple weddings can't tell which purchase
+        // a receipt or Stripe Dashboard charge belongs to.
+        description: `Entrevow ${TIER_LABELS[tier]} — ${wedding.title}`,
+      },
+      success_url: `${origin}/dashboard/${weddingId}?checkout=success`,
+      cancel_url: `${origin}/dashboard/${weddingId}?checkout=cancelled`,
     },
-    success_url: `${origin}/dashboard/${weddingId}?checkout=success`,
-    cancel_url: `${origin}/dashboard/${weddingId}?checkout=cancelled`,
-  });
+    { idempotencyKey }
+  );
 
   return NextResponse.json({ url: session.url });
 });

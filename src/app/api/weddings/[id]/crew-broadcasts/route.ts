@@ -3,7 +3,9 @@ import { db } from "@/lib/db";
 import { requireCoupleId } from "@/lib/require-auth";
 import { coupleOwnsWedding } from "@/lib/wedding-ownership";
 import { withErrorHandling } from "@/lib/route-handler";
+import { isFullTier } from "@/lib/plan";
 import { CrewBroadcast, CrewRole } from "@/types/crew-broadcast";
+import { Wedding } from "@/types/wedding";
 
 const VALID_ROLES: CrewRole[] = ["staff", "driver", "vendor"];
 
@@ -36,6 +38,13 @@ export const POST = withErrorHandling(async (
   const weddingId = Number((await params).id);
   if (!(await coupleOwnsWedding(coupleId, weddingId))) {
     return NextResponse.json({ error: "Not found" }, { status: 404 });
+  }
+
+  const [wedding] = (await db().sql`
+    SELECT plan_tier FROM weddings WHERE id = ${weddingId}
+  `) as Pick<Wedding, "plan_tier">[];
+  if (!wedding || !isFullTier(wedding)) {
+    return NextResponse.json({ error: "Full Day-Of plan required" }, { status: 403 });
   }
 
   const { message, roles } = await req.json();
