@@ -37,14 +37,26 @@ function storagePrefix(weddingId: number): string {
   return `${prefix}/${weddingId}`;
 }
 
+// Supabase Storage's list() caps each call at 1000 entries — page through with
+// offset so a wedding with >1000 uploaded files doesn't silently get size: 0
+// for everything past the first page (which would badly under-budget a zip
+// part and risk it running past the function timeout mid-stream).
 async function sizeItems(
   bucket: "photos" | "videos",
   weddingId: number,
   items: ZipItem[]
 ): Promise<SizedItem[]> {
   const storage = supabaseAdmin().storage.from(bucket);
-  const { data: listing } = await storage.list(storagePrefix(weddingId), { limit: 1000 });
-  const sizeByName = new Map((listing ?? []).map((f) => [f.name, f.metadata?.size ?? 0]));
+  const prefix = storagePrefix(weddingId);
+  const PAGE_SIZE = 1000;
+  const sizeByName = new Map<string, number>();
+
+  for (let offset = 0; ; offset += PAGE_SIZE) {
+    const { data: listing } = await storage.list(prefix, { limit: PAGE_SIZE, offset });
+    for (const f of listing ?? []) sizeByName.set(f.name, f.metadata?.size ?? 0);
+    if (!listing || listing.length < PAGE_SIZE) break;
+  }
+
   return items.map((item) => ({
     ...item,
     size: sizeByName.get(item.key.split("/").pop() ?? "") ?? 0,

@@ -37,6 +37,7 @@ export default function RunsheetGenerator({
   });
   const [draftItems, setDraftItems] = useState<DraftItem[]>([]);
   const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   function handlePreview(e: React.FormEvent) {
     e.preventDefault();
@@ -50,37 +51,59 @@ export default function RunsheetGenerator({
 
   async function handleConfirm() {
     setSubmitting(true);
+    setError(null);
     const groups = knownGroups.length > 0 ? knownGroups : ["general"];
     const created: ItineraryItem[] = [];
+    const failed: DraftItem[] = [];
 
     for (const draft of draftItems) {
-      const res = await fetch(`/api/weddings/${weddingId}/itinerary`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          title: draft.title,
-          location: draft.location,
-          startTime: addMinutesToWallClock(ceremonyStart, draft.offsetMinutes),
-          transportInfo: draft.transportInfo,
-          visibleToGroups: groups,
-        }),
-      });
-      if (res.ok) {
-        const data = await res.json();
-        created.push(data.item);
+      try {
+        const res = await fetch(`/api/weddings/${weddingId}/itinerary`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            title: draft.title,
+            location: draft.location,
+            startTime: addMinutesToWallClock(ceremonyStart, draft.offsetMinutes),
+            transportInfo: draft.transportInfo,
+            visibleToGroups: groups,
+          }),
+        });
+        if (res.ok) {
+          const data = await res.json();
+          created.push(data.item);
+        } else {
+          failed.push(draft);
+        }
+      } catch {
+        failed.push(draft);
       }
     }
 
     setSubmitting(false);
     onItemsAdded(created);
-    setPhase("closed");
-    setDraftItems([]);
+
+    // Keep failed drafts in the preview instead of silently dropping them, so
+    // the couple can see what didn't make it in and retry rather than ending
+    // up with a shorter itinerary than they confirmed with no explanation.
+    if (failed.length > 0) {
+      setDraftItems(failed);
+      setError(
+        `${failed.length} item${failed.length === 1 ? "" : "s"} couldn't be added — check your connection and try again.`
+      );
+    } else {
+      setPhase("closed");
+      setDraftItems([]);
+    }
   }
 
   if (phase === "closed") {
     return (
       <button
-        onClick={() => setPhase("questions")}
+        onClick={() => {
+          setError(null);
+          setPhase("questions");
+        }}
         className="self-start text-sm font-medium text-brand"
       >
         + Generate a draft runsheet
@@ -225,6 +248,7 @@ export default function RunsheetGenerator({
         Remove anything you don&apos;t want, then add the rest to your itinerary. You can edit times,
         locations, and titles afterward like any other item.
       </p>
+      {error && <p className="text-sm text-red-600">{error}</p>}
       <ul className="flex flex-col gap-2">
         {draftItems.map((item, i) => (
           <li
@@ -260,7 +284,10 @@ export default function RunsheetGenerator({
         </button>
         <button
           type="button"
-          onClick={() => setPhase("questions")}
+          onClick={() => {
+            setError(null);
+            setPhase("questions");
+          }}
           disabled={submitting}
           className="text-foreground/80 text-sm font-medium disabled:opacity-60"
         >
