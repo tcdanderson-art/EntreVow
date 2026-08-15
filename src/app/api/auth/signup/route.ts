@@ -4,13 +4,21 @@ import { hashPassword } from "@/lib/password";
 import { createSession } from "@/lib/session";
 import { withErrorHandling } from "@/lib/route-handler";
 import { rateLimit } from "@/lib/rate-limit";
+import { isValidInviteCode } from "@/lib/invite-codes";
 import { Couple } from "@/types/couple";
 
 export const POST = withErrorHandling(async (req: NextRequest) => {
   const limited = rateLimit(req, "signup", 5, 60 * 60_000);
   if (limited) return limited;
 
-  const { email, password, displayName } = await req.json();
+  const { email, password, displayName, inviteCode } = await req.json();
+
+  // The signup page already checks this, but that's UX only -- never trust a
+  // client-side gate as the real enforcement, since this route is reachable
+  // directly regardless of what the page showed.
+  if (!isValidInviteCode(inviteCode)) {
+    return NextResponse.json({ error: "Signup currently requires an invite" }, { status: 403 });
+  }
 
   if (!email || !password || !displayName) {
     return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
