@@ -97,6 +97,7 @@ const SITE_SCHEMA = {
       url: "https://entrevow.com",
       logo: "https://entrevow.com/brand/icon-mark.png",
       email: "hello@entrevow.com",
+      sameAs: ["https://www.facebook.com/entrevow"],
     },
     {
       "@type": "WebSite",
@@ -260,6 +261,15 @@ export default function Home() {
           <Link href="/accessibility" className="hover:text-foreground transition-colors">
             Accessibility
           </Link>
+          <span aria-hidden="true">·</span>
+          <a
+            href="https://www.facebook.com/entrevow"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-foreground transition-colors"
+          >
+            Facebook
+          </a>
         </p>
       </footer>
     </div>

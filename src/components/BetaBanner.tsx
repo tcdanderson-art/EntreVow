@@ -37,8 +37,8 @@ export function BetaHeroPromo() {
           Full Day-Of, <span className="text-brand">complimentary</span> for our first {offer.total} couples
         </p>
         <p className="text-sm text-foreground/75 mb-4">
-          Normally <s>$249 AUD</s>. We&apos;re refining Entrevow alongside real weddings, and ask
-          only for honest feedback in return.
+          Normally <s>$249 AUD</s>. Build your whole wedding first, free. You only need a code
+          when you&apos;re ready to invite guests, and we ask only for honest feedback in return.
         </p>
         <div
           className="flex flex-wrap justify-center gap-1 mb-2"

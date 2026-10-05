@@ -1,6 +1,11 @@
 import Link from "next/link";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata = { title: "Terms of Service — Entrevow", alternates: { canonical: "/terms" } };
+export const metadata = pageMetadata({
+  title: "Terms of Service — Entrevow",
+  description: "The terms for using Entrevow, including plans, payments, the founding couples program and refunds.",
+  path: "/terms",
+});
 
 export default function TermsPage() {
   return (

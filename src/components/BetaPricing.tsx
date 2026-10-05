@@ -74,12 +74,21 @@ export default function BetaPricing() {
         </div>
         <p className="text-foreground/70 text-sm leading-relaxed flex-1">{FULL_COPY}</p>
         {promo ? (
-          <a
-            href={MAILTO}
-            className="text-sm font-medium bg-brand text-white rounded-md py-2 text-center hover:bg-brand-hover transition-colors"
-          >
-            Request your code
-          </a>
+          <div className="flex flex-col gap-2">
+            <Link
+              href="/signup"
+              className="text-sm font-medium bg-brand text-white rounded-md py-2 text-center hover:bg-brand-hover transition-colors"
+            >
+              Start building free
+            </Link>
+            <p className="text-xs text-foreground/75 text-center">
+              Build your whole wedding first. When you&apos;re ready to invite guests,{" "}
+              <a href={MAILTO} className="underline">
+                request your code
+              </a>
+              .
+            </p>
+          </div>
         ) : closed ? (
           <a
             href={WAITLIST}

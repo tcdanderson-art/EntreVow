@@ -1,6 +1,11 @@
 import Link from "next/link";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata = { title: "Privacy Policy — Entrevow", alternates: { canonical: "/privacy" } };
+export const metadata = pageMetadata({
+  title: "Privacy Policy — Entrevow",
+  description: "How Entrevow collects, uses and protects personal information, including guest, account and payment data.",
+  path: "/privacy",
+});
 
 export default function PrivacyPage() {
   return (

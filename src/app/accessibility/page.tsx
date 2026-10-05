@@ -1,6 +1,11 @@
 import Link from "next/link";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata = { title: "Accessibility Statement — Entrevow", alternates: { canonical: "/accessibility" } };
+export const metadata = pageMetadata({
+  title: "Accessibility Statement — Entrevow",
+  description: "Entrevow's accessibility statement: the standard we work to, known limitations and how to report a problem.",
+  path: "/accessibility",
+});
 
 export default function AccessibilityPage() {
   return (

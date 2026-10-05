@@ -1,6 +1,11 @@
 import Link from "next/link";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata = { title: "Getting Started Guide — Entrevow", alternates: { canonical: "/guide" } };
+export const metadata = pageMetadata({
+  title: "Getting Started Guide — Entrevow",
+  description: "A step-by-step guide for couples setting up Entrevow: itinerary, guest list, RSVPs, shuttles, plans and the day-of tools.",
+  path: "/guide",
+});
 
 const SECTIONS = [
   { id: "what-is-entrevow", label: "What Entrevow is" },

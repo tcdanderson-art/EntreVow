@@ -28,6 +28,7 @@ const description =
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
+  themeColor: "#f7f5f0",
   viewportFit: "cover",
 };
 
@@ -40,7 +41,7 @@ export const metadata: Metadata = {
     description,
     url: "https://entrevow.com",
     siteName: "Entrevow",
-    images: [{ url: "/og-image.png", width: 1200, height: 630, alt: "Entrevow" }],
+    images: [{ url: "/og-image.png", width: 1200, height: 630, alt: "Entrevow: wedding-day itinerary, RSVPs and guest list on one link" }],
     locale: "en_AU",
     type: "website",
   },

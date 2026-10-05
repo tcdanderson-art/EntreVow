@@ -1,6 +1,11 @@
 import Link from "next/link";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata = { title: "FAQ — Entrevow", alternates: { canonical: "/faq" } };
+export const metadata = pageMetadata({
+  title: "FAQ — Entrevow",
+  description: "Answers for wedding guests using their Entrevow itinerary link, and for couples setting up a wedding: RSVPs, shuttles, plans and pricing.",
+  path: "/faq",
+});
 
 const GUEST_FAQS = [
   {
@@ -44,7 +49,7 @@ const GUEST_FAQS = [
 const COUPLE_FAQS = [
   {
     q: "Is Entrevow free right now?",
-    a: "During our founding couples program, the first 35 couples receive Full Day-Of at no charge, one per couple, in exchange for honest feedback. Email hello@entrevow.com to request a code. Paid plans are paused for now and will reopen after we've reviewed the program's results.",
+    a: "During our founding couples program, the first 35 couples receive Full Day-Of at no charge, one per couple, in exchange for honest feedback. You can create an account and build your whole wedding first; a code is only needed when you're ready to invite guests. Email hello@entrevow.com to request one. Paid plans are paused for now and will reopen after we've reviewed the program's results.",
   },
   {
     q: "How do I get started?",
@@ -123,9 +128,26 @@ function FaqSection({
   );
 }
 
+// Only plain-text answers are included; they match the visible page text exactly.
+const FAQ_SCHEMA = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: [...GUEST_FAQS, ...COUPLE_FAQS]
+    .filter((f): f is { q: string; a: string } => typeof f.a === "string")
+    .map((f) => ({
+      "@type": "Question",
+      name: f.q,
+      acceptedAnswer: { "@type": "Answer", text: f.a },
+    })),
+};
+
 export default function FaqPage() {
   return (
     <main className="flex-1 bg-cream px-6 py-12">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(FAQ_SCHEMA).replace(/</g, "\\u003c") }}
+      />
       <div className="max-w-2xl mx-auto bg-white border border-border-warm rounded-xl p-8 sm:p-10 flex flex-col gap-8">
         <div>
           <h1 className="font-display text-3xl mb-2">Frequently Asked Questions</h1>
