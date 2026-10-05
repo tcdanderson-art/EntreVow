@@ -1,6 +1,8 @@
 import Link from "next/link";
 import Image from "next/image";
 import type { Metadata } from "next";
+import { BetaHeroPromo } from "@/components/BetaBanner";
+import BetaPricing from "@/components/BetaPricing";
 
 // Only the homepage links the manifest — guests reach the app via their own
 // personal /g/[code] link, and a manifest's fixed start_url would redirect
@@ -128,6 +130,7 @@ export default function Home() {
             one tap and they know exactly where to be, what&apos;s happening next, and how to
             get there.
           </p>
+          <BetaHeroPromo />
           <Link
             href="/signup"
             className="inline-block bg-brand text-white px-8 py-3 rounded-md font-medium shadow-lg shadow-brand/20 hover:bg-brand-hover transition-colors"
@@ -201,41 +204,7 @@ export default function Home() {
             guests — no subscription. Priced in AUD, so Australian couples pay no currency
             conversion fees.
           </p>
-          <div className="grid sm:grid-cols-2 gap-6">
-            <div className="bg-white border border-border-warm rounded-xl p-6 flex flex-col gap-3">
-              <div className="font-semibold text-lg">Essentials</div>
-              <div className="text-3xl font-display text-foreground">
-                $69 <span className="text-sm font-sans text-foreground/75">AUD, one-time</span>
-              </div>
-              <p className="text-foreground/70 text-sm leading-relaxed flex-1">
-                Itinerary, RSVPs with meal choice and plus-ones, guest groups, the digital pass,
-                video &amp; voice guestbook, welcome video, and photo gallery — for up to 150 guests.
-              </p>
-              <Link
-                href="/signup"
-                className="text-sm font-medium bg-cream-card border border-border-warm rounded-md py-2 text-center hover:bg-white transition-colors"
-              >
-                Get Started
-              </Link>
-            </div>
-            <div className="bg-white border border-brand rounded-xl p-6 flex flex-col gap-3">
-              <div className="font-semibold text-lg text-brand">Full Day-Of</div>
-              <div className="text-3xl font-display text-foreground">
-                $249 <span className="text-sm font-sans text-foreground/75">AUD, one-time</span>
-              </div>
-              <p className="text-foreground/70 text-sm leading-relaxed flex-1">
-                Everything in Essentials, plus live shuttle tracking, weather alerts, QR usher
-                check-in, push notifications, vendor check-in &amp; crew broadcasts, the day-of
-                command card, a personalised wedding URL, and unlimited guests.
-              </p>
-              <Link
-                href="/signup"
-                className="text-sm font-medium bg-brand text-white rounded-md py-2 text-center hover:bg-brand-hover transition-colors"
-              >
-                Get Started
-              </Link>
-            </div>
-          </div>
+          <BetaPricing />
           <p className="text-center text-foreground/70 text-sm mt-8">
             Proudly Australian-made, priced in AUD — and nothing to remember to cancel.
           </p>

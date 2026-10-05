@@ -5,6 +5,7 @@ import { createSession } from "@/lib/session";
 import { withErrorHandling } from "@/lib/route-handler";
 import { rateLimit } from "@/lib/rate-limit";
 import { isValidInviteCode } from "@/lib/invite-codes";
+import { isUnspentBetaCode } from "@/lib/beta-offer";
 import { Couple } from "@/types/couple";
 
 export const POST = withErrorHandling(async (req: NextRequest) => {
@@ -16,7 +17,7 @@ export const POST = withErrorHandling(async (req: NextRequest) => {
   // The signup page already checks this, but that's UX only -- never trust a
   // client-side gate as the real enforcement, since this route is reachable
   // directly regardless of what the page showed.
-  if (!isValidInviteCode(inviteCode)) {
+  if (!isValidInviteCode(inviteCode) && !(await isUnspentBetaCode(inviteCode))) {
     return NextResponse.json({ error: "Signup currently requires an invite" }, { status: 403 });
   }
 

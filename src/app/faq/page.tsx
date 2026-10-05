@@ -43,8 +43,12 @@ const GUEST_FAQS = [
 
 const COUPLE_FAQS = [
   {
+    q: "Is Entrevow free right now?",
+    a: "During our founding couples program, the first 35 couples receive Full Day-Of at no charge, one per couple, in exchange for honest feedback. Email hello@entrevow.com to request a code. Paid plans are paused for now and will reopen after we've reviewed the program's results.",
+  },
+  {
     q: "How do I get started?",
-    a: "Create a free account and build out your itinerary and guest list — that part costs nothing. You only pay once you're ready to actually send guests their links.",
+    a: "Create a free account and build out your itinerary and guest list — that part costs nothing. Paid plans are paused during the beta; the prices below are what they will be when they reopen.",
   },
   {
     q: "What's the difference between Essentials and Full Day-Of?",
@@ -52,7 +56,7 @@ const COUPLE_FAQS = [
   },
   {
     q: "Can I upgrade from Essentials to Full Day-Of later?",
-    a: "Yes — from your dashboard's billing section. You'll only be charged the difference between the two tiers, not the full Full Day-Of price again.",
+    a: "Once paid plans reopen, yes, from your dashboard's billing section. You'll only be charged the difference between the two tiers, not the full Full Day-Of price again.",
   },
   {
     q: "How do guests get their link?",

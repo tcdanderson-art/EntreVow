@@ -14,3 +14,8 @@ export const TIER_LABELS: Record<PlanTier, string> = {
   essentials: "Essentials",
   full: "Full Day-Of",
 };
+
+// Flip to true to re-open Stripe checkout once the free beta promo ends. While
+// false, the only way to unlock a wedding is an emailed beta code (see
+// beta-offer.ts); the checkout route enforces this, not just the UI.
+export const PAID_CHECKOUT_ENABLED = false;

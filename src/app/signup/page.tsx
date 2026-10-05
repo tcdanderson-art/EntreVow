@@ -1,4 +1,5 @@
 import { isValidInviteCode } from "@/lib/invite-codes";
+import { isUnspentBetaCode } from "@/lib/beta-offer";
 import SignupForm from "@/components/SignupForm";
 
 export default async function SignupPage({
@@ -8,7 +9,7 @@ export default async function SignupPage({
 }) {
   const { invite } = await searchParams;
 
-  if (!isValidInviteCode(invite)) {
+  if (!isValidInviteCode(invite) && !(await isUnspentBetaCode(invite))) {
     return (
       <div className="flex-1 flex items-center justify-center bg-cream px-6 py-12">
         <div className="w-full max-w-sm text-center bg-white border border-border-warm rounded-xl p-8 shadow-sm">

@@ -132,7 +132,9 @@ export default function GuidePage() {
         <Section id="choosing-a-plan" title="Choosing a plan">
           <p>
             Both plans are a <span className="font-medium">one-time payment</span>, not a
-            subscription — you pay once and it covers your wedding.
+            subscription — you pay once and it covers your wedding. Paid plans are paused during
+            the free beta, so the prices below apply once they reopen. Email{" "}
+            hello@entrevow.com for a free beta code.
           </p>
           <div className="overflow-x-auto -mx-1 px-1">
             <table className="w-full text-sm border-collapse">
@@ -172,8 +174,8 @@ export default function GuidePage() {
             </table>
           </div>
           <p>
-            Pay from the <span className="font-medium">Billing</span> card on your wedding&apos;s
-            dashboard. Started on Essentials and want more later? Upgrading to Full Day-Of only
+            Once plans reopen you&apos;ll pay from the <span className="font-medium">Billing</span> card on your wedding&apos;s
+            dashboard, which is also where a beta code is entered. Started on Essentials and want more later? Upgrading to Full Day-Of only
             charges you the difference, not the full $249 again.
           </p>
         </Section>

@@ -99,6 +99,12 @@ export default function TermsPage() {
             free before paying. Payment unlocks guest access for that wedding immediately.
           </p>
           <p className="text-foreground/70 leading-relaxed">
+            During the free beta, up to 35 couples may receive Full Day-Of access at no charge using
+            a single-use code, limited to one per person. We may decline or revoke a free spot if we
+            reasonably believe this limit is being circumvented. Paid purchases are paused while the
+            beta runs and until we announce otherwise.
+          </p>
+          <p className="text-foreground/70 leading-relaxed">
             Because access unlocks immediately, purchases are refundable within 7 days of payment,
             provided no guests have RSVP&apos;d yet. Outside that window, or once a guest has
             RSVP&apos;d, refunds are at our discretion. If your purchase is refunded in full, guest

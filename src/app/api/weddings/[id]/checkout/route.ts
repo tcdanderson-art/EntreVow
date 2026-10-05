@@ -4,7 +4,8 @@ import { requireCoupleId } from "@/lib/require-auth";
 import { withErrorHandling } from "@/lib/route-handler";
 import { rateLimit } from "@/lib/rate-limit";
 import { stripe, PLAN_PRICES, UPGRADE_PRICE } from "@/lib/stripe";
-import { isFullTier, TIER_LABELS } from "@/lib/plan";
+import { isFullTier, PAID_CHECKOUT_ENABLED, TIER_LABELS } from "@/lib/plan";
+import { tryClaimBetaGrant } from "@/lib/beta-offer";
 import { Wedding } from "@/types/wedding";
 
 export const POST = withErrorHandling(async (
@@ -18,7 +19,7 @@ export const POST = withErrorHandling(async (
   if (limited) return limited;
 
   const weddingId = Number((await params).id);
-  const { tier: rawTier } = await req.json();
+  const { tier: rawTier, fingerprint, betaCode } = await req.json();
   if (rawTier !== "essentials" && rawTier !== "full") {
     return NextResponse.json({ error: "Invalid plan tier" }, { status: 400 });
   }
@@ -35,6 +36,28 @@ export const POST = withErrorHandling(async (
   }
   if (isFullTier(wedding) && tier === "essentials") {
     return NextResponse.json({ error: "Can't downgrade from Full Day-Of" }, { status: 400 });
+  }
+
+  // Beta offer: a couple holding an emailed single-use code gets Full Day-Of
+  // free, once each, while the 35 spots last. Without a code they fall through
+  // to normal paid checkout below.
+  if (wedding.plan_tier == null && typeof betaCode === "string" && betaCode.trim()) {
+    const [couple] = (await db().sql`SELECT email FROM couples WHERE id = ${coupleId}`) as { email: string }[];
+    const result = await tryClaimBetaGrant({ req, coupleId, email: couple.email, weddingId, fingerprint, code: betaCode });
+    if (result === "granted") return NextResponse.json({ granted: true });
+    const messages = {
+      bad_code: "That code isn't valid or has already been used.",
+      sold_out: "All the free beta spots have been claimed.",
+      duplicate: "A free spot has already been claimed from this account or device.",
+    } as const;
+    return NextResponse.json({ error: messages[result] }, { status: 400 });
+  }
+
+  if (!PAID_CHECKOUT_ENABLED) {
+    return NextResponse.json(
+      { error: "Paid plans are paused for now. Email hello@entrevow.com to hear when they open." },
+      { status: 403 }
+    );
   }
 
   // An Essentials wedding upgrading to Full Day-Of pays only the difference,
