@@ -1,10 +1,10 @@
 import Link from "next/link";
 
-export const metadata = { title: "Privacy Policy — Entrevow" };
+export const metadata = { title: "Privacy Policy — Entrevow", alternates: { canonical: "/privacy" } };
 
 export default function PrivacyPage() {
   return (
-    <div className="flex-1 bg-cream px-6 py-12">
+    <main className="flex-1 bg-cream px-6 py-12">
       <div className="max-w-2xl mx-auto bg-white border border-border-warm rounded-xl p-8 sm:p-10 flex flex-col gap-6">
         <div>
           <h1 className="font-display text-3xl mb-2">Privacy Policy</h1>
@@ -199,6 +199,6 @@ export default function PrivacyPage() {
           ← Back to Entrevow
         </Link>
       </div>
-    </div>
+    </main>
   );
 }

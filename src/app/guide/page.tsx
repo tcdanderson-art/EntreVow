@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-export const metadata = { title: "Getting Started Guide — Entrevow" };
+export const metadata = { title: "Getting Started Guide — Entrevow", alternates: { canonical: "/guide" } };
 
 const SECTIONS = [
   { id: "what-is-entrevow", label: "What Entrevow is" },
@@ -52,7 +52,7 @@ function Steps({ items }: { items: React.ReactNode[] }) {
 
 export default function GuidePage() {
   return (
-    <div className="flex-1 bg-cream px-6 py-12">
+    <main className="flex-1 bg-cream px-6 py-12">
       <div className="max-w-2xl mx-auto bg-white border border-border-warm rounded-xl p-8 sm:p-10 flex flex-col gap-10">
         <div>
           <h1 className="font-display text-3xl mb-2">Getting Started Guide</h1>
@@ -61,7 +61,7 @@ export default function GuidePage() {
             account to running the day itself. Bookmark this page; it&apos;s always here from the{" "}
             <span className="font-medium">Guide</span> link at the top of your dashboard whenever
             you have a question. For quick answers, the{" "}
-            <Link href="/faq" className="text-brand hover:underline">
+            <Link href="/faq" className="text-brand underline">
               FAQ
             </Link>{" "}
             is faster.
@@ -69,13 +69,13 @@ export default function GuidePage() {
         </div>
 
         <nav className="border border-border-warm rounded-lg p-4 bg-cream/60">
-          <p className="text-xs font-medium text-foreground/60 uppercase tracking-wide mb-2">
+          <p className="text-xs font-medium text-foreground/75 uppercase tracking-wide mb-2">
             Contents
           </p>
           <ul className="grid sm:grid-cols-2 gap-x-4 gap-y-1 text-sm">
             {SECTIONS.map((s) => (
               <li key={s.id}>
-                <a href={`#${s.id}`} className="text-brand hover:underline">
+                <a href={`#${s.id}`} className="text-brand underline">
                   {s.label}
                 </a>
               </li>
@@ -136,7 +136,7 @@ export default function GuidePage() {
             the free beta, so the prices below apply once they reopen. Email{" "}
             hello@entrevow.com for a free beta code.
           </p>
-          <div className="overflow-x-auto -mx-1 px-1">
+          <div className="overflow-x-auto -mx-1 px-1" tabIndex={0} role="region" aria-label="Plan comparison table">
             <table className="w-full text-sm border-collapse">
               <thead>
                 <tr className="border-b border-border-warm text-left">
@@ -522,7 +522,7 @@ export default function GuidePage() {
               <span className="font-medium">Refunds:</span> available within 7 days of payment,
               provided no guest has RSVP&apos;d yet. After that, refunds are at our discretion.
               This is in addition to your rights under the Australian Consumer Law. Contact{" "}
-              <a href="mailto:hello@entrevow.com" className="text-brand hover:underline">
+              <a href="mailto:hello@entrevow.com" className="text-brand underline">
                 hello@entrevow.com
               </a>{" "}
               for anything billing-related.
@@ -559,11 +559,11 @@ export default function GuidePage() {
             </li>
             <li>
               Still stuck? Check the{" "}
-              <Link href="/faq" className="text-brand hover:underline">
+              <Link href="/faq" className="text-brand underline">
                 FAQ
               </Link>{" "}
               or email{" "}
-              <a href="mailto:hello@entrevow.com" className="text-brand hover:underline">
+              <a href="mailto:hello@entrevow.com" className="text-brand underline">
                 hello@entrevow.com
               </a>
               .
@@ -571,10 +571,10 @@ export default function GuidePage() {
           </ul>
         </Section>
 
-        <Link href="/dashboard" className="text-sm text-brand hover:underline">
+        <Link href="/dashboard" className="text-sm text-brand underline">
           ← Back to dashboard
         </Link>
       </div>
-    </div>
+    </main>
   );
 }

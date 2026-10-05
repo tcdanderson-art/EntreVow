@@ -12,7 +12,7 @@ export default async function SignupPage({
 
   if (!isValidInviteCode(invite) && !(await isUnspentBetaCode(invite))) {
     return (
-      <div className="flex-1 flex items-center justify-center bg-cream px-6 py-12">
+      <main className="flex-1 flex items-center justify-center bg-cream px-6 py-12">
         <div className="w-full max-w-sm text-center bg-white border border-border-warm rounded-xl p-8 shadow-sm">
           <h1 className="font-display text-2xl mb-2">Founding couples access</h1>
           <p className="text-sm text-foreground/80">
@@ -31,7 +31,7 @@ export default async function SignupPage({
             to request one.
           </p>
         </div>
-      </div>
+      </main>
     );
   }
 

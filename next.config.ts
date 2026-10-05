@@ -38,6 +38,10 @@ const nextConfig: NextConfig = {
             key: "Content-Security-Policy-Report-Only",
             value: cspDirectives,
           },
+          // Enforced framing + referrer protection now; the CSP itself stays
+          // report-only until /api/csp-report logs are checked.
+          { key: "X-Frame-Options", value: "SAMEORIGIN" },
+          { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
         ],
       },
     ];

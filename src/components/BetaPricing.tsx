@@ -22,9 +22,7 @@ export default function BetaPricing() {
   return (
     <div className="grid sm:grid-cols-2 gap-6">
       <div
-        className={`bg-white border border-border-warm rounded-xl p-6 flex flex-col gap-3 ${
-          promo ? "opacity-70" : ""
-        }`}
+        className="bg-white border border-border-warm rounded-xl p-6 flex flex-col gap-3"
       >
         <div className="font-semibold text-lg">Essentials</div>
         <div className="text-3xl font-display text-foreground">
@@ -63,7 +61,7 @@ export default function BetaPricing() {
           {promo ? (
             <>
               <span className="text-brand">Complimentary</span>{" "}
-              <span className="text-lg text-foreground/60 line-through decoration-foreground/40">
+              <span className="text-lg text-foreground/75 line-through decoration-foreground/40">
                 $249
               </span>{" "}
             </>

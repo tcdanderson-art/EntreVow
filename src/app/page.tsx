@@ -9,6 +9,7 @@ import BetaPricing from "@/components/BetaPricing";
 // an installed shortcut away from that link back to this marketing page.
 export const metadata: Metadata = {
   manifest: "/manifest.json",
+  alternates: { canonical: "/" },
 };
 
 const FEATURES = [
@@ -85,9 +86,38 @@ const MEMORY_FEATURES = [
   },
 ];
 
+// Only facts already visible on the site: name, URL, contact address, logo.
+const SITE_SCHEMA = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://entrevow.com/#organization",
+      name: "Entrevow",
+      url: "https://entrevow.com",
+      logo: "https://entrevow.com/brand/icon-mark.png",
+      email: "hello@entrevow.com",
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://entrevow.com/#website",
+      name: "Entrevow",
+      url: "https://entrevow.com",
+      description:
+        "Wedding-day logistics: a live itinerary, RSVPs and guest list, shuttle tracking and a photo and video guestbook, shared with guests on one personal link.",
+      publisher: { "@id": "https://entrevow.com/#organization" },
+      inLanguage: "en-AU",
+    },
+  ],
+};
+
 export default function Home() {
   return (
     <div className="flex flex-col min-h-full bg-cream">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(SITE_SCHEMA) }}
+      />
       <header className="flex items-center justify-between gap-3 px-4 sm:px-10 py-6 max-w-6xl mx-auto w-full">
         <Image
           src="/brand/wordmark.png"
@@ -125,7 +155,7 @@ export default function Home() {
           <h1 className="font-display text-4xl sm:text-5xl leading-tight text-foreground mb-6">
             The guest list, the timeline, the whole day — all in one tap.
           </h1>
-          <p className="text-lg text-foreground/70 mb-8 max-w-xl mx-auto">
+          <p className="text-lg text-foreground/80 mb-8 max-w-xl mx-auto">
             Don&apos;t hand out paper itineraries that get lost. Give your guests Entrevow —
             one tap and they know exactly where to be, what&apos;s happening next, and how to
             get there.
@@ -140,6 +170,7 @@ export default function Home() {
         </section>
 
         <section className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 px-6 sm:px-10 py-14 max-w-6xl mx-auto">
+          <h2 className="sr-only">What Entrevow does</h2>
           {FEATURES.map((feature) => (
             <div
               key={feature.title}
@@ -205,7 +236,7 @@ export default function Home() {
             conversion fees.
           </p>
           <BetaPricing />
-          <p className="text-center text-foreground/70 text-sm mt-8">
+          <p className="text-center text-foreground/80 text-sm mt-8">
             Proudly Australian-made, priced in AUD — and nothing to remember to cancel.
           </p>
         </section>

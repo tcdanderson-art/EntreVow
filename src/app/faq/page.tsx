@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-export const metadata = { title: "FAQ — Entrevow" };
+export const metadata = { title: "FAQ — Entrevow", alternates: { canonical: "/faq" } };
 
 const GUEST_FAQS = [
   {
@@ -87,7 +87,7 @@ const COUPLE_FAQS = [
     a: (
       <>
         Email us any time at{" "}
-        <a href="mailto:hello@entrevow.com" className="text-brand hover:underline">
+        <a href="mailto:hello@entrevow.com" className="text-brand underline">
           hello@entrevow.com
         </a>
         .
@@ -125,14 +125,14 @@ function FaqSection({
 
 export default function FaqPage() {
   return (
-    <div className="flex-1 bg-cream px-6 py-12">
+    <main className="flex-1 bg-cream px-6 py-12">
       <div className="max-w-2xl mx-auto bg-white border border-border-warm rounded-xl p-8 sm:p-10 flex flex-col gap-8">
         <div>
           <h1 className="font-display text-3xl mb-2">Frequently Asked Questions</h1>
           <p className="text-foreground/80 text-sm">
             Answers for guests using their itinerary link, and for couples setting up a wedding.
             Can&apos;t find what you need?{" "}
-            <a href="mailto:hello@entrevow.com" className="text-brand hover:underline">
+            <a href="mailto:hello@entrevow.com" className="text-brand underline">
               Email us
             </a>
             .
@@ -142,10 +142,10 @@ export default function FaqPage() {
         <FaqSection title="For guests" items={GUEST_FAQS} />
         <FaqSection title="For couples" items={COUPLE_FAQS} />
 
-        <Link href="/" className="text-sm text-brand hover:underline">
+        <Link href="/" className="text-sm text-brand underline">
           ← Back to Entrevow
         </Link>
       </div>
-    </div>
+    </main>
   );
 }

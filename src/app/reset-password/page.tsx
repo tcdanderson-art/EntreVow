@@ -89,7 +89,7 @@ function ResetPasswordForm() {
 
 export default function ResetPasswordPage() {
   return (
-    <div className="flex-1 flex items-center justify-center bg-cream px-6 py-12">
+    <main className="flex-1 flex items-center justify-center bg-cream px-6 py-12">
       <div className="w-full max-w-sm bg-white border border-border-warm rounded-xl p-8 shadow-sm">
         <h1 className="font-display text-2xl mb-1 text-center">Set a new password</h1>
         <p className="text-sm text-foreground/80 text-center mb-6">
@@ -100,6 +100,6 @@ export default function ResetPasswordPage() {
           <ResetPasswordForm />
         </Suspense>
       </div>
-    </div>
+    </main>
   );
 }

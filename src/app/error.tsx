@@ -15,7 +15,7 @@ export default function Error({
   }, [error]);
 
   return (
-    <div className="flex-1 flex items-center justify-center bg-cream px-6 py-12">
+    <main className="flex-1 flex items-center justify-center bg-cream px-6 py-12">
       <div className="w-full max-w-sm text-center bg-white border border-border-warm rounded-xl p-8 shadow-sm">
         <h1 className="font-display text-3xl mb-2">Something went wrong</h1>
         <p className="text-sm text-foreground/80 mb-6">
@@ -36,6 +36,6 @@ export default function Error({
           </Link>
         </div>
       </div>
-    </div>
+    </main>
   );
 }
