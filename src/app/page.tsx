@@ -3,6 +3,7 @@ import Image from "next/image";
 import type { Metadata } from "next";
 import { BetaHeroPromo } from "@/components/BetaBanner";
 import BetaPricing from "@/components/BetaPricing";
+import DemoPhone from "@/components/DemoPhone";
 
 // Only the homepage links the manifest — guests reach the app via their own
 // personal /g/[code] link, and a manifest's fixed start_url would redirect
@@ -11,6 +12,24 @@ export const metadata: Metadata = {
   manifest: "/manifest.json",
   alternates: { canonical: "/" },
 };
+
+const HOW_IT_WORKS = [
+  {
+    title: "Build your wedding",
+    description:
+      "Add your guests, itinerary, meal options and shuttles. It's free to build, and nothing is shared until you choose.",
+  },
+  {
+    title: "Share one link",
+    description:
+      "Every guest gets their own personal link by text or QR code. They see only what applies to them, with nothing to download.",
+  },
+  {
+    title: "Enjoy the day",
+    description:
+      "Change a time once and every guest sees it. Track shuttles, check guests in and collect the messages and photos.",
+  },
+];
 
 const FEATURES = [
   {
@@ -131,6 +150,24 @@ export default function Home() {
         />
         <nav className="flex items-center gap-2 sm:gap-4 shrink-0">
           <Link
+            href="/demo"
+            className="hidden md:inline text-sm font-medium text-foreground/80 hover:text-foreground transition-colors whitespace-nowrap"
+          >
+            Demo
+          </Link>
+          <Link
+            href="/guide"
+            className="hidden md:inline text-sm font-medium text-foreground/80 hover:text-foreground transition-colors whitespace-nowrap"
+          >
+            Guide
+          </Link>
+          <Link
+            href="/faq"
+            className="hidden md:inline text-sm font-medium text-foreground/80 hover:text-foreground transition-colors whitespace-nowrap"
+          >
+            FAQ
+          </Link>
+          <Link
             href="#pricing"
             className="hidden sm:inline text-sm font-medium text-foreground/80 hover:text-foreground transition-colors whitespace-nowrap"
           >
@@ -152,22 +189,59 @@ export default function Home() {
       </header>
 
       <main className="flex-1">
-        <section className="text-center px-6 pt-16 pb-12 max-w-3xl mx-auto">
-          <h1 className="font-display text-4xl sm:text-5xl leading-tight text-foreground mb-6">
-            The guest list, the timeline, the whole day — all in one tap.
-          </h1>
-          <p className="text-lg text-foreground/80 mb-8 max-w-xl mx-auto">
-            Don&apos;t hand out paper itineraries that get lost. Give your guests Entrevow —
-            one tap and they know exactly where to be, what&apos;s happening next, and how to
-            get there.
-          </p>
+        <section className="px-6 pt-12 sm:pt-16 pb-12 max-w-6xl mx-auto grid lg:grid-cols-2 gap-12 items-center">
+          <div className="text-center lg:text-left">
+            <h1 className="font-display text-4xl sm:text-5xl leading-tight text-foreground mb-6">
+              The guest list, the timeline, the whole day — all in one tap.
+            </h1>
+            <p className="text-lg text-foreground/80 mb-8 max-w-xl mx-auto lg:mx-0">
+              Don&apos;t hand out paper itineraries that get lost. Give your guests Entrevow —
+              one tap and they know exactly where to be, what&apos;s happening next, and how to
+              get there.
+            </p>
+            <div className="flex flex-wrap justify-center lg:justify-start items-center gap-3">
+              <Link
+                href="/signup"
+                className="inline-block bg-brand text-white px-8 py-3 rounded-md font-medium shadow-lg shadow-brand/20 hover:bg-brand-hover transition-colors"
+              >
+                Start building free
+              </Link>
+              <Link
+                href="/demo"
+                className="inline-block px-8 py-3 rounded-md font-medium border border-border-warm bg-white text-foreground hover:bg-cream-card transition-colors"
+              >
+                See a demo
+              </Link>
+            </div>
+            <p className="text-sm text-foreground/80 mt-4">
+              No app for guests to install. Build your whole wedding before you pay anything.
+            </p>
+          </div>
+          <DemoPhone />
+        </section>
+
+        <section className="px-6 pb-4 max-w-6xl mx-auto">
           <BetaHeroPromo />
-          <Link
-            href="/signup"
-            className="inline-block bg-brand text-white px-8 py-3 rounded-md font-medium shadow-lg shadow-brand/20 hover:bg-brand-hover transition-colors"
-          >
-            Get Started
-          </Link>
+        </section>
+
+        <section className="px-6 sm:px-10 py-14 max-w-6xl mx-auto">
+          <h2 className="font-display text-2xl sm:text-3xl text-center text-foreground mb-10">
+            How it works
+          </h2>
+          <ol className="grid sm:grid-cols-3 gap-6">
+            {HOW_IT_WORKS.map((step, i) => (
+              <li
+                key={step.title}
+                className="bg-white border border-border-warm rounded-xl p-6 shadow-sm"
+              >
+                <span className="text-xs font-medium tracking-[0.2em] uppercase text-brand">
+                  Step {i + 1}
+                </span>
+                <h3 className="font-semibold text-lg mt-2 mb-2">{step.title}</h3>
+                <p className="text-foreground/70 text-sm leading-relaxed">{step.description}</p>
+              </li>
+            ))}
+          </ol>
         </section>
 
         <section className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 px-6 sm:px-10 py-14 max-w-6xl mx-auto">
@@ -227,7 +301,22 @@ export default function Home() {
           </div>
         </section>
 
-        <section id="pricing" className="px-6 sm:px-10 py-14 max-w-4xl mx-auto scroll-mt-8">
+        <section className="px-6 sm:px-10 py-14 max-w-3xl mx-auto text-center">
+          <h2 className="font-display text-2xl sm:text-3xl text-foreground mb-4">
+            Built in Australia, run personally
+          </h2>
+          <p className="text-foreground/80 leading-relaxed">
+            Entrevow is an independent Australian product, not a division of a large wedding
+            company. For the first 35 couples, the founder reads every code request and every piece
+            of feedback and replies personally. You can reach the founder directly at{" "}
+            <a href="mailto:hello@entrevow.com" className="text-brand font-medium underline">
+              hello@entrevow.com
+            </a>
+            .
+          </p>
+        </section>
+
+        <section id="pricing"className="px-6 sm:px-10 py-14 max-w-4xl mx-auto scroll-mt-8">
           <h2 className="font-display text-2xl sm:text-3xl text-center text-foreground mb-2">
             Simple, one-time pricing
           </h2>
