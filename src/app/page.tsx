@@ -116,7 +116,7 @@ const SITE_SCHEMA = {
       url: "https://entrevow.com",
       logo: "https://entrevow.com/brand/icon-mark.png",
       email: "hello@entrevow.com",
-      sameAs: ["https://www.facebook.com/entrevow"],
+      sameAs: ["https://www.facebook.com/entrevow", "https://www.instagram.com/entrevow"],
     },
     {
       "@type": "WebSite",
@@ -358,6 +358,15 @@ export default function Home() {
             className="hover:text-foreground transition-colors"
           >
             Facebook
+          </a>
+          <span aria-hidden="true">·</span>
+          <a
+            href="https://www.instagram.com/entrevow"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-foreground transition-colors"
+          >
+            Instagram
           </a>
         </p>
       </footer>
