@@ -4,6 +4,7 @@
 
 ## Key pages
 - [Home](https://entrevow.com): what Entrevow does and the founding couples offer
+- [Demo](https://entrevow.com/demo): an interactive sample guest page
 - [Guide](https://entrevow.com/guide): how to set up a wedding day
 - [FAQ](https://entrevow.com/faq): common questions on pricing, privacy and guest access
 - [Sign up](https://entrevow.com/signup): create a free account and build your wedding

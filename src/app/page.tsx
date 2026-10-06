@@ -316,7 +316,7 @@ export default function Home() {
           </p>
         </section>
 
-        <section id="pricing"className="px-6 sm:px-10 py-14 max-w-4xl mx-auto scroll-mt-8">
+        <section id="pricing" className="px-6 sm:px-10 py-14 max-w-4xl mx-auto scroll-mt-8">
           <h2 className="font-display text-2xl sm:text-3xl text-center text-foreground mb-2">
             Simple, one-time pricing
           </h2>
