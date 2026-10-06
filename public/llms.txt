@@ -1,0 +1,15 @@
+# Entrevow
+
+> Entrevow is a wedding-day logistics tool built in Australia. Couples build an itinerary and guest list, and every guest gets one personal link with their schedule, RSVP, shuttle ETA, weather alerts and a shared photo and video guestbook. No app download and no guest login.
+
+## Key pages
+- [Home](https://entrevow.com): what Entrevow does and the founding couples offer
+- [Guide](https://entrevow.com/guide): how to set up a wedding day
+- [FAQ](https://entrevow.com/faq): common questions on pricing, privacy and guest access
+- [Sign up](https://entrevow.com/signup): create a free account and build your wedding
+
+## Offer
+The first 35 couples receive the Full Day-Of plan free, one per couple, by emailing hello@entrevow.com for a code.
+
+## Contact
+hello@entrevow.com
