@@ -53,7 +53,7 @@ const COUPLE_FAQS = [
   },
   {
     q: "How do I get started?",
-    a: "Create a free account and build out your itinerary and guest list — that part costs nothing. Paid plans are paused during the beta; the prices below are what they will be when they reopen.",
+    a: "Create a free account and build out your itinerary and guest list — that part costs nothing. Paid plans are paused during the founding couples program; the prices below are what they will be when they reopen.",
   },
   {
     q: "What's the difference between Essentials and Full Day-Of?",

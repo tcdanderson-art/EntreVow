@@ -84,9 +84,9 @@ export default function PrivacyPage() {
             couples logged in, plus Google Analytics cookies on our marketing pages and couple
             dashboard (see below). We never load Google Analytics on a guest, usher, or driver
             link, so guest activity on the event itself is not tracked by it. We do not use
-            advertising cookies. If you claim a free beta spot, we also set a random device
+            advertising cookies. If you claim a founding couples place, we also set a random device
             cookie and store one-way hashes of it, your browser characteristics and your network
-            address, solely to make sure each person claims only one free spot.
+            address, solely to make sure each person claims only one place.
           </p>
         </section>
 

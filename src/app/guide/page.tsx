@@ -108,9 +108,8 @@ export default function GuidePage() {
           <Steps
             items={[
               <>
-                <span className="font-medium">Sign up.</span> Entrevow is currently invite-only
-                during beta — you&apos;ll need an invite link from us. On the signup page, enter
-                your names as you&apos;d like them to appear (e.g. &quot;Alex &amp;
+                <span className="font-medium">Sign up.</span> Signup is open to everyone. On the
+                signup page, enter your names as you&apos;d like them to appear (e.g. &quot;Alex &amp;
                 Priya&quot;), your email, and a password (8+ characters).
               </>,
               <>
@@ -138,8 +137,8 @@ export default function GuidePage() {
           <p>
             Both plans are a <span className="font-medium">one-time payment</span>, not a
             subscription — you pay once and it covers your wedding. Paid plans are paused during
-            the free beta, so the prices below apply once they reopen. Email{" "}
-            hello@entrevow.com for a free beta code.
+            the founding couples program, so the prices below apply once they reopen. The first 35
+            couples receive Full Day-Of free: email hello@entrevow.com for a code.
           </p>
           <div className="overflow-x-auto -mx-1 px-1" tabIndex={0} role="region" aria-label="Plan comparison table">
             <table className="w-full text-sm border-collapse">
