@@ -334,7 +334,7 @@ export default function Home() {
 
       <footer className="text-center text-sm text-foreground/75 py-8 border-t border-border-warm flex flex-col items-center gap-2">
         <p>Entrevow — from &ldquo;I do&rdquo; to the last dance.</p>
-        <p className="flex items-center gap-3">
+        <p className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 px-4">
           <Link href="/faq" className="hover:text-foreground transition-colors">
             FAQ
           </Link>

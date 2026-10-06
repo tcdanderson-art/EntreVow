@@ -52,7 +52,7 @@ export default function BetaPricing() {
         }`}
       >
         {promo && (
-          <span className="absolute -top-3 left-6 bg-brand text-white text-xs font-medium tracking-wide uppercase rounded-full px-3 py-1">
+          <span className="absolute -top-3 left-1/2 -translate-x-1/2 w-max max-w-[calc(100%-1rem)] text-center bg-brand text-white text-xs font-medium tracking-wide uppercase rounded-full px-3 py-1">
             Founding couples · {offer.remaining} of {offer.total} remaining
           </span>
         )}
