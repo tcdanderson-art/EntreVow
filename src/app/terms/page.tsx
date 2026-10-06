@@ -13,7 +13,7 @@ export default function TermsPage() {
       <div className="max-w-2xl mx-auto bg-white border border-border-warm rounded-xl p-8 sm:p-10 flex flex-col gap-6">
         <div>
           <h1 className="font-display text-3xl mb-2">Terms of Service</h1>
-          <p className="text-sm text-foreground/75">Last updated August 14, 2026</p>
+          <p className="text-sm text-foreground/75">Last updated October 6, 2026</p>
         </div>
 
         <p className="text-foreground/70 leading-relaxed">
@@ -104,10 +104,20 @@ export default function TermsPage() {
             free before paying. Payment unlocks guest access for that wedding immediately.
           </p>
           <p className="text-foreground/70 leading-relaxed">
-            During the free beta, up to 35 couples may receive Full Day-Of access at no charge using
-            a single-use code, limited to one per person. We may decline or revoke a free spot if we
-            reasonably believe this limit is being circumvented. Paid purchases are paused while the
-            beta runs and until we announce otherwise.
+            Founding couples program: the first 35 couples to claim a place receive Full Day-Of
+            access for one wedding at no charge. Places are issued by us on request, by a
+            single-use code that you enter in your dashboard when you&apos;re ready to invite
+            guests. Building your wedding doesn&apos;t use a place; only entering a valid code
+            does. Each couple, email address and device may claim one place, and a place has no
+            cash value, can&apos;t be transferred or resold, and can&apos;t be exchanged for a
+            refund or credit. Because there are a limited number, a code that hasn&apos;t been
+            claimed may stop working once all places are taken.
+          </p>
+          <p className="text-foreground/70 leading-relaxed">
+            We welcome feedback from founding couples but don&apos;t require it. We may decline or
+            revoke a place if we reasonably believe the one-per-couple limit is being circumvented
+            or a code was obtained improperly. Paid purchases are paused while the program runs
+            and until we announce otherwise; we&apos;ll update this page when they reopen.
           </p>
           <p className="text-foreground/70 leading-relaxed">
             Because access unlocks immediately, purchases are refundable within 7 days of payment,
